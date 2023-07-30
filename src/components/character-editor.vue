@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CharacterRepository from '@/database/repository'
 import Dropdown from '@components/dropdown.vue'
@@ -11,26 +11,34 @@ import SwitchButton from '@components/switch.vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 import { ideologies } from '@shared/const/ideology'
 import { commanding, ministers, officers } from '@shared/const/roles'
+import {
+  getCommandingRole,
+  getMinisterialRoles,
+  getOfficerRole,
+  hasCommandingRole
+} from '@shared/utils/character'
 
 const repository = CharacterRepository.getInstance()
 const { t } = useI18n()
 const loading = ref(false)
-defineProps({
-  open: Boolean
-})
+const { open, character } = defineProps<{
+  open: boolean
+  character: CharacterWithId | null
+}>()
+const emit = defineEmits(['hide'])
 
-const tag = ref('')
-const name = ref('')
+const tag = ref<string>('')
+const name = ref<string>('')
 const ideology = ref<Ideology>(ideologies[0].value)
 const addLeaderRole = ref(false)
 const addCommandingRole = ref(false)
 const addMinisterRole = ref(false)
 const addOfficerRole = ref(false)
 
-const leaderTraits = ref('')
+const leaderTraits = ref<string>('')
 
 const commandingRole = ref<CommandingRole>(commanding[0].value)
-const commanderTraits = ref('')
+const commanderTraits = ref<string>('')
 const ministerRoles = ref<MinisterPosition[]>([])
 const ministerTraits = ref<Record<MinisterPosition, string>>({
   'head-of-government': '',
@@ -44,6 +52,28 @@ const officerTraits = ref<Record<MilitaryPosition, string>>({
   'army-chief': '',
   'air-chief': '',
   'navy-chief': ''
+})
+
+onMounted(() => {
+  if (character) {
+    tag.value = character.tag
+    name.value = character.name
+    ideology.value = character.ideology
+    addLeaderRole.value = character.roles.includes('leader')
+    addCommandingRole.value = hasCommandingRole(character)
+    addMinisterRole.value = character.roles.includes('minister')
+    addOfficerRole.value = character.roles.includes('officer')
+    leaderTraits.value = character.leaderTraits.join(',')
+    commanderTraits.value = character.commanderTraits.join(',')
+    ministerTraits.value = character.ministerTraits
+    officerTraits.value = character.officerTraits
+
+    const commanding = getCommandingRole(character)
+    if (commanding) commandingRole.value = commanding
+
+    ministerRoles.value = getMinisterialRoles(character)
+    officerRoles.value = getOfficerRole(character)
+  }
 })
 
 function handleMinisterRoles(event: Event) {
@@ -64,6 +94,7 @@ function handleOfficerRoles(event: Event) {
     officerRoles.value = roles
   } else officerRoles.value = roles.filter((e) => e !== role)
 }
+
 async function submit() {
   try {
     loading.value = true
@@ -72,9 +103,10 @@ async function submit() {
     if (addLeaderRole.value) roles.push('leader')
     if (addCommandingRole.value) roles.push(commandingRole.value)
     if (addMinisterRole.value) roles.push('minister')
+    if (addOfficerRole.value) roles.push('officer')
 
-    const character: CharacterWithId = {
-      id: nanoid(),
+    const data: CharacterWithId = {
+      id: character ? character.id : nanoid(),
       name: name.value,
       tag: tag.value,
       cost: 150,
@@ -82,10 +114,13 @@ async function submit() {
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
       ministerTraits: ministerTraits.value,
+      officerTraits: officerTraits.value,
       positions: ministerRoles.value,
       roles
     }
-    repository.create(character)
+    emit('hide')
+    if (character) await repository.update(data)
+    else await repository.create(data)
   } catch {
     /* empty */
   } finally {
@@ -108,7 +143,8 @@ async function submit() {
                 id="name"
                 v-model.trim="name"
                 :label="t('field.name')"
-                :placeholder="t('placeholder.name')" />
+                :placeholder="t('placeholder.name')"
+                :disabled="loading" />
             </label>
           </div>
           <div class="flex items-center gap-4">
@@ -120,7 +156,8 @@ async function submit() {
                   id="tag"
                   v-model.trim="tag"
                   :label="t('field.tag')"
-                  :placeholder="t('placeholder.tag')" />
+                  :placeholder="t('placeholder.tag')"
+                  :disabled="loading" />
               </label>
             </div>
             <div class="w-full">
@@ -128,10 +165,10 @@ async function submit() {
                 <span class="form-label">{{ t('field.ideology') }}</span>
                 <dropdown
                   localise
-                  :model-value="ideology"
-                  :options="ideologies"
                   value-key="value"
                   display-key="label"
+                  :model-value="ideology"
+                  :options="ideologies"
                   @update:model-value="ideology = $event" />
               </label>
             </div>
@@ -176,7 +213,8 @@ async function submit() {
                     type="text"
                     id="traits"
                     v-model.trim="commanderTraits"
-                    :label="t('field.traits')" />
+                    :label="t('field.traits')"
+                    :disabled="loading" />
                 </label>
               </div>
             </div>

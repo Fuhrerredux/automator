@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS characters (
   leaderTraits TEXT,
   commanderTraits TEXT,
   ministerTraits TEXT,
+  officerTraits TEXT,
   roles TEXT,
-  cost INT
+  cost INTEGER
 )
 `

@@ -30,7 +30,7 @@ declare global {
     | 'paternal-autocrat'
     | 'national-populist'
     | 'valkist'
-  type CommandingRole = 'marshal' | 'general' | 'admiral'
+  type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
   type CharacterRole = CommandingRole | 'leader' | 'minister'
   type MinisterPosition =
     | 'head-of-government'
@@ -47,6 +47,7 @@ declare global {
     leaderTraits: string[]
     commanderTraits: string[]
     ministerTraits: Record<MinisterPosition, string>
+    officerTraits: Record<MilitaryPosition, string>
     roles: CharacterRole[]
     cost: number
   }

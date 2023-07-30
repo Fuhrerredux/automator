@@ -1,10 +1,16 @@
 export function normalize<T extends object>(obj: T) {
-  const arr: string[] = []
+  return JSON.stringify(obj)
+}
 
-  Object.values(obj).forEach((e) => {
-    if (typeof e === 'object' || Array.isArray(e)) arr.push(JSON.stringify(e))
-    else arr.push(e)
-  })
+export function denormalize<T extends object>(data: string) {
+  return JSON.parse(data) as T
+}
 
-  return arr
+export function denormalizeObject<T extends object, E extends object>(obj: T, keys: (keyof T)[]) {
+  return Object.entries(obj).reduce((prev, [key, value]) => {
+    if (keys.includes(key as keyof T)) {
+      prev[key as keyof E] = JSON.parse(value)
+    } else prev[key as keyof E] = value
+    return prev
+  }, {} as E)
 }

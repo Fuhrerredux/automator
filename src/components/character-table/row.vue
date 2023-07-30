@@ -16,7 +16,7 @@ const { t } = useI18n()
   <tr>
     <td>{{ character.tag }}</td>
     <td>{{ character.name }}</td>
-    <td>{{ character.tag }}</td>
+    <td>{{ character.positions.join(',') }}</td>
     <td>
       <menu-dropdown>
         <template #button>

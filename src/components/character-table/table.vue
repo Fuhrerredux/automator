@@ -5,8 +5,8 @@ import CharacterRow from '@components/character-table/row.vue'
 const { t } = useI18n()
 defineProps<{ characters: CharacterWithId[] }>()
 defineEmits<{
-  (e: 'update', value: Character): void
-  (e: 'remove', value: Character): void
+  (e: 'update', value: CharacterWithId): void
+  (e: 'remove', value: CharacterWithId): void
 }>()
 </script>
 
@@ -24,7 +24,10 @@ defineEmits<{
     </thead>
     <tbody>
       <template v-for="character of characters" :key="character.id">
-        <character-row :character="character" />
+        <character-row
+          :character="character"
+          @update="$emit('update', $event)"
+          @remove="$emit('remove', $event)" />
       </template>
     </tbody>
   </table>
