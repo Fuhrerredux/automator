@@ -14,3 +14,7 @@ export function denormalizeObject<T extends object, E extends object>(obj: T, ke
     return prev
   }, {} as E)
 }
+
+export function buildToken(string: string): string {
+  return string.replace('-', '_')
+}

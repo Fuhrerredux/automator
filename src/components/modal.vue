@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { XMarkIcon } from '@heroicons/vue/20/solid'
 import {
-  Dialog as DialogRoot,
-  DialogTitle,
   DialogDescription,
   DialogPanel,
-  TransitionRoot,
-  TransitionChild
+  Dialog as DialogRoot,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot
 } from '@headlessui/vue'
+import { XMarkIcon } from '@heroicons/vue/20/solid'
 
 defineProps({
   open: Boolean,
@@ -46,7 +46,7 @@ defineEmits(['hide'])
               :class="size ? size : 'max-w-md'">
               <button
                 type="button"
-                class="absolute right-0 top-0 m-3 rounded-lg p-2 hover:bg-zinc-100"
+                class="absolute right-0 top-0 m-3 rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700"
                 @click="hideable && $emit('hide')">
                 <span class="sr-only">Close</span>
                 <x-mark-icon class="h-5 w-5 text-zinc-500" />

@@ -2,24 +2,24 @@
   setup
   lang="ts"
   generic="V extends string | number | boolean | object | null | undefined, I extends object">
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
-import useKeys from '@composables/use-keys'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import useKeys from '@composables/use-keys'
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
 const props = defineProps<{
   options: I[]
   valueKey: KeyOfType<I, V> | ((item: I) => V)
-  displayKey: keyof I | ((item: I) => V)
+  displayKey: keyof I | ((item: I) => string)
   modelValue: V
   localise?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: V): void
 }>()
-const { valueFunc, displayFunc } = useKeys(props)
+const { valueFunc, displayFunc } = useKeys<V, I>(props)
 
 const item = computed(() => props.options.find((i) => valueFunc(i) === props.modelValue))
 </script>

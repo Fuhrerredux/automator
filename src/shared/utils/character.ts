@@ -35,3 +35,7 @@ export function isOfficerRole(role: Position): boolean {
 export function getOfficerRole(character: CharacterWithId): MilitaryPosition[] {
   return character.positions.filter((e) => isOfficerRole(e)) as MilitaryPosition[]
 }
+
+export function buildCharacterToken(character: CharacterWithId): string {
+  return `${character.tag}_${character.name}`
+}
