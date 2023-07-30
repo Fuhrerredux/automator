@@ -1,0 +1,13 @@
+{
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "semi": false,
+  "bracketSameLine": true,
+  "printWidth": 100,
+  "jsxBracketSameLine": true,
+  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
+  "pluginSearchDirs": ["."],
+  "importOrder": ["^vue$", "^vue-(.*)$", "^@(.*)$", "^\\$(.*)$", "^[./]"],
+  "importOrderSortSpecifiers": true
+}

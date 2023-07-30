@@ -1,0 +1,68 @@
+{
+  "app": "Automator",
+  "route": {
+    "main": "Main",
+    "characters": "Characters",
+    "others": "Others"
+  },
+  "theme": {
+    "auto": "System",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "field": {
+    "tag": "Country Tag",
+    "name": "Character Name",
+    "ideology": "Ideology",
+    "leader-role": "Add Leader Role",
+    "commanding-role": "Add Commanding Role",
+    "minister-role": "Add Minister Role",
+    "officer-role": "Add Officer Role",
+    "role": "Role",
+    "roles": "Roles",
+    "traits": "Traits"
+  },
+  "placeholder": {
+    "tag": "USA",
+    "name": "Douglas MacArthur",
+    "dropdown": "Choose one",
+    "traits": "Enter traits here, make sure to separate by comma"
+  },
+  "action": {
+    "create": "Create",
+    "edit": "Edit",
+    "import": "Import",
+    "remove": "Remove",
+    "cancel": "Cancel",
+    "row-actions": "Actions"
+  },
+  "loading": {
+    "saving": "Saving"
+  },
+  "ideology": {
+    "vanguardist": "National Collectivist",
+    "collectivist": "Socialist",
+    "libertarian-socialist": "Libertarian Socialist",
+    "social-democrat": "Social Democrat",
+    "social-liberal": "Social Liberal",
+    "market-liberal": "Market Liberal",
+    "social-conservative": "Social Conservative",
+    "authoritarian-democrat": "Authoritarian Democrat",
+    "paternal-autocrat": "Paternal Autocrat",
+    "national-populist": "National Populist",
+    "valkist": "Valkist"
+  },
+  "roles": {
+    "marshal": "Field Marshal",
+    "general": "Corps Commander",
+    "admiral": "Admiral",
+    "head-of-government": "Head of Government",
+    "foreign-minister": "Foreign Minister",
+    "economy-minister": "Economy Minister",
+    "security-minister": "Security Minister",
+    "high-command": "Chief of Staff",
+    "army-chief": "Chief of Army",
+    "air-chief": "Chief of Air Force",
+    "navy-chief": "Chief of Navy"
+  }
+}
