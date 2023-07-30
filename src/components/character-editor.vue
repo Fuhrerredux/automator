@@ -19,11 +19,12 @@ import {
 } from '@shared/utils/character'
 
 const repository = CharacterRepository.getInstance()
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'local' })
 const loading = ref(false)
-const { open, character } = defineProps<{
+const { open, character, refresh } = defineProps<{
   open: boolean
   character: CharacterWithId | null
+  refresh: () => Promise<void>
 }>()
 const emit = defineEmits(['hide'])
 
@@ -118,9 +119,11 @@ async function submit() {
       positions: ministerRoles.value,
       roles
     }
-    emit('hide')
+
     if (character) await repository.update(data)
     else await repository.create(data)
+    await refresh()
+    emit('hide')
   } catch {
     /* empty */
   } finally {
@@ -131,7 +134,9 @@ async function submit() {
 
 <template>
   <modal :hideable="!loading" :open="open" size="max-w-2xl" @hide="$emit('hide')">
-    <template #title>{{ t('create.heading') }}</template>
+    <template #title>
+      {{ t(character ? 'modal.character-editor.update' : 'modal.character-editor.create') }}
+    </template>
     <template #body>
       <form @submit.prevent="submit">
         <div class="space-y-2">
@@ -302,13 +307,3 @@ async function submit() {
     </template>
   </modal>
 </template>
-
-<i18n lang="json">
-{
-  "en": {
-    "create": {
-      "heading": "Create Character"
-    }
-  }
-}
-</i18n>

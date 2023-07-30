@@ -30,7 +30,7 @@ const { t } = useI18n()
               </button>
             </menu-item>
             <menu-item as="div">
-              <button type="button" class="menu-item" @click="$emit('update', character)">
+              <button type="button" class="menu-item" @click="$emit('remove', character)">
                 {{ t('action.remove') }}
               </button>
             </menu-item>

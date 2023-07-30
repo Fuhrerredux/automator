@@ -20,7 +20,8 @@
     "officer-role": "Add Officer Role",
     "role": "Role",
     "roles": "Roles",
-    "traits": "Traits"
+    "traits": "Traits",
+    "actions": "Actions"
   },
   "placeholder": {
     "tag": "USA",
@@ -37,7 +38,8 @@
     "row-actions": "Actions"
   },
   "loading": {
-    "saving": "Saving"
+    "saving": "Saving",
+    "removing": "Removing"
   },
   "ideology": {
     "vanguardist": "National Collectivist",
@@ -64,5 +66,15 @@
     "army-chief": "Chief of Army",
     "air-chief": "Chief of Air Force",
     "navy-chief": "Chief of Navy"
+  },
+  "modal": {
+    "character-editor": {
+      "create": "Create Character",
+      "update": "Update Character"
+    },
+    "remove-character": {
+      "heading": "Remove character?",
+      "summary": "Are you sure you want to remove the character \"{name}\" for the {tag} tag? This action cannot be undone."
+    }
   }
 }

@@ -9,13 +9,16 @@ import CharacterRepository from '@database/repository'
 const characters = ref<CharacterWithId[]>([])
 const database = DatabaseController.getInstance()
 const controller = CharacterRepository.getInstance()
+
 onMounted(async () => {
   await database.init()
-  characters.value = await controller.findAll()
+  await refresh()
 })
-const { theme, change } = useTheme()
 
-provide('characters', characters)
+const { theme, change } = useTheme()
+const refresh = async () => (characters.value = await controller.findAll())
+
+provide('characters', { characters, refresh })
 provide('theme', { theme, change })
 </script>
 

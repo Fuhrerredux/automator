@@ -4,7 +4,7 @@
 
 @layer base {
   table {
-    @apply w-full text-left text-sm text-zinc-700;
+    @apply w-full text-left text-sm text-zinc-700 dark:text-zinc-300;
   }
   thead {
     @apply border-b dark:border-b-zinc-600;
@@ -67,6 +67,6 @@
     @apply cursor-pointer px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-600;
   }
   .menu-item {
-    @apply w-full cursor-pointer rounded-md px-3 py-2 text-left hover:bg-zinc-100;
+    @apply w-full cursor-pointer rounded-md px-3 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-600;
   }
 }

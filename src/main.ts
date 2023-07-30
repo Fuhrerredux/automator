@@ -9,6 +9,7 @@ const locale = 'en'
 const i18n = createI18n({
   locale,
   fallbackLocale: locale,
+  legacy: false,
   allowComposition: true,
   globalInjection: true,
   messages: locales
