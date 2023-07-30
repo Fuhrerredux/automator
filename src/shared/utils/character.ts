@@ -1,3 +1,5 @@
+import { buildToken } from '@shared/core/data'
+
 export function isCommandingRole(role: CharacterRole): boolean {
   return role === 'marshal' || role === 'general' || role === 'admiral'
 }
@@ -37,5 +39,5 @@ export function getOfficerRole(character: CharacterWithId): MilitaryPosition[] {
 }
 
 export function buildCharacterToken(character: CharacterWithId): string {
-  return `${character.tag}_${character.name}`
+  return `${character.tag}_${buildToken(character.name)}`
 }

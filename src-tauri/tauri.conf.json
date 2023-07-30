@@ -18,7 +18,8 @@
         "open": true
       },
       "fs": {
-        "all": true
+        "all": true,
+        "scope": ["$APPDATA/*", "$DESKTOP/*", "$DOCUMENT/*"]
       }
     },
     "bundle": {
