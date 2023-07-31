@@ -18,7 +18,7 @@ export default function getLanguageName(locale: string): string {
       return 'Deutsch'
     case 'pirate':
       return 'Pirate English'
-    case 'enderman'
+    case 'enderman':
       return 'egagnahdE egaugnaL'
     default:
       return locale
