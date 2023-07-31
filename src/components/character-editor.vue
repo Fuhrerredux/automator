@@ -2,6 +2,7 @@
 import { nanoid } from 'nanoid'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toast-notification'
 import CharacterRepository from '@/database/repository'
 import Dropdown from '@components/dropdown.vue'
 import FormGroup from '@components/form-group.vue'
@@ -20,6 +21,7 @@ import {
 
 const repository = CharacterRepository.getInstance()
 const { t } = useI18n({ useScope: 'local' })
+const $toast = useToast()
 const loading = ref(false)
 const { open, character, refresh } = defineProps<{
   open: boolean
@@ -106,6 +108,10 @@ async function submit() {
     if (addMinisterRole.value) roles.push('minister')
     if (addOfficerRole.value) roles.push('officer')
 
+    const ministers: Position[] = ministerRoles.value
+    const officers: Position[] = officerRoles.value
+    const positions: Position[] = ministers.concat(officers)
+
     const data: CharacterWithId = {
       id: character ? character.id : nanoid(),
       name: name.value,
@@ -116,16 +122,17 @@ async function submit() {
       leaderTraits: leaderTraits.value.split(','),
       ministerTraits: ministerTraits.value,
       officerTraits: officerTraits.value,
-      positions: ministerRoles.value,
+      positions,
       roles
     }
 
     if (character) await repository.update(data)
     else await repository.create(data)
+    $toast.success('status.saved')
     await refresh()
     emit('hide')
-  } catch {
-    /* empty */
+  } catch (e) {
+    $toast.error(String(e))
   } finally {
     loading.value = false
   }

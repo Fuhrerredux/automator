@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
+import 'vue-toast-notification/dist/theme-sugar.css'
 import Automator from './app.vue'
 import './assets/app.css'
 import locales from './locales'
@@ -12,7 +13,9 @@ const i18n = createI18n({
   legacy: false,
   allowComposition: true,
   globalInjection: true,
-  messages: locales
+  messages: locales,
+  missingWarn: false,
+  fallbackWarn: false
 })
 
 const app = createApp(Automator)

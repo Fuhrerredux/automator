@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { type Ref, inject, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toast-notification'
 import writeCharacter from '@/shared/core/writer'
 import CharacterEditor from '@components/character-editor.vue'
 import CharacterTable from '@components/character-table/table.vue'
+import MenuDropdown from '@components/menu-dropdown.vue'
 import RemoveCharacter from '@components/remove-character.vue'
-import { PlusIcon } from '@heroicons/vue/20/solid'
-import { BaseDirectory, writeFile } from '@tauri-apps/api/fs'
+import { MenuItem } from '@headlessui/vue'
+import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
+const $toast = useToast()
 const editor = ref(false)
 const confirm = ref(false)
 const character = ref<CharacterWithId | null>(null)
 const { characters, refresh } = inject<{
   characters: Ref<CharacterWithId[]>
   refresh: () => Promise<void>
-}>('characters') ?? { characters: [], refresh: () => Promise.resolve() }
+}>('characters')!
 
 function handleNew() {
   character.value = null
@@ -38,15 +41,9 @@ function handleConfirmDismiss() {
 }
 
 async function exportCharacters() {
-  const data = toRaw(characters.value)
-
-  if (Array.isArray(data)) {
-    const content = writeCharacter(data)
-    const template = `characters = {
-${content}
-}`
-    await writeFile('USA.txt', template, { dir: BaseDirectory.Document })
-  }
+  let data: CharacterWithId[] = toRaw(characters.value)
+  if (Array.isArray(data)) await writeCharacter(data)
+  $toast.success(t('status.characters-exported'))
 }
 </script>
 
@@ -59,7 +56,20 @@ ${content}
           <plus-icon class="mr-2 h-5 w-5" />
           <span>{{ t('action.create') }}</span>
         </button>
-        <button type="button" class="button-primary" @click="exportCharacters">Export</button>
+        <menu-dropdown>
+          <template #button>
+            <ellipsis-vertical-icon class="inline-block h-5 w-5" />
+          </template>
+          <template #default>
+            <div class="p-1">
+              <menu-item as="div">
+                <button type="button" class="menu-item" @click="exportCharacters">
+                  {{ t('action.export') }}
+                </button>
+              </menu-item>
+            </div>
+          </template>
+        </menu-dropdown>
       </div>
     </div>
     <div class="mt-4">

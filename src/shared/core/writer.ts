@@ -1,7 +1,9 @@
 import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
+import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix, getIdeologyToken } from '@shared/utils/ideology'
-import { getPositionSuffix } from '@shared/utils/position'
+import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
+import { BaseDirectory, writeFile } from '@tauri-apps/api/fs'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -97,7 +99,8 @@ function defineMinisterialRole(character: CharacterWithId): string {
   const token = `${buildCharacterToken(character)}`
 
   let advisor = ''
-  for (const position of positions) {
+  const ministerPositions = positions.filter((e) => isCivilianPosition(e))
+  for (const position of ministerPositions) {
     const ideology = getIdeologyToken(character.ideology)
     const trait = ministerTraits[position as MinisterPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
@@ -128,12 +131,13 @@ function defineMinisterialRole(character: CharacterWithId): string {
 }
 
 function defineOfficerRole(character: CharacterWithId): string {
-  const { positions, ministerTraits, cost } = character
+  const { positions, officerTraits, cost } = character
   const token = `${buildCharacterToken(character)}`
 
   let advisor = ''
-  for (const position of positions) {
-    const trait = ministerTraits[position as MinisterPosition]
+  const officerPositions = positions.filter((e) => isMilitaryPosition(e))
+  for (const position of officerPositions) {
+    const trait = officerTraits[position as MilitaryPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
 
     const template = `advisor = {
@@ -150,7 +154,7 @@ function defineOfficerRole(character: CharacterWithId): string {
   return advisor
 }
 
-export default function writeCharacter(characters: CharacterWithId[]) {
+export function writeCharacter(characters: CharacterWithId[]) {
   let content: string = ''
   for (const character of characters) {
     const portraits = definePortraits(character)
@@ -168,4 +172,18 @@ export default function writeCharacter(characters: CharacterWithId[]) {
   }
 
   return content
+}
+
+export default async function exportCharacters(characters: CharacterWithId[]) {
+  if (Array.isArray(characters)) {
+    const grouped = groupBy(characters, 'tag')
+    for (const [key, value] of Object.entries(grouped)) {
+      const content = writeCharacter(value)
+      const template = ` # Characters for ${key}
+characters = {
+${content}
+}`
+      await writeFile(`${key}.txt`, template, { dir: BaseDirectory.Document })
+    }
+  }
 }

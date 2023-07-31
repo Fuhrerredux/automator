@@ -35,6 +35,7 @@
     "import": "Import",
     "remove": "Remove",
     "cancel": "Cancel",
+    "export": "Export",
     "row-actions": "Actions"
   },
   "loading": {
@@ -76,5 +77,9 @@
       "heading": "Remove character?",
       "summary": "Are you sure you want to remove the character \"{name}\" for the {tag} tag? This action cannot be undone."
     }
+  },
+  "status": {
+    "characters-exported": "Characters exported",
+    "saved": "Saved"
   }
 }

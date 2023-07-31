@@ -68,17 +68,34 @@ export default class CharacterRepository {
   }
 
   async update(character: CharacterWithId) {
-    const { id, ...others } = character
-    const data = normalize(others)
+    const positions = normalize(character.positions)
+    const leaderTraits = normalize(character.leaderTraits)
+    const commanderTraits = normalize(character.commanderTraits)
+    const ministerTraits = normalize(character.ministerTraits)
+    const officerTraits = normalize(character.officerTraits)
+    const roles = normalize(character.roles)
+    const { id, name, tag, ideology, cost } = character
 
     return await this.database.execute(
       `
       UPDATE characters SET name = $1, tag = $2, ideology = $3, 
-        positions = $4, leaderTraits = $5, commanderTraits = $6, ministerTraits = $7, officerTraits = $8
-        roles = $9, cost = $10, 
+        positions = $4, leaderTraits = $5, commanderTraits = $6, ministerTraits = $7, officerTraits = $8,
+        roles = $9, cost = $10
       WHERE id = $11
       `,
-      [...data, id]
+      [
+        name,
+        tag,
+        ideology,
+        positions,
+        leaderTraits,
+        commanderTraits,
+        ministerTraits,
+        officerTraits,
+        roles,
+        cost,
+        id
+      ]
     )
   }
 

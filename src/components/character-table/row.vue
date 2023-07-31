@@ -22,7 +22,7 @@ const { t } = useI18n()
         <template #button>
           <ellipsis-horizontal-icon class="inline-block h-5 w-5" />
         </template>
-        <template #items>
+        <template #default>
           <div class="p-1">
             <menu-item>
               <button type="button" class="menu-item" @click="$emit('update', character)">
