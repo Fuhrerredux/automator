@@ -12,9 +12,6 @@ const useModStore = defineStore({
   getters: {
     getCommonDirectory(store: ModStore) {
       return store.entries.find((e) => e.name === 'common')
-    },
-    getGFXDirectory(store: ModStore) {
-      return store.entries.find((e) => e.name === 'gfx')
     }
   },
   actions: {

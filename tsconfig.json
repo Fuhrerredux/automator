@@ -28,7 +28,8 @@
       "@pages/*": ["./src/pages/*"],
       "@shared/*": ["./src/shared/*"],
       "@stores/*": ["./src/stores/*"]
-    }
+    },
+    "types": ["vue-i18n"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

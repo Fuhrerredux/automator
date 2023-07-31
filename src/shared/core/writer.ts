@@ -189,7 +189,7 @@ ${content}
 }
 
 export async function exportShine(dir: string) {
-  const source = `${dir}/interface/FX_goals.gfx`
+  const source = `${dir}/FX_goals.gfx`
   const file = await readTextFile(source)
   const src = file.split('\n')
 
@@ -247,5 +247,5 @@ export async function exportShine(dir: string) {
   let shine = `spriteTypes = {
 ${shines.join('\n')}
 }`
-  await writeTextFile(`${dir}/interface/FX_goals_shine.gfx`, shine)
+  await writeTextFile(`${dir}/FX_goals_shine.gfx`, shine)
 }

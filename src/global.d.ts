@@ -1,3 +1,4 @@
+import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
 import type { FileEntry } from '@tauri-apps/api/fs'
 
 declare global {
@@ -68,4 +69,12 @@ declare global {
     cost: number
   }
   type CharacterWithId = Character & { id: string }
+}
+
+declare module 'vue' {
+  // hack to take care of typing errors caused by the
+  // vue-i18n library.
+  interface ComponentCustomProperties {
+    $i18n: VueI18n | ExportedGlobalComposer
+  }
 }

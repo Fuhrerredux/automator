@@ -1,0 +1,101 @@
+{
+  "app": "Automator",
+  "route": {
+    "main": "Κύρια",
+    "characters": "Χαρακτήρες",
+    "others": "Άλλοι"
+  },
+  "theme": {
+    "auto": "Σύστημα",
+    "dark": "Σκοτεινό",
+    "light": "Φως"
+  },
+  "field": {
+    "tag": "Ετικέτα χώρας",
+    "name": "Όνομα χαρακτήρα",
+    "ideology": "Ιδεολογία",
+    "leader-role": "Προσθήκη ρόλου ηγέτη",
+    "commanding-role": "Προσθήκη ρόλου διοικητή",
+    "minister-role": "Προσθήκη Υπουργικού Ρόλου",
+    "officer-role": "Προσθήκη ρόλου αξιωματικού",
+    "role": "Ρόλος",
+    "roles": "Ρόλοι",
+    "traits": "Χαρακτηριστικά",
+    "actions": "Ενέργειες",
+    "mod-dir": "Κατάλογος",
+    "traits-def": "Ορισμοί γνωρισμάτων"
+  },
+  "placeholder": {
+    "tag": "USA",
+    "name": "Douglas MacArthur",
+    "dropdown": "Επιλέξτε ένα",
+    "traits": "Εισάγετε τα γνωρίσματα εδώ, βεβαιωθείτε ότι τα χωρίζετε με κόμμα",
+    "remaining": "{num} ακόμη"
+  },
+  "action": {
+    "create": "Δημιουργία",
+    "edit": "Επεξεργασία",
+    "import": "Εισαγωγή",
+    "remove": "Κατάργηση",
+    "cancel": "Ακύρωση",
+    "export": "Εξαγωγή",
+    "row-actions": "Ενέργειες",
+    "browse": "Αναζήτηση",
+    "generate": "Δημιουργία",
+    "load": "Φορτίο"
+  },
+  "loading": {
+    "saving": "Αποθήκευση",
+    "removing": "Αφαίρεση"
+  },
+  "ideology": {
+    "vanguardist": "National Collectivist",
+    "collectivist": "Socialist",
+    "libertarian-socialist": "Libertarian Socialist",
+    "social-democrat": "Social Democrat",
+    "social-liberal": "Social Liberal",
+    "market-liberal": "Market Liberal",
+    "social-conservative": "Social Conservative",
+    "authoritarian-democrat": "Authoritarian Democrat",
+    "paternal-autocrat": "Paternal Autocrat",
+    "national-populist": "National Populist",
+    "valkist": "Valkist"
+  },
+  "roles": {
+    "marshal": "Field Marshal",
+    "general": "Corps Commander",
+    "admiral": "Admiral",
+    "head-of-government": "Head of Government",
+    "foreign-minister": "Foreign Minister",
+    "economy-minister": "Economy Minister",
+    "security-minister": "Security Minister",
+    "high-command": "Chief of Staff",
+    "army-chief": "Chief of Army",
+    "air-chief": "Chief of Air Force",
+    "navy-chief": "Chief of Navy"
+  },
+  "modal": {
+    "character-editor": {
+      "create": "Δημιουργία χαρακτήρα",
+      "update": "Ενημέρωση χαρακτήρα"
+    },
+    "remove-character": {
+      "heading": "Αφαίρεση χαρακτήρα",
+      "summary": "Είστε σίγουροι ότι θέλετε να αφαιρέσετε τον χαρακτήρα \"{name}\" για την ετικέτα {tag}; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+    }
+  },
+  "status": {
+    "characters-exported": "Χαρακτήρες που εξάγονται",
+    "saved": "Αποθηκευμένο",
+    "shines-generated": "Λάμπει παράγεται"
+  },
+  "error": {
+    "generic-dir-read": "Σφάλμα ανάγνωσης καταλόγου"
+  },
+  "others": {
+    "shine": {
+      "heading": "Γεννήτρια λάμψης Focus GFX",
+      "summary": "Δημιουργία λάμψεων για sprites που ορίζονται στο αρχείο FX_goals.gfx."
+    }
+  }
+}

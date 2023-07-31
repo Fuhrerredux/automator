@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import { useRoute } from 'vue-router'
+import localeSwitcher from '@components/navigation/locale-switcher.vue'
 import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
 
 const { t } = useI18n()
@@ -27,7 +28,8 @@ function isActive(link: string): string {
           {{ t('route.others') }}
         </router-link>
       </div>
-      <div>
+      <div class="flex items-center gap-4">
+        <locale-switcher />
         <theme-switcher />
       </div>
     </div>

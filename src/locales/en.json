@@ -23,8 +23,7 @@
     "traits": "Traits",
     "actions": "Actions",
     "mod-dir": "Mod Directory",
-    "traits-def": "Traits Definitions",
-    "generate-shines": "Generate Focus Shines"
+    "traits-def": "Traits Definitions"
   },
   "placeholder": {
     "tag": "USA",
@@ -42,7 +41,8 @@
     "export": "Export",
     "row-actions": "Actions",
     "browse": "Browse",
-    "generate": "Generate"
+    "generate": "Generate",
+    "load": "Load"
   },
   "loading": {
     "saving": "Saving",
@@ -86,9 +86,16 @@
   },
   "status": {
     "characters-exported": "Characters exported",
-    "saved": "Saved"
+    "saved": "Saved",
+    "shines-generated": "Shines generated"
   },
   "error": {
     "generic-dir-read": "Error reading directory"
+  },
+  "others": {
+    "shine": {
+      "heading": "Focus GFX Shine Generator",
+      "summary": "Generate shines for sprites defined in FX_goals.gfx file."
+    }
   }
 }

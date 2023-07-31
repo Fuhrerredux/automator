@@ -29,7 +29,7 @@ function handleChange(event: string) {
       </div>
       <button type="button" class="button-primary flex items-center" @click="store.readTraits">
         <arrow-path-icon class="h-5 w-5 mr-2" />
-        <span>Load</span>
+        <span>{{ t('action.load') }}</span>
       </button>
     </div>
   </div>
