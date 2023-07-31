@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { SunIcon, MoonIcon, SparklesIcon } from '@heroicons/vue/24/outline'
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { inject } from 'vue'
+import { MoonIcon, SparklesIcon, SunIcon } from '@heroicons/vue/24/outline'
+import useThemeStore from '@stores/theme'
 
 const { t } = useI18n()
-const { theme, change } = inject('theme') as ThemeResource
+const themeStore = useThemeStore()
+const { theme } = storeToRefs(themeStore)
+const { change } = themeStore
 
 const themes: Theme[] = ['light', 'dark', 'auto']
 </script>

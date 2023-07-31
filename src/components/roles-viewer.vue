@@ -20,10 +20,10 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center gap-2">
-    <span v-for="position of firstThree" :key="position" class="chip-primary">
+    <span v-for="position of firstThree" :key="position" class="chip-primary truncate">
       {{ t(`roles.${position}`) }}
     </span>
-    <span v-if="remaining > 0" class="chip-primary">
+    <span v-if="remaining > 0" class="chip-primary truncate">
       {{ t('placeholder.remaining', { num: remaining }) }}
     </span>
   </div>

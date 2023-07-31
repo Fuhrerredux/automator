@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, provide } from 'vue'
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import Navigation from '@components/navigation.vue'
-import useTheme from '@composables/use-theme'
 import DatabaseController from '@database/controller'
 import useCharactersStore from '@stores/characters'
 import useModStore from '@stores/mod'
+import useThemeStore from '@stores/theme'
 import useTraitsStore from '@stores/traits'
 
 const { t } = useI18n()
@@ -15,12 +15,14 @@ const $toast = useToast()
 const database = DatabaseController.getInstance()
 const characterStore = useCharactersStore()
 const modStore = useModStore()
+const themeStore = useThemeStore()
 const traitsStore = useTraitsStore()
 
 onMounted(async () => {
   await database.init()
   characterStore.refresh()
 
+  themeStore.fetch()
   const directory = localStorage.getItem('directory')
   if (directory) {
     modStore.$patch({ directory })
@@ -36,9 +38,6 @@ onMounted(async () => {
     }
   }
 })
-
-const { theme, change } = useTheme()
-provide('theme', { theme, change })
 </script>
 
 <template>
