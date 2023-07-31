@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Translation, useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import CharacterRepository from '@database/repository'
@@ -34,14 +34,7 @@ async function submit() {
       {{ t('modal.remove-character.heading') }}
     </template>
     <template #description>
-      <translation keypath="modal.remove-character.summary" tag="span" scope="global">
-        <template v-slot:name>
-          <span class="font-medium text-zinc-800 dark:text-zinc-100">{{ character.name }}</span>
-        </template>
-        <template v-slot:tag>
-          <span>{{ character.tag }}</span>
-        </template>
-      </translation>
+      {{ t('modal.remove-character.summary', { name: character.name, tag: character.tag }) }}
     </template>
     <template #body>
       <form @submit.prevent="submit">
