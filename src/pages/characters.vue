@@ -44,6 +44,11 @@ function handleConfirmDismiss() {
 }
 
 async function handleExportCharacters() {
+  if (modStore.directory.length <= 0) {
+    $toast.error(t('error.no-dir-selected'))
+    return
+  }
+
   const data = characterStore.characters
   const common = modStore.getCommonDirectory
 

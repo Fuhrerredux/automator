@@ -90,7 +90,9 @@
     "shines-generated": "Shines generated"
   },
   "error": {
-    "generic-dir-read": "Error reading directory"
+    "generic-dir-read": "Error reading directory",
+    "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
+    "no-dir-short": "No mod directory selected"
   },
   "others": {
     "shine": {

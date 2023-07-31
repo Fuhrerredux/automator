@@ -1,101 +1,101 @@
 {
-    "app": "Automator",
-    "route": {
-        "main": "Principale",
-        "characters": "Personaggi",
-        "others": "Altro"
+  "app": "Automator",
+  "route": {
+    "main": "Principale",
+    "characters": "Personaggi",
+    "others": "Altro"
+  },
+  "theme": {
+    "auto": "Sistema",
+    "dark": "Scuro",
+    "light": "Chiaro"
+  },
+  "field": {
+    "tag": "Etichetta del Paese",
+    "name": "Nome del Personaggio",
+    "ideology": "Ideologia",
+    "leader-role": "Aggiungi Ruolo del Leader",
+    "commanding-role": "Aggiungi Ruolo di Comando",
+    "minister-role": "Aggiungi Ruolo di Ministro",
+    "officer-role": "Aggiungi Ruolo di Ufficiale",
+    "role": "Ruolo",
+    "roles": "Ruoli",
+    "traits": "Caratteristiche",
+    "actions": "Azioni",
+    "mod-dir": "Directory Mod",
+    "traits-def": "Definizioni delle Caratteristiche"
+  },
+  "placeholder": {
+    "tag": "USA",
+    "name": "Douglas MacArthur",
+    "dropdown": "Scegli uno",
+    "traits": "Inserisci qui le caratteristiche, assicurati di separarle con una virgola",
+    "remaining": "{num} rimanenti"
+  },
+  "action": {
+    "create": "Crea",
+    "edit": "Modifica",
+    "import": "Importa",
+    "remove": "Rimuovi",
+    "cancel": "Annulla",
+    "export": "Esporta",
+    "row-actions": "Azioni",
+    "browse": "Sfoglia",
+    "generate": "Genera",
+    "load": "Carica"
+  },
+  "loading": {
+    "saving": "Salvataggio",
+    "removing": "Rimozione"
+  },
+  "ideology": {
+    "vanguardist": "Collettivismo Nazionale",
+    "collectivist": "Socialista",
+    "libertarian-socialist": "Socialista Libertario",
+    "social-democrat": "Socialdemocratico",
+    "social-liberal": "Social-Liberale",
+    "market-liberal": "Liberale di Mercato",
+    "social-conservative": "Conservatore Sociale",
+    "authoritarian-democrat": "Democratico Autoritario",
+    "paternal-autocrat": "Autocrate Paternalista",
+    "national-populist": "Populista Nazionale",
+    "valkist": "Valkista"
+  },
+  "roles": {
+    "marshal": "Maresciallo di Campo",
+    "general": "Comandante di Corpo",
+    "admiral": "Ammiraglio",
+    "head-of-government": "Capo di Governo",
+    "foreign-minister": "Ministro degli Esteri",
+    "economy-minister": "Ministro dell'Economia",
+    "security-minister": "Ministro della Sicurezza",
+    "high-command": "Capo di Stato Maggiore",
+    "army-chief": "Capo dell'Esercito",
+    "air-chief": "Capo dell'Aeronautica",
+    "navy-chief": "Capo della Marina"
+  },
+  "modal": {
+    "character-editor": {
+      "create": "Crea Personaggio",
+      "update": "Aggiorna Personaggio"
     },
-    "theme": {
-        "auto": "Sistema",
-        "dark": "Scuro",
-        "light": "Chiaro"
-    },
-    "field": {
-        "tag": "Etichetta del Paese",
-        "name": "Nome del Personaggio",
-        "ideology": "Ideologia",
-        "leader-role": "Aggiungi Ruolo del Leader",
-        "commanding-role": "Aggiungi Ruolo di Comando",
-        "minister-role": "Aggiungi Ruolo di Ministro",
-        "officer-role": "Aggiungi Ruolo di Ufficiale",
-        "role": "Ruolo",
-        "roles": "Ruoli",
-        "traits": "Caratteristiche",
-        "actions": "Azioni",
-        "mod-dir": "Directory Mod",
-        "traits-def": "Definizioni delle Caratteristiche"
-    },
-    "placeholder": {
-        "tag": "USA",
-        "name": "Douglas MacArthur",
-        "dropdown": "Scegli uno",
-        "traits": "Inserisci qui le caratteristiche, assicurati di separarle con una virgola",
-        "remaining": "{num} rimanenti"
-    },
-    "action": {
-        "create": "Crea",
-        "edit": "Modifica",
-        "import": "Importa",
-        "remove": "Rimuovi",
-        "cancel": "Annulla",
-        "export": "Esporta",
-        "row-actions": "Azioni",
-        "browse": "Sfoglia",
-        "generate": "Genera",
-        "load": "Carica"
-    },
-    "loading": {
-        "saving": "Salvataggio",
-        "removing": "Rimozione"
-    },
-    "ideology": {
-        "vanguardist": "Collettivismo Nazionale",
-        "collectivist": "Socialista",
-        "libertarian-socialist": "Socialista Libertario",
-        "social-democrat": "Socialdemocratico",
-        "social-liberal": "Social-Liberale",
-        "market-liberal": "Liberale di Mercato",
-        "social-conservative": "Conservatore Sociale",
-        "authoritarian-democrat": "Democratico Autoritario",
-        "paternal-autocrat": "Autocrate Paternalista",
-        "national-populist": "Populista Nazionale",
-        "valkist": "Valkista"
-    },
-    "roles": {
-        "marshal": "Maresciallo di Campo",
-        "general": "Comandante di Corpo",
-        "admiral": "Ammiraglio",
-        "head-of-government": "Capo di Governo",
-        "foreign-minister": "Ministro degli Esteri",
-        "economy-minister": "Ministro dell'Economia",
-        "security-minister": "Ministro della Sicurezza",
-        "high-command": "Capo di Stato Maggiore",
-        "army-chief": "Capo dell'Esercito",
-        "air-chief": "Capo dell'Aeronautica",
-        "navy-chief": "Capo della Marina"
-    },
-    "modal": {
-        "character-editor": {
-            "create": "Crea Personaggio",
-            "update": "Aggiorna Personaggio"
-        },
-        "remove-character": {
-            "heading": "Rimuovere il personaggio?",
-            "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per l'etichetta {tag}? Questa azione non può essere annullata."
-        }
-    },
-    "status": {
-        "characters-exported": "Personaggi esportati",
-        "saved": "Salvato",
-        "shines-generated": "Effetti di luce generati"
-    },
-    "error": {
-        "generic-dir-read": "Errore nella lettura della directory"
-    },
-    "others": {
-        "shine": {
-            "heading": "Generatore di Effetti di Luce GFX",
-            "summary": "Genera effetti di luce per le sprites definite nel file FX_goals.gfx."
-        }
+    "remove-character": {
+      "heading": "Rimuovere il personaggio?",
+      "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per l'etichetta {tag}? Questa azione non può essere annullata."
     }
+  },
+  "status": {
+    "characters-exported": "Personaggi esportati",
+    "saved": "Salvato",
+    "shines-generated": "Effetti di luce generati"
+  },
+  "error": {
+    "generic-dir-read": "Errore nella lettura della directory"
+  },
+  "others": {
+    "shine": {
+      "heading": "Generatore di Effetti di Luce GFX",
+      "summary": "Genera effetti di luce per le sprites definite nel file FX_goals.gfx."
+    }
+  }
 }

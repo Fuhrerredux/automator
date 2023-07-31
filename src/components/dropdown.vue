@@ -14,6 +14,7 @@ const props = defineProps<{
   valueKey: KeyOfType<I, V> | ((item: I) => V)
   displayKey: keyof I | ((item: I) => string)
   modelValue: V
+  disabled?: boolean
   localise?: boolean
 }>()
 const emit = defineEmits<{
@@ -27,11 +28,12 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
 <template>
   <listbox
     :model-value="item"
+    :disabled="disabled"
     @update:model-value="emit('update:modelValue', valueFunc($event))"
     as="div"
     class="relative">
     <listbox-button class="dropdown-button w-full">
-      <span class="flex-1 text-left">
+      <span class="flex-1 text-left truncate">
         {{ item ? t(displayFunc(item)) : t('placeholder.dropdown') }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
@@ -45,7 +47,7 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option v-for="option in options" :value="option" as="template">
-          <li :key="String(valueFunc(option))" class="dropdown-option">
+          <li :key="String(valueFunc(option))" class="dropdown-option truncate">
             {{ localise ? t(displayFunc(option)) : displayFunc(option) }}
           </li>
         </listbox-option>

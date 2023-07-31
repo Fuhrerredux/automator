@@ -1,101 +1,101 @@
 {
-    "app": "rotamotuA",
-    "route": {
-        "main": "niaM",
-        "characters": "sgnirrahcS",
-        "others": "srehtuB reinaB"
+  "app": "rotamotuA",
+  "route": {
+    "main": "niaM",
+    "characters": "sgnirrahcS",
+    "others": "srehtuB reinaB"
+  },
+  "theme": {
+    "auto": "epaSpihs",
+    "dark": "rekcolB sa senoJ yevaD",
+    "light": "sdniW riaF"
+  },
+  "field": {
+    "tag": "egaM suotegrA",
+    "name": "sremaN s'lekcawhsahS",
+    "ideology": "dnuotcnoC o' edoC",
+    "leader-role": "ddA nepoC ruotegA",
+    "commanding-role": "ddA gnimmanoC",
+    "minister-role": "ddA sretsinim",
+    "officer-role": "ddA relfficO",
+    "role": "eloR",
+    "roles": "seloR",
+    "traits": "stiartS",
+    "actions": "snoitcA",
+    "mod-dir": "dliroH doM",
+    "traits-def": "snoititneDef stiartS"
+  },
+  "placeholder": {
+    "tag": "USA",
+    "name": "drahcalB draCkcalB",
+    "dropdown": "esolhc a s'leihs",
+    "traits": "ereh si tiartS ,esreverp dluoweb a ton s'ti",
+    "remaining": "{mun drow ot nruter}"
+  },
+  "action": {
+    "create": "erutcaC a traht",
+    "edit": "dne'mA",
+    "import": "ytniomreP",
+    "remove": "pihssabnaS",
+    "cancel": "tsavA",
+    "export": "ytnuoBreT yruB",
+    "row-actions": "snoitciA",
+    "browse": "gicspyglS",
+    "generate": "sloreC eht sCigoloC",
+    "load": "sliafS lrefnU"
+  },
+  "loading": {
+    "saving": "gnitaviuS",
+    "removing": "draobyreveO gniwohrT"
+  },
+  "ideology": {
+    "vanguardist": "laitsignocilP lanosrevoN",
+    "collectivist": "gawyllahcS tsollecS",
+    "libertarian-socialist": "rellekwahsabhsawS nairetrebiL",
+    "social-democrat": "etacip ratiP",
+    "social-liberal": "rebrebuL laicoS",
+    "market-liberal": "redrauM redliB",
+    "social-conservative": "reburbnelclanoitacocS laicoS",
+    "authoritarian-democrat": "taritnA-nomocratmoC",
+    "paternal-autocrat": "tarotcurA lanirehtapA",
+    "national-populist": "tsitulopoplaN lanosrevoN",
+    "valkist": "tsiklaV"
+  },
+  "roles": {
+    "marshal": "liradmA",
+    "general": "retsamrauqnauQ",
+    "admiral": "liramirdA taelF",
+    "head-of-government": "tnainignaC spiH",
+    "foreign-minister": "tnemtsiL-gniraeB sa tseretneF",
+    "economy-minister": "toopmaL sa reemitceleS",
+    "security-minister": "yatireugeS sa reemitsetaerC",
+    "high-command": "hguorhT fo eht sgnirrahcS",
+    "army-chief": "deifirreC fo eht siht",
+    "air-chief": "stegrus fo eht ykciP",
+    "navy-chief": "sgaeD aeY fo eht siht"
+  },
+  "modal": {
+    "character-editor": {
+      "create": "eorgeR eht hguorhT",
+      "update": "etadnuoF sgnirrahcS"
     },
-    "theme": {
-        "auto": "epaSpihs",
-        "dark": "rekcolB sa senoJ yevaD",
-        "light": "sdniW riaF"
-    },
-    "field": {
-        "tag": "egaM suotegrA",
-        "name": "sremaN s'lekcawhsahS",
-        "ideology": "dnuotcnoC o' edoC",
-        "leader-role": "ddA nepoC ruotegA",
-        "commanding-role": "ddA gnimmanoC",
-        "minister-role": "ddA sretsinim",
-        "officer-role": "ddA relfficO",
-        "role": "eloR",
-        "roles": "seloR",
-        "traits": "stiartS",
-        "actions": "snoitcA",
-        "mod-dir": "dliroH doM",
-        "traits-def": "snoititneDef stiartS"
-    },
-    "placeholder": {
-        "tag": "USA",
-        "name": "drahcalB draCkcalB",
-        "dropdown": "esolhc a s'leihs",
-        "traits": "ereh si tiartS ,esreverp dluoweb a ton s'ti",
-        "remaining": "{mun drow ot nruter}"
-    },
-    "action": {
-        "create": "erutcaC a traht",
-        "edit": "dne'mA",
-        "import": "ytniomreP",
-        "remove": "pihssabnaS",
-        "cancel": "tsavA",
-        "export": "ytnuoBreT yruB",
-        "row-actions": "snoitciA",
-        "browse": "gicspyglS",
-        "generate": "sloreC eht sCigoloC",
-        "load": "sliafS lrefnU"
-    },
-    "loading": {
-        "saving": "gnitaviuS",
-        "removing": "draobyreveO gniwohrT"
-    },
-    "ideology": {
-        "vanguardist": "laitsignocilP lanosrevoN",
-        "collectivist": "gawyllahcS tsollecS",
-        "libertarian-socialist": "rellekwahsabhsawS nairetrebiL",
-        "social-democrat": "etacip ratiP",
-        "social-liberal": "rebrebuL laicoS",
-        "market-liberal": "redrauM redliB",
-        "social-conservative": "reburbnelclanoitacocS laicoS",
-        "authoritarian-democrat": "taritnA-nomocratmoC",
-        "paternal-autocrat": "tarotcurA lanirehtapA",
-        "national-populist": "tsitulopoplaN lanosrevoN",
-        "valkist": "tsiklaV"
-    },
-    "roles": {
-        "marshal": "liradmA",
-        "general": "retsamrauqnauQ",
-        "admiral": "liramirdA taelF",
-        "head-of-government": "tnainignaC spiH",
-        "foreign-minister": "tnemtsiL-gniraeB sa tseretneF",
-        "economy-minister": "toopmaL sa reemitceleS",
-        "security-minister": "yatireugeS sa reemitsetaerC",
-        "high-command": "hguorhT fo eht sgnirrahcS",
-        "army-chief": "deifirreC fo eht siht",
-        "air-chief": "stegrus fo eht ykciP",
-        "navy-chief": "sgaeD aeY fo eht siht"
-    },
-    "modal": {
-        "character-editor": {
-            "create": "eorgeR eht hguorhT",
-            "update": "etadnuoF sgnirrahcS"
-        },
-        "remove-character": {
-            "heading": "?sginnirrahc eht neB",
-            "summary": ".gat{ganamrehtoB regnahc s'tI}?puorg nevah yas neht ecin yehT"
-        }
-    },
-    "status": {
-        "characters-exported": "sgnirrahcS dedlurnepxE",
-        "saved": "deiruS yletafS eriuqerT",
-        "shines-generated": "tsaC senihS"
-    },
-    "error": {
-        "generic-dir-read": "dlorh eht gnisaeR"
-    },
-    "others": {
-        "shine": {
-            "heading": "rotareG yttieF gnirotxEFX",
-            "summary": ".pam gnisserd rof setirpS selppihs eht rof setirps seiduts eht sa rof senihS enihC."
-        }
+    "remove-character": {
+      "heading": "?sginnirrahc eht neB",
+      "summary": ".gat{ganamrehtoB regnahc s'tI}?puorg nevah yas neht ecin yehT"
     }
+  },
+  "status": {
+    "characters-exported": "sgnirrahcS dedlurnepxE",
+    "saved": "deiruS yletafS eriuqerT",
+    "shines-generated": "tsaC senihS"
+  },
+  "error": {
+    "generic-dir-read": "dlorh eht gnisaeR"
+  },
+  "others": {
+    "shine": {
+      "heading": "rotareG yttieF gnirotxEFX",
+      "summary": ".pam gnisserd rof setirpS selppihs eht rof setirps seiduts eht sa rof senihS enihC."
+    }
+  }
 }

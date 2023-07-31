@@ -19,7 +19,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center gap-2">
+  <div class="flex flex-wrap items-center gap-2">
     <span v-for="position of firstThree" :key="position" class="chip-primary truncate">
       {{ t(`roles.${position}`) }}
     </span>

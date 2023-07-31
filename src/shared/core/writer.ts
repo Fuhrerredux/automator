@@ -24,7 +24,7 @@ function definePortraits(character: CharacterWithId): string {
   let portraits = ''
   if (hasCivillian) {
     const template = `\tcivilian = {
-        ${roles.includes('leader') && `large = ${buildLargePortaitPath(name, tag)})`}
+        ${roles.includes('leader') && `large = ${buildLargePortaitPath(name, tag)}`}
         ${roles.includes('minister') && `small = ${buildSmallPortraitPath(name, tag)}`}
       }`
     portraits = portraits.concat(template)
@@ -123,7 +123,8 @@ function defineMinisterialRole(character: CharacterWithId): string {
         ${ideology}
         ${trait}
       }
-    }`
+    }
+    `
     advisor = advisor.concat(template)
   }
 
@@ -147,7 +148,8 @@ function defineOfficerRole(character: CharacterWithId): string {
       traits = {
         ${trait}
       }
-    }`
+    }
+    `
     advisor = advisor.concat(template)
   }
 

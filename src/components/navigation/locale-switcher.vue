@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-  <div class="locale-changer">
+  <div class="locale-changer w-32">
     <dropdown
       :options="$i18n.availableLocales"
       :model-value="$i18n.locale"
