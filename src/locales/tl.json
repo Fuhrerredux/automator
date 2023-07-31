@@ -1,0 +1,101 @@
+{
+    "app": "Automator",
+    "route": {
+        "main": "Pangunahin",
+        "characters": "Mga Tauhan",
+        "others": "Iba Pa"
+    },
+    "theme": {
+        "auto": "Sistema",
+        "dark": "Madilim",
+        "light": "Maliwanag"
+    },
+    "field": {
+        "tag": "Tag ng Bansa",
+        "name": "Pangalan ng Tauhan",
+        "ideology": "Ideolohiya",
+        "leader-role": "Magdagdag ng Papel ng Pinuno",
+        "commanding-role": "Magdagdag ng Papel ng Komandante",
+        "minister-role": "Magdagdag ng Papel ng Ministro",
+        "officer-role": "Magdagdag ng Papel ng Opisyal",
+        "role": "Papel",
+        "roles": "Mga Papel",
+        "traits": "Mga Katangian",
+        "actions": "Mga Aksyon",
+        "mod-dir": "Direktoryo ng Mod",
+        "traits-def": "Mga Depinisyon ng Katangian"
+    },
+    "placeholder": {
+        "tag": "USA",
+        "name": "Douglas MacArthur",
+        "dropdown": "Pumili ng isa",
+        "traits": "Ilagay ang mga katangian dito, tiyakin na hiwalayin sa pamamagitan ng koma",
+        "remaining": "{num} pa"
+    },
+    "action": {
+        "create": "Lumikha",
+        "edit": "I-edit",
+        "import": "Mag-angkat",
+        "remove": "Alisin",
+        "cancel": "Kanselahin",
+        "export": "I-eksport",
+        "row-actions": "Mga Aksyon",
+        "browse": "Mag-browse",
+        "generate": "Mag-generate",
+        "load": "Mag-load"
+    },
+    "loading": {
+        "saving": "Nag-iisave",
+        "removing": "Nag-aalis"
+    },
+    "ideology": {
+        "vanguardist": "Pambansang Koliktibista",
+        "collectivist": "Sosyalista",
+        "libertarian-socialist": "Libertaryan Sosyalista",
+        "social-democrat": "Sosyal-Demokratiko",
+        "social-liberal": "Sosyal-Liberal",
+        "market-liberal": "Pasarang-Liberal",
+        "social-conservative": "Sosyal-Konservatibo",
+        "authoritarian-democrat": "Awtoritaryan Demokratiko",
+        "paternal-autocrat": "Ama-Awtoritaryan",
+        "national-populist": "Pambansang Populista",
+        "valkist": "Balkist"
+    },
+    "roles": {
+        "marshal": "Marshal ng Lugar",
+        "general": "Komandante ng Korps",
+        "admiral": "Adbiral",
+        "head-of-government": "Pangulo ng Pamahalaan",
+        "foreign-minister": "Ministro ng Ugnayang Panlabas",
+        "economy-minister": "Ministro ng Ekonomiya",
+        "security-minister": "Ministro ng Seguridad",
+        "high-command": "Punong Kautusan",
+        "army-chief": "Punong Hukbong Lupa",
+        "air-chief": "Punong Hukbong Himpapawid",
+        "navy-chief": "Punong Hukbong Dagat"
+    },
+    "modal": {
+        "character-editor": {
+            "create": "Lumikha ng Tauhan",
+            "update": "I-update ang Tauhan"
+        },
+        "remove-character": {
+            "heading": "Tanggalin ang tauhan?",
+            "summary": "Sigurado ka bang gusto mong tanggalin ang tauhan na \"{name}\" para sa tag na {tag}? Hindi na maaaring bawiin ang aksyong ito."
+        }
+    },
+    "status": {
+        "characters-exported": "Mga tauhan na ineksport",
+        "saved": "Nai-save",
+        "shines-generated": "Mga kinang na inegenereyt"
+    },
+    "error": {
+        "generic-dir-read": "Error sa pagbasa ng direktoryo"
+    },
+    "others": {
+        "shine": {
+            "heading": "Tagabigay ng Kinang GFX Focus",
+            "summary": "Mag-enerate ng mga kinang para sa mga sprites na nakasaad sa file na FX_goals.gfx."
+        }
+    }
+}
