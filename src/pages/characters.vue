@@ -9,7 +9,7 @@ import MenuDropdown from '@components/menu-dropdown.vue'
 import RemoveCharacter from '@components/remove-character.vue'
 import { MenuItem } from '@headlessui/vue'
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/vue/20/solid'
-import writeCharacters from '@shared/core/writer'
+import { exportCharacters } from '@shared/core/writer'
 import useCharacterStore from '@stores/characters'
 import useModStore from '@stores/mod'
 
@@ -43,12 +43,12 @@ function handleConfirmDismiss() {
   confirm.value = false
 }
 
-async function exportCharacters() {
+async function handleExportCharacters() {
   const data = characterStore.characters
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
-    await writeCharacters(data, common.path)
+    await exportCharacters(data, common.path)
     $toast.success(t('status.characters-exported'))
   }
 }
@@ -70,7 +70,7 @@ async function exportCharacters() {
           <template #default>
             <div class="p-1">
               <menu-item as="div">
-                <button type="button" class="menu-item" @click="exportCharacters">
+                <button type="button" class="menu-item" @click="handleExportCharacters">
                   {{ t('action.export') }}
                 </button>
               </menu-item>

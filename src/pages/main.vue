@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import ModDirectory from '@components/main/mod-directory.vue'
+import ShineGeneration from '@components/main/shine-generation.vue'
 import TraitsSource from '@components/main/traits-source.vue'
 
 const { t } = useI18n()
@@ -13,8 +14,9 @@ const { t } = useI18n()
     </div>
     <div class="mt-4 space-y-4">
       <mod-directory />
-      <div class="border-t dark:border-t-zinc-600 space-y-2 py-4 grid grid-cols-2">
+      <div class="border-t dark:border-t-zinc-600 py-4 grid grid-cols-2 gap-4">
         <traits-source />
+        <shine-generation />
       </div>
     </div>
   </main>

@@ -3,7 +3,7 @@ import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix, getIdeologyToken } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
-import { BaseDirectory, writeFile } from '@tauri-apps/api/fs'
+import { readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -174,7 +174,7 @@ export function writeCharacter(characters: CharacterWithId[]) {
   return content
 }
 
-export default async function exportCharacters(characters: CharacterWithId[], destination: string) {
+export async function exportCharacters(characters: CharacterWithId[], destination: string) {
   if (Array.isArray(characters)) {
     const grouped = groupBy(characters, 'tag')
     for (const [key, value] of Object.entries(grouped)) {
@@ -186,4 +186,66 @@ ${content}
       await writeFile(`${destination}/characters/${key}.txt`, template)
     }
   }
+}
+
+export async function exportShine(dir: string) {
+  const source = `${dir}/interface/FX_goals.gfx`
+  const file = await readTextFile(source)
+  const src = file.split('\n')
+
+  const content = new Map()
+  src.forEach((str, index) => {
+    if (str.includes('spriteType')) {
+      if (src.length > index + 2) {
+        let name = src[index + 1]
+        let dir = src[index + 2]
+
+        name = name.substring(name.indexOf('"') + 1, name.lastIndexOf('"')).trim()
+        dir = dir.substring(dir.indexOf('"') + 1, dir.lastIndexOf('"')).trim()
+        content.set(name, dir)
+      }
+    }
+  })
+
+  let shines: string[] = []
+  content.forEach((value, key) => {
+    let shine = `\tspriteType = {
+    name = "${key}_shine"
+    texturefile = "${value}"
+    effectFile = "gfx/FX/buttonstate.lua"
+    animation = {
+      animationmaskfile = "${value}"
+      animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+      animationrotation = -90.0
+      animationlooping = no
+      animationtime = 0.75
+      animationdelay = 0
+      animationblendmode = "add"
+      animationtype = "scrolling"
+      animationrotationoffset = { x = 0.0 y = 0.0 }
+      animationtexturescale = { x = 1.0 y = 1.0 }
+    }
+
+    animation = {
+      animationmaskfile = "${value}"
+      animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+      animationrotation = 90.0
+      animationlooping = no
+      animationtime = 0.75
+      animationdelay = 0
+      animationblendmode = "add"
+      animationtype = "scrolling"
+      animationrotationoffset = { x = 0.0 y = 0.0 }
+      animationtexturescale = { x = 1.0 y = 1.0 }
+    }
+    legacy_lazy_load = no
+  }\n`
+
+    if (key && value) shines.push(shine)
+  })
+
+  let shine = `spriteTypes = {
+${shines.join('\n')}
+}`
+  await writeTextFile(`${dir}/interface/FX_goals_shine.gfx`, shine)
 }

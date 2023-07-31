@@ -23,7 +23,8 @@
     "traits": "Traits",
     "actions": "Actions",
     "mod-dir": "Mod Directory",
-    "traits-def": "Traits Definitions"
+    "traits-def": "Traits Definitions",
+    "generate-shines": "Generate Focus Shines"
   },
   "placeholder": {
     "tag": "USA",
@@ -40,7 +41,8 @@
     "cancel": "Cancel",
     "export": "Export",
     "row-actions": "Actions",
-    "browse": "Browse"
+    "browse": "Browse",
+    "generate": "Generate"
   },
   "loading": {
     "saving": "Saving",
