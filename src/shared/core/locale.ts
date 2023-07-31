@@ -14,6 +14,8 @@ export default function getLanguageName(locale: string): string {
       return 'Tagalog'
     case 'it':
       return 'Italiano'
+    case 'pirate':
+      return 'Pirate English'
     default:
       return locale
   }
