@@ -5,6 +5,7 @@ import ag from './ag.json'
 import es from './es.json'
 import tl from './tl.json'
 import it from './tl.json'
+import pirate from './pirate.json'
 
 export default {
   en,
@@ -13,5 +14,6 @@ export default {
   ag,
   es,
   tl,
-  it
+  it,
+  pirate
 }
