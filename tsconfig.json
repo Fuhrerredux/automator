@@ -26,7 +26,8 @@
       "@composables/*": ["./src/composables/*"],
       "@database/*": ["./src/database/*"],
       "@pages/*": ["./src/pages/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@stores/*": ["./src/stores/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import { type Ref, inject, ref, toRaw } from 'vue'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
-import writeCharacter from '@/shared/core/writer'
 import CharacterEditor from '@components/character-editor.vue'
 import CharacterTable from '@components/character-table/table.vue'
 import MenuDropdown from '@components/menu-dropdown.vue'
 import RemoveCharacter from '@components/remove-character.vue'
 import { MenuItem } from '@headlessui/vue'
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/vue/20/solid'
+import writeCharacters from '@shared/core/writer'
+import useCharacters from '@stores/characters'
 
 const { t } = useI18n()
 const $toast = useToast()
 const editor = ref(false)
 const confirm = ref(false)
 const character = ref<CharacterWithId | null>(null)
-const { characters, refresh } = inject<{
-  characters: Ref<CharacterWithId[]>
-  refresh: () => Promise<void>
-}>('characters')!
+const store = useCharacters()
+const { characters } = storeToRefs(store)
+const { refresh } = store
 
 function handleNew() {
   character.value = null
@@ -41,8 +42,8 @@ function handleConfirmDismiss() {
 }
 
 async function exportCharacters() {
-  let data: CharacterWithId[] = toRaw(characters.value)
-  if (Array.isArray(data)) await writeCharacter(data)
+  const data = store.characters
+  if (Array.isArray(data)) await writeCharacters(data)
   $toast.success(t('status.characters-exported'))
 }
 </script>

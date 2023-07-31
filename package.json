@@ -17,6 +17,7 @@
     "i": "^0.3.7",
     "nanoid": "^4.0.2",
     "npm": "^9.8.1",
+    "pinia": "^2.1.6",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "vue": "^3.3.4",
     "vue-i18n": "^9.3.0-beta.24",

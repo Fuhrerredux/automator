@@ -1,24 +1,43 @@
 <script setup lang="ts">
-import { onMounted, provide, ref } from 'vue'
+import { onMounted, provide } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 import Navigation from '@components/navigation.vue'
 import useTheme from '@composables/use-theme'
 import DatabaseController from '@database/controller'
-import CharacterRepository from '@database/repository'
+import useCharactersStore from '@stores/characters'
+import useModStore from '@stores/mod'
+import useTraitsStore from '@stores/traits'
 
-const characters = ref<CharacterWithId[]>([])
+const { t } = useI18n()
+const $toast = useToast()
 const database = DatabaseController.getInstance()
-const controller = CharacterRepository.getInstance()
+const characterStore = useCharactersStore()
+const modStore = useModStore()
+const traitsStore = useTraitsStore()
 
 onMounted(async () => {
   await database.init()
-  await refresh()
+  characterStore.refresh()
+
+  const directory = localStorage.getItem('directory')
+  if (directory) {
+    modStore.$patch({ directory })
+    try {
+      await modStore.readEntries(directory)
+      const traitsDir = modStore.getCommonDirectory
+      if (traitsDir) {
+        await traitsStore.readDir(traitsDir.path)
+        await traitsStore.fetchFromLocalStorage()
+      }
+    } catch {
+      $toast.error(t('error.generic-dir-read'))
+    }
+  }
 })
 
 const { theme, change } = useTheme()
-const refresh = async () => (characters.value = await controller.findAll())
-
-provide('characters', { characters, refresh })
 provide('theme', { theme, change })
 </script>
 

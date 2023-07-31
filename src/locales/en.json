@@ -21,7 +21,9 @@
     "role": "Role",
     "roles": "Roles",
     "traits": "Traits",
-    "actions": "Actions"
+    "actions": "Actions",
+    "mod-dir": "Mod Directory",
+    "traits-def": "Traits Definitions"
   },
   "placeholder": {
     "tag": "USA",
@@ -36,7 +38,8 @@
     "remove": "Remove",
     "cancel": "Cancel",
     "export": "Export",
-    "row-actions": "Actions"
+    "row-actions": "Actions",
+    "browse": "Browse"
   },
   "loading": {
     "saving": "Saving",
@@ -81,5 +84,8 @@
   "status": {
     "characters-exported": "Characters exported",
     "saved": "Saved"
+  },
+  "error": {
+    "generic-dir-read": "Error reading directory"
   }
 }

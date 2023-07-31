@@ -128,7 +128,7 @@ async function submit() {
 
     if (character) await repository.update(data)
     else await repository.create(data)
-    $toast.success('status.saved')
+    $toast.success(t('status.saved'))
     await refresh()
     emit('hide')
   } catch (e) {

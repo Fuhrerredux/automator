@@ -17,9 +17,12 @@
         "all": false,
         "open": true
       },
+      "dialog": {
+        "open": true
+      },
       "fs": {
         "all": true,
-        "scope": ["$APPDATA/*", "$DESKTOP/*", "$DOCUMENT/*"]
+        "scope": ["$HOME/*/**", "$LOCALDATA/*/**", "$DOCUMENT/*/**"]
       }
     },
     "bundle": {

@@ -26,7 +26,8 @@ export default defineConfig(async () => ({
       '@composables': path.resolve(__dirname, './src/composables'),
       '@database': path.resolve(__dirname, './src/database'),
       '@pages': path.resolve(__dirname, './src/pages'),
-      '@shared': path.resolve(__dirname, './src/shared')
+      '@shared': path.resolve(__dirname, './src/shared'),
+      '@stores': path.resolve(__dirname, './src/stores')
     }
   }
 }))

@@ -1,3 +1,4 @@
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import 'vue-toast-notification/dist/theme-sugar.css'
@@ -19,6 +20,7 @@ const i18n = createI18n({
 })
 
 const app = createApp(Automator)
+app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.mount('#app')

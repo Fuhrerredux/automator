@@ -1,3 +1,5 @@
+import type { FileEntry } from '@tauri-apps/api/fs'
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -21,6 +23,16 @@ declare global {
     displayKey: keyof I | ((item: I) => string)
   }
   type DropdownOption<T> = { label: string; value: T }
+
+  type ModStore = {
+    directory: string
+    entries: FileEntry[]
+  }
+  type TraitsStore = {
+    traits: Record<Position, string[]>
+    files: FileEntry[]
+    trait: string | null
+  }
 
   type Ideology =
     | 'vanguardist'
@@ -57,5 +69,3 @@ declare global {
   }
   type CharacterWithId = Character & { id: string }
 }
-
-export {}
