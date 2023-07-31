@@ -261,7 +261,7 @@ async function submit() {
                       :for="`${position}-trait`"
                       class="my-2 block">
                       <dropdown
-                        v-if="traits[position.value]"
+                        v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
                         :display-key="(e) => e"
                         :value-key="(e) => e"
@@ -269,7 +269,7 @@ async function submit() {
                         @update:model-value="ministerTraits[position.value] = $event" />
                       <form-group
                         type="text"
-                        v-if="!traits[position.value]"
+                        v-if="traits[position.value].length <= 0"
                         v-model.trim="ministerTraits[position.value]"
                         :id="`${position}-trait`"
                         :label="t('field.traits')" />
@@ -301,7 +301,7 @@ async function submit() {
                       :for="`${position}-trait`"
                       class="my-2 block">
                       <dropdown
-                        v-if="traits[position.value]"
+                        v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
                         :display-key="(e) => e"
                         :value-key="(e) => e"
@@ -309,7 +309,7 @@ async function submit() {
                         @update:model-value="officerTraits[position.value] = $event" />
                       <form-group
                         type="text"
-                        v-if="!traits[position.value]"
+                        v-if="traits[position.value].length <= 0"
                         v-model.trim="officerTraits[position.value]"
                         :id="`${position}-trait`"
                         :label="t('field.traits')" />
