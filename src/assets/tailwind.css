@@ -43,7 +43,7 @@
     @apply rounded-lg bg-rose-500 px-4 py-2 text-sm font-medium text-white transition-all ease-in-out hover:bg-zinc-200 focus:outline-none focus:ring-4 focus:ring-zinc-300 dark:border-zinc-700 dark:bg-rose-800 dark:text-zinc-200 dark:hover:bg-rose-600 dark:focus:ring-zinc-700;
   }
   .form-input {
-    @apply block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-800 shadow-sm transition-all duration-150 ease-in-out focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-70 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-zinc-200 dark:border-zinc-700 dark:bg-transparent dark:text-white dark:placeholder-zinc-400 dark:focus:border-zinc-500 dark:focus:ring-zinc-500;
+    @apply block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-800 shadow-sm transition-all duration-150 ease-in-out focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-70 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-zinc-200 disabled:text-zinc-600 dark:border-zinc-700 dark:bg-transparent dark:text-white dark:placeholder-zinc-400 dark:focus:border-zinc-500 dark:focus:ring-zinc-500;
   }
   .form-checkbox {
     @apply h-4 w-4 rounded border-zinc-300 bg-zinc-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-700 dark:ring-offset-zinc-800 dark:focus:ring-blue-600;
