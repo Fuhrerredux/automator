@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import MenuDropdown from '@components/menu-dropdown.vue'
+import RolesViewer from '@components/roles-viewer.vue'
 import { MenuItem } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 
@@ -16,7 +17,9 @@ const { t } = useI18n()
   <tr>
     <td>{{ character.tag }}</td>
     <td>{{ character.name }}</td>
-    <td>{{ character.positions.join(',') }}</td>
+    <td>
+      <roles-viewer :positions="character.positions" />
+    </td>
     <td>
       <menu-dropdown>
         <template #button>

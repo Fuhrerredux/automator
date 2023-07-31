@@ -163,31 +163,29 @@ async function submit() {
                   :disabled="loading" />
               </label>
             </div>
-            <div class="flex items-center gap-4">
-              <div class="w-full">
-                <label for="tag">
-                  <form-group
-                    required
-                    type="text"
-                    id="tag"
-                    v-model.trim="tag"
-                    :label="t('field.tag')"
-                    :placeholder="t('placeholder.tag')"
-                    :disabled="loading" />
-                </label>
-              </div>
-              <div class="w-full">
-                <label for="ideology">
-                  <span class="form-label">{{ t('field.ideology') }}</span>
-                  <dropdown
-                    localise
-                    value-key="value"
-                    display-key="label"
-                    :model-value="ideology"
-                    :options="ideologies"
-                    @update:model-value="ideology = $event" />
-                </label>
-              </div>
+            <div>
+              <label for="tag">
+                <form-group
+                  required
+                  type="text"
+                  id="tag"
+                  v-model.trim="tag"
+                  :label="t('field.tag')"
+                  :placeholder="t('placeholder.tag')"
+                  :disabled="loading" />
+              </label>
+            </div>
+            <div>
+              <label for="ideology">
+                <span class="form-label">{{ t('field.ideology') }}</span>
+                <dropdown
+                  localise
+                  value-key="value"
+                  display-key="label"
+                  :model-value="ideology"
+                  :options="ideologies"
+                  @update:model-value="ideology = $event" />
+              </label>
             </div>
             <div>
               <switch-button

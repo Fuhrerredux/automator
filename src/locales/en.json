@@ -29,7 +29,8 @@
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Choose one",
-    "traits": "Enter traits here, make sure to separate by comma"
+    "traits": "Enter traits here, make sure to separate by comma",
+    "remaining": "{num} more"
   },
   "action": {
     "create": "Create",

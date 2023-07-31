@@ -72,4 +72,7 @@
   .menu-item {
     @apply w-full cursor-pointer rounded-md px-3 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-600;
   }
+  .chip-primary {
+    @apply rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300;
+  }
 }
