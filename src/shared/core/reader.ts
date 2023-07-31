@@ -21,7 +21,8 @@ export function extractTraits(content: string): Record<Position, string[]> {
   content.split('\n').forEach((e) => {
     for (const key of Object.keys(traits)) {
       const prefix = getPositionSuffix(key as Position)
-      if (e.includes(prefix)) {
+      const data = e.trim()
+      if (data.startsWith(prefix)) {
         const arr = traits[key as Position]
         arr.push(extract(prefix, e))
         traits[key as Position] = arr

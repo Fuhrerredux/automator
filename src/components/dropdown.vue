@@ -1,7 +1,7 @@
 <script
   setup
   lang="ts"
-  generic="V extends string | number | boolean | object | null | undefined, I extends object">
+  generic="V extends string | number | boolean | object | null | undefined, I extends object | string">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useKeys from '@composables/use-keys'

@@ -174,7 +174,7 @@ export function writeCharacter(characters: CharacterWithId[]) {
   return content
 }
 
-export default async function exportCharacters(characters: CharacterWithId[]) {
+export default async function exportCharacters(characters: CharacterWithId[], destination: string) {
   if (Array.isArray(characters)) {
     const grouped = groupBy(characters, 'tag')
     for (const [key, value] of Object.entries(grouped)) {
@@ -183,7 +183,7 @@ export default async function exportCharacters(characters: CharacterWithId[]) {
 characters = {
 ${content}
 }`
-      await writeFile(`${key}.txt`, template, { dir: BaseDirectory.Document })
+      await writeFile(`${destination}/characters/${key}.txt`, template)
     }
   }
 }

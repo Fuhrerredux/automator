@@ -10,16 +10,18 @@ import RemoveCharacter from '@components/remove-character.vue'
 import { MenuItem } from '@headlessui/vue'
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import writeCharacters from '@shared/core/writer'
-import useCharacters from '@stores/characters'
+import useCharacterStore from '@stores/characters'
+import useModStore from '@stores/mod'
 
 const { t } = useI18n()
 const $toast = useToast()
 const editor = ref(false)
 const confirm = ref(false)
 const character = ref<CharacterWithId | null>(null)
-const store = useCharacters()
-const { characters } = storeToRefs(store)
-const { refresh } = store
+const characterStore = useCharacterStore()
+const modStore = useModStore()
+const { characters } = storeToRefs(characterStore)
+const { refresh } = characterStore
 
 function handleNew() {
   character.value = null
@@ -42,9 +44,13 @@ function handleConfirmDismiss() {
 }
 
 async function exportCharacters() {
-  const data = store.characters
-  if (Array.isArray(data)) await writeCharacters(data)
-  $toast.success(t('status.characters-exported'))
+  const data = characterStore.characters
+  const common = modStore.getCommonDirectory
+
+  if (Array.isArray(data) && common) {
+    await writeCharacters(data, common.path)
+    $toast.success(t('status.characters-exported'))
+  }
 }
 </script>
 
