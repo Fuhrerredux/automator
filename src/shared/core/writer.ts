@@ -26,12 +26,12 @@ function definePortraits(character: CharacterWithId): string {
     const template = `\tcivilian = {
         ${roles.includes('leader') && `large = ${buildLargePortaitPath(name, tag)})`}
         ${roles.includes('minister') && `small = ${buildSmallPortraitPath(name, tag)}`}
-      }
-    `
+      }`
     portraits = portraits.concat(template)
   }
   if (hasArmyWithOfficer) {
-    const template = `\t\tarmy = {
+    const template = `
+      army = {
         ${hasArmy && `large = ${buildLargePortaitPath(name, tag)})`}
         ${roles.includes('officer') && `small = ${buildSmallPortraitPath(name, tag)}`}
       }
@@ -39,7 +39,7 @@ function definePortraits(character: CharacterWithId): string {
     portraits = portraits.concat(template)
   }
   if (hasNavy) {
-    const template = `\t\tnavy = {
+    const template = `navy = {
         large = ${buildLargePortaitPath(name, tag)}
       }
     `

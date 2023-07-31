@@ -49,7 +49,7 @@ async function submit() {
           <button type="button" class="button-secondary" @click="$emit('hide')">
             {{ t('action.cancel') }}
           </button>
-          <spinner-button type="submit" class="button-primary" :loading="loading">
+          <spinner-button type="submit" class="button-destructive" :loading="loading">
             <template #content>
               {{ t('action.remove') }}
             </template>
