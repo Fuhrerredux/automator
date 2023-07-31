@@ -10,6 +10,7 @@ const useThemeStore = defineStore({
   actions: {
     fetch() {
       this.theme = localStorage.getItem('theme') as Theme
+      this.change(this.theme)
     },
     change(theme: Theme) {
       this.theme = theme
