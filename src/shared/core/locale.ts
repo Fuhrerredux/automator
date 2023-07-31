@@ -3,7 +3,15 @@ export default function getLanguageName(locale: string): string {
     case 'en':
       return 'English'
     case 'el':
-      return 'Greek'
+      return 'Ελληνικά'
+    case 'fr':
+      return 'Français'
+    case 'ag':
+      return 'Ἀρχαῖα Ἑλληνική'
+    case 'es':
+      return 'Espanol'
+    case 'tl':
+      return 'Tagalog'
     default:
       return locale
   }
