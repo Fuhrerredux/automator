@@ -3,33 +3,33 @@
   "route": {
     "main": "Κύρια",
     "characters": "Χαρακτήρες",
-    "others": "Άλλοι"
+    "others": "Άλλα"
   },
   "theme": {
     "auto": "Σύστημα",
     "dark": "Σκοτεινό",
-    "light": "Φως"
+    "light": "Φωτεινό"
   },
   "field": {
-    "tag": "Ετικέτα χώρας",
-    "name": "Όνομα χαρακτήρα",
+    "tag": "Ετικέτα Χώρας (Tag)",
+    "name": "Όνομα Χαρακτήρα",
     "ideology": "Ιδεολογία",
-    "leader-role": "Προσθήκη ρόλου ηγέτη",
-    "commanding-role": "Προσθήκη ρόλου διοικητή",
+    "leader-role": "Προσθήκη ρόλου Ηγέτη",
+    "commanding-role": "Προσθήκη Εντολικού Ρόλου",
     "minister-role": "Προσθήκη Υπουργικού Ρόλου",
-    "officer-role": "Προσθήκη ρόλου αξιωματικού",
+    "officer-role": "Προσθήκη Ρόλου Αξιωματικού",
     "role": "Ρόλος",
     "roles": "Ρόλοι",
-    "traits": "Χαρακτηριστικά",
+    "traits": "Γνωρίσματα",
     "actions": "Ενέργειες",
-    "mod-dir": "Κατάλογος",
+    "mod-dir": "Κατάλογος του mod",
     "traits-def": "Ορισμοί γνωρισμάτων"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Επιλέξτε ένα",
-    "traits": "Εισάγετε τα γνωρίσματα εδώ, βεβαιωθείτε ότι τα χωρίζετε με κόμμα",
+    "traits": "Εισάγετε τα γνωρίσματα εδώ, βεβαιωθείτε ότι είναι χωρισμένα με κόμμα!",
     "remaining": "{num} ακόμη"
   },
   "action": {
@@ -42,37 +42,37 @@
     "row-actions": "Ενέργειες",
     "browse": "Αναζήτηση",
     "generate": "Δημιουργία",
-    "load": "Φορτίο"
+    "load": "Φόρτωση"
   },
   "loading": {
-    "saving": "Αποθήκευση",
-    "removing": "Αφαίρεση"
+    "saving": "Αποθηκεύονται",
+    "removing": "Αφαίρούνται"
   },
   "ideology": {
-    "vanguardist": "National Collectivist",
-    "collectivist": "Socialist",
-    "libertarian-socialist": "Libertarian Socialist",
-    "social-democrat": "Social Democrat",
-    "social-liberal": "Social Liberal",
-    "market-liberal": "Market Liberal",
-    "social-conservative": "Social Conservative",
-    "authoritarian-democrat": "Authoritarian Democrat",
-    "paternal-autocrat": "Paternal Autocrat",
-    "national-populist": "National Populist",
-    "valkist": "Valkist"
+    "vanguardist": "Εθνικός Συλλογικιστής",
+    "collectivist": "Σοσιαλιστής",
+    "libertarian-socialist": "Ελεύθερος Σοσιαλιστής",
+    "social-democrat": "Σοσιαλδημοκράτης",
+    "social-liberal": "Σοσιαλφιλελεύθερος",
+    "market-liberal": "Φιλελεύθερος της Αγοράς",
+    "social-conservative": "Κοινωνική Συντηρητική",
+    "authoritarian-democrat": "Αυταρχικός Δημοκρατικός",
+    "paternal-autocrat": "Πατερικός Αυτοκράτορας",
+    "national-populist": "Εθνικολαϊκιστής",
+    "valkist": "Βαλκιστής"
   },
   "roles": {
-    "marshal": "Field Marshal",
-    "general": "Corps Commander",
-    "admiral": "Admiral",
-    "head-of-government": "Head of Government",
-    "foreign-minister": "Foreign Minister",
-    "economy-minister": "Economy Minister",
-    "security-minister": "Security Minister",
-    "high-command": "Chief of Staff",
-    "army-chief": "Chief of Army",
-    "air-chief": "Chief of Air Force",
-    "navy-chief": "Chief of Navy"
+    "marshal": "Αρχιστράτηγος",
+    "general": "Διοικητής Σώματος",
+    "admiral": "Ναύαρχος",
+    "head-of-government": "Πρωθυπουργός",
+    "foreign-minister": "Υπουργός Εξωτερικών",
+    "economy-minister": "Υπουργός Οικονομίας",
+    "security-minister": "Υπουργός Εσωτερικών/Ασφαλείας",
+    "high-command": "Επιτελάρχης",
+    "army-chief": "Αρχηγός Στρατού",
+    "air-chief": "Αρχηγός της Πολεμικής Αεροπορίας",
+    "navy-chief": "Αρχηγός Ναυτικού"
   },
   "modal": {
     "character-editor": {
@@ -81,21 +81,21 @@
     },
     "remove-character": {
       "heading": "Αφαίρεση χαρακτήρα",
-      "summary": "Είστε σίγουροι ότι θέλετε να αφαιρέσετε τον χαρακτήρα \"{name}\" για την ετικέτα {tag}; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+      "summary": "Είστε σίγουροι ότι θέλετε να αφαιρέσετε τον χαρακτήρα \"{name}\" για την ετικέτα {tag}; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί!"
     }
   },
   "status": {
-    "characters-exported": "Χαρακτήρες που εξάγονται",
-    "saved": "Αποθηκευμένο",
-    "shines-generated": "Λάμπει παράγεται"
+    "characters-exported": "Οι Χαρακτήρες Εξάχθη",
+    "saved": "Αποθηκεύτηκαν",
+    "shines-generated": "Τα focus shines Δημιουργήθηκαν."
   },
   "error": {
-    "generic-dir-read": "Σφάλμα ανάγνωσης καταλόγου"
+    "generic-dir-read": "Σφάλμα ανάγνωσης φακέλου"
   },
   "others": {
     "shine": {
-      "heading": "Γεννήτρια λάμψης Focus GFX",
-      "summary": "Δημιουργία λάμψεων για sprites που ορίζονται στο αρχείο FX_goals.gfx."
+      "heading": "Focus GFX Shine γεννήτρια",
+      "summary": "Δημιουργία focus shines για sprites ορισμένα στο αρχείο FX_goals.gfx."
     }
   }
 }
