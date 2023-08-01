@@ -90,7 +90,9 @@
     "shines-generated": "Τα focus shines Δημιουργήθηκαν."
   },
   "error": {
-    "generic-dir-read": "Σφάλμα ανάγνωσης φακέλου"
+    "generic-dir-read": "Error reading directory",
+    "no-dir": "Δεν έχει επιλεγεί κατάλογος του mod. Πρέπει να περιηγηθείτε στη ρίζα του καταλόγου mod σας για να ξεκινήσετε.",
+    "no-dir-short": "Δεν έχει επιλεγεί κατάλογος του mod",
   },
   "others": {
     "shine": {
