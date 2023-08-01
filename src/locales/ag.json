@@ -90,8 +90,8 @@
   },
   "error": {
     "generic-dir-read": "Ἀνάγνωσις καταλόγου λαθός",
-    "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
-    "no-dir-short": "No mod directory selected"
+    "no-dir": "Mὴ ὁρίσατε κατάλογον mod. Ἀναγκαῖον διορᾶν τὰν ῥίζαν τοῦ καταλόγου τοῦ mod, ὅπως ἄρχησθε.",
+    "no-dir-short": "Mὴ ὁρισμένος κατάλογος μοδ."
   },
   "others": {
     "shine": {
@@ -99,8 +99,8 @@
       "summary": "Δημιουργὴ λαμπρύνσεων γιὰ τοὺς στρατιωτικοὺς οὐρανοξύστες ποὺ καθορίζονται στὸν φάκελο FX_goals.gfx."
     },
     "character-recruit": {
-      "heading": "Append Characters to History Files",
-      "summary": "Adds 'recruit_character' effects to the end of the history files"
+      "heading": "Προσθήκη ἀνθρώπων εἰς τὰ ἱστορικὰ ἀρχεῖα",
+      "summary": "προστίθηνται ἐπιδράσεις 'recruit_character' εἰς τὸ τέλος τῶν ἱστορικῶν ἀρχείων."
     }
   }
 }
