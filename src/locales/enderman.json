@@ -91,8 +91,8 @@
   },
   "error": {
     "generic-dir-read": "dlorh eht gnisaeR",
-    "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
-    "no-dir-short": "No mod directory selected"
+    "no-dir": ".detrats siorypmeR yhtlaehc denrgoB ot dluow uoy fo toor eht esirb yas ton. Detratsid dom on",
+    "no-dir-short": "detartxe desolc dir dom oN"
   },
   "others": {
     "shine": {
@@ -100,8 +100,8 @@
       "summary": ".pam gnisserd rof setirpS selppihs eht rof setirps seiduts eht sa rof senihS enihC."
     },
     "character-recruit": {
-      "heading": "Append Characters to History Files",
-      "summary": "Adds 'recruit_character' effects to the end of the history files"
+      "heading": "selif yrotsih ot sretcarahC dneppA",
+      "summary": "sddA 'character_recruit' seiduts ot eht dne fo eht yrotsih seffocxe"
     }
   }
 }
