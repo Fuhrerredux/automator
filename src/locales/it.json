@@ -90,12 +90,18 @@
     "shines-generated": "Effetti di luce generati"
   },
   "error": {
-    "generic-dir-read": "Errore nella lettura della directory"
+    "generic-dir-read": "Errore nella lettura della directory",
+    "no-dir": "Non è stata selezionata alcuna directory di mod. Per iniziare, è necessario sfogliare la radice della cartella delle mod.",
+    "no-dir-short": "Non è stata selezionata alcuna directory di mod"
   },
   "others": {
     "shine": {
       "heading": "Generatore di Effetti di Luce GFX",
       "summary": "Genera effetti di luce per le sprites definite nel file FX_goals.gfx."
+    },
+    "character-recruit": {
+      "heading": "Aggiungi personaggi ai file di storia",
+      "summary": "Aggiunge gli effetti \"recluta_personaggio\" alla fine dei file di cronologia."
     }
   }
 }

@@ -90,12 +90,18 @@
     "shines-generated": "Shines Cast"
   },
   "error": {
-    "generic-dir-read": "Error readin' the Hold"
+    "generic-dir-read": "Error readin' the Hold",
+    "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
+    "no-dir-short": "No mod directory selected"
   },
   "others": {
     "shine": {
       "heading": "Focus GFX Booty Generator",
       "summary": "Generate shines for sprites defined in the FX_goals.gfx treasure map."
+    },
+    "character-recruit": {
+      "heading": "Append Characters to History Files",
+      "summary": "Adds 'recruit_character' effects to the end of the history files"
     }
   }
 }

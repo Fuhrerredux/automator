@@ -90,12 +90,18 @@
     "shines-generated": "Effekte generiert"
   },
   "error": {
-    "generic-dir-read": "Fehler beim Lesen des Verzeichnisses"
+    "generic-dir-read": "Fehler beim Lesen des Verzeichnisses",
+    "no-dir": "Kein Mod-Verzeichnis ausgewählt. Sie müssen das Stammverzeichnis Ihres Mod-Verzeichnisses durchsuchen, um loszulegen.",
+    "no-dir-short": "Kein Mod-Verzeichnis ausgewählt"
   },
   "others": {
     "shine": {
       "heading": "Effekt-GFX-Gerätegenerator",
       "summary": "Generiere Effekte für die in der Datei FX_goals.gfx definierten Sprites."
+    },
+    "character-recruit": {
+      "heading": "Anhängen von Zeichen an Verlaufsdateien",
+      "summary": "Fügt die Effekte \"recruit_character\" am Ende der Geschichtsdateien hinzu"
     }
   }
 }

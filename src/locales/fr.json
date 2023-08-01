@@ -90,12 +90,18 @@
     "shines-generated": "Effets de brillance générés"
   },
   "error": {
-    "generic-dir-read": "Erreur lors de la lecture du répertoire"
+    "generic-dir-read": "Erreur lors de la lecture du répertoire",
+    "no-dir": "Aucun répertoire de mod n'a été sélectionné. Vous devez naviguer à la racine de votre répertoire de mods pour commencer.",
+    "no-dir-short": "Aucun répertoire de mod n'a été sélectionné"
   },
   "others": {
     "shine": {
       "heading": "Générateur d'effets de brillance pour la focalisation",
       "summary": "Génère des effets de brillance pour les sprites définis dans le fichier FX_goals.gfx."
+    },
+    "character-recruit": {
+      "heading": "Ajouter des personnages aux fichiers d'historique",
+      "summary": "Ajoute les effets \"recruit_character\" à la fin des fichiers historiques."
     }
   }
 }

@@ -57,15 +57,15 @@
     "market-liberal": "Pasarang-Liberal",
     "social-conservative": "Sosyal-Konservatibo",
     "authoritarian-democrat": "Awtoritaryan Demokratiko",
-    "paternal-autocrat": "Ama-Awtoritaryan",
+    "paternal-autocrat": "Awtokrasya",
     "national-populist": "Pambansang Populista",
     "valkist": "Balkist"
   },
   "roles": {
-    "marshal": "Marshal ng Lugar",
+    "marshal": "Punong Marsikal",
     "general": "Komandante ng Korps",
     "admiral": "Adbiral",
-    "head-of-government": "Pangulo ng Pamahalaan",
+    "head-of-government": "Puno ng Pamahalaan",
     "foreign-minister": "Ministro ng Ugnayang Panlabas",
     "economy-minister": "Ministro ng Ekonomiya",
     "security-minister": "Ministro ng Seguridad",
@@ -90,12 +90,18 @@
     "shines-generated": "Mga kinang na inegenereyt"
   },
   "error": {
-    "generic-dir-read": "Error sa pagbasa ng direktoryo"
+    "generic-dir-read": "Pumalya ang pagbasa sa direktoryo",
+    "no-dir": "Walang piniling direktoryo. Kailangan mong mag-browse ng direktoryo para magsimula.",
+    "no-dir-short": "Walang piniling direktoryo"
   },
   "others": {
     "shine": {
       "heading": "Tagabigay ng Kinang GFX Focus",
-      "summary": "Mag-enerate ng mga kinang para sa mga sprites na nakasaad sa file na FX_goals.gfx."
+      "summary": "Bumuo ng mga kinang para sa mga sprites na nakasaad sa file na FX_goals.gfx."
+    },
+    "character-recruit": {
+      "heading": "Ilagay ang mga Characters sa History File",
+      "summary": "Ilalagay ang 'recruit_character' na epekto sa dulo ng mga history payls."
     }
   }
 }

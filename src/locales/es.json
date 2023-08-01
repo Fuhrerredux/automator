@@ -90,12 +90,18 @@
     "shines-generated": "Brillos generados"
   },
   "error": {
-    "generic-dir-read": "Error al leer el directorio"
+    "generic-dir-read": "Error al leer el directorio",
+    "no-dir": "No se ha seleccionado ningún directorio mod. Necesitas navegar por la raíz de tu directorio mod para empezar",
+    "no-dir-short": "No se ha seleccionado ningún directorio mod."
   },
   "others": {
     "shine": {
       "heading": "Generador de Brillos GFX para Focalización",
       "summary": "Genera brillos para sprites definidos en el archivo FX_goals.gfx."
+    },
+    "character-recruit": {
+      "heading": "Añadir personajes a los archivos de historia",
+      "summary": "Añade efectos \"recruit_character\" al final de los archivos de historial."
     }
   }
 }

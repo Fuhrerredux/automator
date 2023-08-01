@@ -98,6 +98,10 @@
     "shine": {
       "heading": "Focus GFX Shine Generator",
       "summary": "Generate shines for sprites defined in FX_goals.gfx file."
+    },
+    "character-recruit": {
+      "heading": "Append Characters to History Files",
+      "summary": "Adds 'recruit_character' effects to the end of the history files"
     }
   }
 }

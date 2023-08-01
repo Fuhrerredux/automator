@@ -90,12 +90,18 @@
     "shines-generated": "Τα focus shines Δημιουργήθηκαν."
   },
   "error": {
-    "generic-dir-read": "Σφάλμα ανάγνωσης φακέλου"
+    "generic-dir-read": "Σφάλμα ανάγνωσης φακέλου",
+    "no-dir": "Δεν έχει επιλεγεί κατάλογος mod. Πρέπει να περιηγηθείτε στη ρίζα του καταλόγου mod σας για να ξεκινήσετε",
+    "no-dir-short": "Δεν έχει επιλεγεί κατάλογος mod"
   },
   "others": {
     "shine": {
       "heading": "Focus GFX Shine γεννήτρια",
       "summary": "Δημιουργία focus shines για sprites ορισμένα στο αρχείο FX_goals.gfx."
+    },
+    "character-recruit": {
+      "heading": "Προσθήκη χαρακτήρων σε αρχεία ιστορικού",
+      "summary": "Προσθέτει εφέ \"recruit_character\" στο τέλος των αρχείων ιστορικού"
     }
   }
 }
