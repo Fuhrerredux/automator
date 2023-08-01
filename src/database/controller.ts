@@ -13,7 +13,7 @@ export default class DatabaseController {
   }
 
   async init() {
-    const name = process.env.NODE_ENV
+    const name = 'automator'
     this.instance = await Database.load(`sqlite:${name}.db`)
 
     await this.instance.execute(CREATE_TABLE)
