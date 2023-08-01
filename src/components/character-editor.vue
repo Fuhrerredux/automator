@@ -142,7 +142,7 @@ async function submit() {
 </script>
 
 <template>
-  <modal :hideable="!loading" :open="open" size="max-w-2xl" @hide="$emit('hide')">
+  <modal :hideable="false" :open="open" size="max-w-2xl" @hide="$emit('hide')">
     <template #title>
       {{ t(character ? 'modal.character-editor.update' : 'modal.character-editor.create') }}
     </template>
