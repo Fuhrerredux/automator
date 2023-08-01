@@ -3,7 +3,7 @@ import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix, getIdeologyToken } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
-import { readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
+import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -250,4 +250,39 @@ export async function exportShine(dir: string) {
 ${shines.join('\n')}
 }`
   await writeTextFile(`${dir}/FX_goals_shine.gfx`, shine)
+}
+
+export async function appendToHistory(characters: CharacterWithId[], destination: string) {
+  if (Array.isArray(characters)) {
+    const history = `${destination}/history/countries/`
+    const grouped = groupBy(characters, 'tag')
+    const entries = await readDir(history)
+
+    const findHistoryFile = (tag: string) => entries.find((e) => e.name?.startsWith(tag))
+
+    for (const [key, value] of Object.entries(grouped)) {
+      const file = findHistoryFile(key)
+      if (!file) continue
+
+      const path = file.path
+      let data = ''
+      for (const character of value) {
+        const token = buildCharacterToken(character)
+        data = data.concat(`recruit_character = ${token}\n`)
+      }
+
+      let content = ''
+      if (await exists(path)) {
+        content = await readTextFile(path)
+
+        content = content
+          .split('\n')
+          .filter((e) => !e.startsWith('recruit_character'))
+          .join('\n')
+      }
+
+      content = content.concat(`\n${data}`)
+      await writeTextFile(path, content)
+    }
+  }
 }

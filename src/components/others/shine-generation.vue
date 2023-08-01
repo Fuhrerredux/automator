@@ -17,7 +17,7 @@ async function generate() {
   try {
     loading.value = true
     await exportShine(`${store.directory}/interface`)
-    $toast.success(t('shines-generated'))
+    $toast.success(t('status.shines-generated'))
   } catch (e) {
     $toast.error(String(e))
   } finally {
@@ -31,6 +31,8 @@ async function generate() {
   <action-item
     :title="t('others.shine.heading')"
     :summary="t('others.shine.summary')"
+    :loading="loading"
+    :finished="finished"
     @action="generate">
     <template #icon>
       <bolt-icon class="h-6 w-6" />
