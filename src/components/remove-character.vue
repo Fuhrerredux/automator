@@ -55,12 +55,3 @@ async function submit() {
     </template>
   </modal>
 </template>
-
-<i18n lang="json">
-{
-  "en": {
-    "heading": "Remove character?",
-    "summary": "Are you sure you want to remove the character \"{name}\" for the {tag} tag? This action cannot be undone."
-  }
-}
-</i18n>

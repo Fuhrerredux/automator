@@ -22,9 +22,7 @@ async function browse() {
 </script>
 
 <template>
-  <div
-    v-if="modStore.directory.length <= 0"
-    class="mx-auto w-1/2 text-sm text-center bg-amber-100 dark:bg-amber-500 dark:text-amber-800 font-medium p-4 rounded-md">
+  <div v-if="modStore.directory.length <= 0" class="mx-auto w-1/2 banner-warning">
     <exclamation-triangle-icon class="h-6 w-6 inline-block" />
     <p>{{ t('error.no-dir') }}</p>
   </div>

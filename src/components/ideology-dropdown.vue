@@ -1,41 +1,34 @@
-<script
-  setup
-  lang="ts"
-  generic="V extends string | number | boolean | object | null | undefined, I extends object | string">
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useKeys from '@composables/use-keys'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { ideologies } from '@shared/const/ideology'
 
 const { t } = useI18n()
-const props = defineProps<{
-  options: I[]
-  valueKey: KeyOfType<I, V> | ((item: I) => V)
-  displayKey: keyof I | ((item: I) => string)
-  modelValue: V
-  disabled?: boolean
-  localise?: boolean
-  multiple?: boolean
-}>()
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: V): void
-}>()
-const { valueFunc, displayFunc } = useKeys<V, I>(props)
 
-const item = computed(() => props.options.find((i) => valueFunc(i) === props.modelValue))
+const props = defineProps<{
+  disabled?: boolean
+  modelValue: Ideology[]
+}>()
+defineEmits<{
+  (e: 'update:modelValue', value: Ideology[]): void
+}>()
+
+const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).join(', '))
 </script>
 
 <template>
   <listbox
-    :model-value="item"
+    multiple
+    :model-value="modelValue"
     :disabled="disabled"
-    @update:model-value="emit('update:modelValue', valueFunc($event))"
+    @update:model-value="$emit('update:modelValue', $event)"
     as="div"
     class="relative">
     <listbox-button class="dropdown-button w-full">
-      <span class="flex-1 text-left truncate">
-        {{ item ? t(displayFunc(item)) : t('placeholder.dropdown') }}
+      <span class="truncate inline-block flex-1 text-left">
+        {{ modelValue.length > 0 ? label : t('placeholder.dropdown') }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
     </listbox-button>
@@ -48,13 +41,13 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option
-          v-for="option in options"
+          v-for="option in ideologies"
           v-slot="{ selected }"
-          :value="option"
+          :value="option.value"
           as="template">
-          <li :key="String(valueFunc(option))" class="dropdown-option truncate">
-            <span>
-              {{ localise ? t(displayFunc(option)) : displayFunc(option) }}
+          <li :key="option.value" class="dropdown-option truncate">
+            <span :class="selected ? 'font-medium' : 'font-normal'">
+              {{ t(option.label) }}
             </span>
             <span
               v-if="selected"

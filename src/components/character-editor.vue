@@ -6,6 +6,7 @@ import { useToast } from 'vue-toast-notification'
 import CharacterRepository from '@/database/repository'
 import Dropdown from '@components/dropdown.vue'
 import FormGroup from '@components/form-group.vue'
+import IdeologyDropdown from '@components/ideology-dropdown.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import SwitchButton from '@components/switch.vue'
@@ -41,6 +42,7 @@ const addMinisterRole = ref(false)
 const addOfficerRole = ref(false)
 
 const leaderTraits = ref<string>('')
+const leaderIdeologies = ref<Ideology[]>([])
 
 const commandingRole = ref<CommandingRole>(commanding[0].value)
 const commanderTraits = ref<string>('')
@@ -122,6 +124,7 @@ async function submit() {
       ideology: ideology.value,
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
+      leaderIdeologies: leaderIdeologies.value,
       ministerTraits: ministerTraits.value,
       officerTraits: officerTraits.value,
       positions,
@@ -148,9 +151,9 @@ async function submit() {
     </template>
     <template #body>
       <form @submit.prevent="submit">
-        <div class="flex items-start justify-start gap-4">
+        <div class="grid grid-cols-2 gap-4">
           <!-- Left -->
-          <div class="w-full space-y-2">
+          <div class="space-y-2">
             <div>
               <label for="name">
                 <form-group
@@ -192,15 +195,23 @@ async function submit() {
                 :checked="addLeaderRole"
                 :label="t('field.leader-role')"
                 @update:model-value="addLeaderRole = $event" />
-              <div v-if="addLeaderRole">
-                <label for="traits">
-                  <form-group
-                    type="text"
-                    id="traits"
-                    v-model.trim="leaderTraits"
-                    :label="t('field.traits')"
-                    :placeholder="t('placeholder.traits')" />
-                </label>
+              <div v-if="addLeaderRole" class="mt-2 space-y-2">
+                <div>
+                  <span class="form-label">{{ t('field.ideology') }}</span>
+                  <ideology-dropdown
+                    :model-value="leaderIdeologies"
+                    @update:model-value="leaderIdeologies = $event" />
+                </div>
+                <div>
+                  <label for="traits">
+                    <form-group
+                      type="text"
+                      id="traits"
+                      v-model.trim="leaderTraits"
+                      :label="t('field.traits')"
+                      :placeholder="t('placeholder.traits')" />
+                  </label>
+                </div>
               </div>
             </div>
             <div class="space-y-2">
@@ -235,7 +246,7 @@ async function submit() {
             </div>
           </div>
           <!-- Right -->
-          <div class="w-full space-y-2">
+          <div class="space-y-2">
             <div class="space-y-2">
               <switch-button
                 :checked="addMinisterRole"

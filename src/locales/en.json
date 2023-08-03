@@ -46,7 +46,8 @@
   },
   "loading": {
     "saving": "Saving",
-    "removing": "Removing"
+    "removing": "Removing",
+    "exporting": "Exporting"
   },
   "ideology": {
     "vanguardist": "National Collectivist",
@@ -82,6 +83,10 @@
     "remove-character": {
       "heading": "Remove character?",
       "summary": "Are you sure you want to remove the character \"{name}\" for the {tag} tag? This action cannot be undone."
+    },
+    "character-export": {
+      "heading": "Character Exporter",
+      "summary": "Every characters defined in the database will be exported to the mod files; in the characters folder. This will however, overwrite the current definitions, be sure to create a backup before using this feature."
     }
   },
   "status": {
@@ -92,7 +97,8 @@
   "error": {
     "generic-dir-read": "Error reading directory",
     "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
-    "no-dir-short": "No mod directory selected"
+    "no-dir-short": "No mod directory selected",
+    "no-characters-to-export": "There are no characters to export"
   },
   "others": {
     "shine": {

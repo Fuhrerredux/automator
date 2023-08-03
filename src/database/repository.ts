@@ -4,6 +4,7 @@ import DatabaseController from '@database/controller'
 type ParsedCharacter = Pick<CharacterWithId, 'name' | 'id' | 'tag' | 'cost'> & {
   positions: string
   leaderTraits: string
+  leaderIdeologies: string
   commanderTraits: string
   ministerTraits: string
   officerTraits: string
@@ -27,6 +28,7 @@ export default class CharacterRepository {
       denormalizeObject<ParsedCharacter, CharacterWithId>(e, [
         'positions',
         'leaderTraits',
+        'leaderIdeologies',
         'commanderTraits',
         'ministerTraits',
         'officerTraits',
@@ -42,6 +44,7 @@ export default class CharacterRepository {
   async create(character: CharacterWithId) {
     const positions = normalize(character.positions)
     const leaderTraits = normalize(character.leaderTraits)
+    const leaderIdeologies = normalize(character.leaderIdeologies)
     const commanderTraits = normalize(character.commanderTraits)
     const ministerTraits = normalize(character.ministerTraits)
     const officerTraits = normalize(character.officerTraits)
@@ -49,8 +52,8 @@ export default class CharacterRepository {
     const { id, name, tag, ideology, cost } = character
 
     return await this.database.execute(
-      `INSERT INTO characters (id, name, tag, ideology, positions, leaderTraits, commanderTraits, ministerTraits, officerTraits, roles, cost) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      `INSERT INTO characters (id, name, tag, ideology, positions, leaderTraits, leaderIdeologies, commanderTraits, ministerTraits, officerTraits, roles, cost) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
       [
         id,
         name,
@@ -58,6 +61,7 @@ export default class CharacterRepository {
         ideology,
         positions,
         leaderTraits,
+        leaderIdeologies,
         commanderTraits,
         ministerTraits,
         officerTraits,
@@ -70,6 +74,7 @@ export default class CharacterRepository {
   async update(character: CharacterWithId) {
     const positions = normalize(character.positions)
     const leaderTraits = normalize(character.leaderTraits)
+    const leaderIdeologies = normalize(character.leaderIdeologies)
     const commanderTraits = normalize(character.commanderTraits)
     const ministerTraits = normalize(character.ministerTraits)
     const officerTraits = normalize(character.officerTraits)
@@ -79,9 +84,9 @@ export default class CharacterRepository {
     return await this.database.execute(
       `
       UPDATE characters SET name = $1, tag = $2, ideology = $3, 
-        positions = $4, leaderTraits = $5, commanderTraits = $6, ministerTraits = $7, officerTraits = $8,
-        roles = $9, cost = $10
-      WHERE id = $11
+        positions = $4, leaderTraits = $5, leaderIdeologies = $6 commanderTraits = $7, ministerTraits = $8, officerTraits = $9,
+        roles = $10, cost = $11
+      WHERE id = $12
       `,
       [
         name,
@@ -89,6 +94,7 @@ export default class CharacterRepository {
         ideology,
         positions,
         leaderTraits,
+        leaderIdeologies,
         commanderTraits,
         ministerTraits,
         officerTraits,

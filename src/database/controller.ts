@@ -1,5 +1,19 @@
 import Database, { QueryResult } from 'tauri-plugin-sql-api'
-import { CREATE_TABLE } from '@/shared/const/queries'
+
+const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS characters (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  tag TEXT NOT NULL,
+  ideology TEXT,
+  positions TEXT,
+  leaderTraits TEXT,
+  leaderIdeologies TEXT,
+  commanderTraits TEXT,
+  ministerTraits TEXT,
+  officerTraits TEXT,
+  roles TEXT,
+  cost INTEGER
+)`
 
 export default class DatabaseController {
   static controller: DatabaseController | null = null

@@ -62,6 +62,7 @@ declare global {
     ideology: Ideology
     positions: Position[]
     leaderTraits: string[]
+    leaderIdeologies: string[]
     commanderTraits: string[]
     ministerTraits: Record<MinisterPosition, string>
     officerTraits: Record<MilitaryPosition, string>
