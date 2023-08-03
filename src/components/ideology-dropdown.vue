@@ -28,7 +28,7 @@ const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).joi
     class="relative">
     <listbox-button class="dropdown-button w-full">
       <span class="truncate inline-block flex-1 text-left">
-        {{ modelValue.length > 0 ? label : t('placeholder.dropdown') }}
+        {{ modelValue.length > 0 ? label : t('placeholder.dropdown-multiple') }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
     </listbox-button>

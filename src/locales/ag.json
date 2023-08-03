@@ -22,12 +22,14 @@
     "traits": "Ἰδιότητες",
     "actions": "Ἐνέργειες",
     "mod-dir": "Κατάλογος Μονάδων",
-    "traits-def": "Ἐρμηνείες Ἰδιοτήτων"
+    "traits-def": "Ἐρμηνείες Ἰδιοτήτων",
+    "leader-roles": "Leader Roles"
   },
   "placeholder": {
     "tag": "῎ΗΠΑ",
     "name": "Δοῦγκλας ΜακΆρθουρ",
     "dropdown": "Ἐπιλέξτε ἕνα",
+    "dropdown-multiple": "Choose multiple",
     "traits": "Εἰσαγάγετε ἰδιότητες ἐνθάδε, βεβαιωθεῖτε ὅτι τὰς χωρίζετε με κόμμα",
     "remaining": "{num} μᾶλλον"
   },
@@ -81,17 +83,23 @@
     "remove-character": {
       "heading": "Ἀφαίρεσις χαρακτῆρος;",
       "summary": "Σίγουρα θέλετε νὰ ἀφαιρέσετε τὸν χαρακτῆρα \"{name}\" γιὰ τὴν ἐτικέτα {tag}; Αὕτη ἡ ἐνέργεια δὲν μπορεῖ νὰ ἀναιρεθεῖ."
+    },
+    "character-export": {
+      "heading": "Character Exporter",
+      "summary": "Every characters defined in the database will be exported to the mod files; in the characters folder. This will however, overwrite the current definitions, be sure to create a backup before using this feature."
     }
   },
   "status": {
-    "characters-exported": "Χαρακτῆρες ἐξήχθησαν",
     "saved": "Δέδοχται",
+    "characters-exported": "Χαρακτῆρες ἐξήχθησαν",
+    "character-removed": "Character removed",
     "shines-generated": "Ἐσκάσθησαν Περιστολές"
   },
   "error": {
     "generic-dir-read": "Ἀνάγνωσις καταλόγου λαθός",
     "no-dir": "Mὴ ὁρίσατε κατάλογον mod. Ἀναγκαῖον διορᾶν τὰν ῥίζαν τοῦ καταλόγου τοῦ mod, ὅπως ἄρχησθε.",
-    "no-dir-short": "Mὴ ὁρισμένος κατάλογος μοδ."
+    "no-dir-short": "Mὴ ὁρισμένος κατάλογος μοδ.",
+    "no-characters-to-export": "There are no characters to export"
   },
   "others": {
     "shine": {

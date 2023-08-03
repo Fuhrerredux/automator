@@ -23,12 +23,14 @@
     "traits": "Mga Katangian",
     "actions": "Mga Aksyon",
     "mod-dir": "Direktoryo ng Mod",
-    "traits-def": "Mga Depinisyon ng Katangian"
+    "traits-def": "Mga Depinisyon ng Katangian",
+    "leader-roles": "Mga Tungkulin ng Pinuno"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Pumili ng isa",
+    "dropdown-multiple": "Pumili ng marami",
     "traits": "Ilagay ang mga katangian dito, tiyakin na hiwalayin sa pamamagitan ng koma",
     "remaining": "{num} pa"
   },
@@ -82,17 +84,22 @@
     "remove-character": {
       "heading": "Tanggalin ang tauhan?",
       "summary": "Sigurado ka bang gusto mong tanggalin ang tauhan na \"{name}\" para sa tag na {tag}? Hindi na maaaring bawiin ang aksyong ito."
+    },
+    "character-export": {
+      "heading": "Pagluwas ng mga karakter",
+      "summary": "Lahat ng mga karakter na nasa database ay iluluwas sa mga payls ng mod; sa karpeta ng mga karakter. Papalitan nito ang mga kasalayukuyang karakter kaya unahin muna na gumawa ng backup bago gamitin ito."
     }
   },
   "status": {
-    "characters-exported": "Mga tauhan na ineksport",
     "saved": "Nai-save",
+    "characters-exported": "Mga tauhan na ineksport",
     "shines-generated": "Mga kinang na inegenereyt"
   },
   "error": {
     "generic-dir-read": "Pumalya ang pagbasa sa direktoryo",
     "no-dir": "Walang piniling direktoryo. Kailangan mong mag-browse ng direktoryo para magsimula.",
-    "no-dir-short": "Walang piniling direktoryo"
+    "no-dir-short": "Walang piniling direktoryo",
+    "no-characters-to-export": "Walang karakter ang maaring iluwas"
   },
   "others": {
     "shine": {

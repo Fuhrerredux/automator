@@ -23,12 +23,14 @@
     "traits": "Eigenschaften",
     "actions": "Aktionen",
     "mod-dir": "Mod-Verzeichnis",
-    "traits-def": "Eigenschaftsdefinitionen"
+    "traits-def": "Eigenschaftsdefinitionen",
+    "leader-roles": "Rollen der Führungskräfte"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Auswählen",
+    "dropdown-multiple": "Wählen Sie mehrere",
     "traits": "Eigenschaften hier eingeben, mit Komma trennen",
     "remaining": "noch {num} übrig"
   },
@@ -82,17 +84,23 @@
     "remove-character": {
       "heading": "Charakter entfernen?",
       "summary": "Bist du sicher, dass du den Charakter \"{name}\" für die Kennung {tag} entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "character-export": {
+      "heading": "Zeichen-Exporter",
+      "summary": "Alle in der Datenbank definierten Charaktere werden in die Mod-Dateien exportiert, die sich im Ordner characters befinden. Dies überschreibt jedoch die aktuellen Definitionen, daher sollte man vor der Verwendung dieser Funktion ein Backup erstellen."
     }
   },
   "status": {
-    "characters-exported": "Charaktere exportiert",
     "saved": "Gespeichert",
+    "characters-exported": "Charaktere exportiert",
+    "character-removed": "Zeichen entfernt",
     "shines-generated": "Effekte generiert"
   },
   "error": {
     "generic-dir-read": "Fehler beim Lesen des Verzeichnisses",
     "no-dir": "Kein Mod-Verzeichnis ausgewählt. Sie müssen das Stammverzeichnis Ihres Mod-Verzeichnisses durchsuchen, um loszulegen.",
-    "no-dir-short": "Kein Mod-Verzeichnis ausgewählt"
+    "no-dir-short": "Kein Mod-Verzeichnis ausgewählt",
+    "no-characters-to-export": "Es sind keine Zeichen zu exportieren"
   },
   "others": {
     "shine": {

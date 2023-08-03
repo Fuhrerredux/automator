@@ -23,12 +23,14 @@
     "traits": "Caratteristiche",
     "actions": "Azioni",
     "mod-dir": "Directory Mod",
-    "traits-def": "Definizioni delle Caratteristiche"
+    "traits-def": "Definizioni delle Caratteristiche",
+    "leader-roles": "Ruoli di leader"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Scegli uno",
+    "dropdown-multiple": "Scegliere più ruoli",
     "traits": "Inserisci qui le caratteristiche, assicurati di separarle con una virgola",
     "remaining": "{num} rimanenti"
   },
@@ -82,17 +84,23 @@
     "remove-character": {
       "heading": "Rimuovere il personaggio?",
       "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per l'etichetta {tag}? Questa azione non può essere annullata."
+    },
+    "character-export": {
+      "heading": "Esportatore di personaggi",
+      "summary": "Tutti i personaggi definiti nel database saranno esportati nei file della mod; nella cartella characters. Tuttavia, questa operazione sovrascriverà le definizioni correnti; assicurarsi di creare un backup prima di utilizzare questa funzione."
     }
   },
   "status": {
-    "characters-exported": "Personaggi esportati",
     "saved": "Salvato",
+    "characters-exported": "Personaggi esportati",
+    "character-removed": "Character removed",
     "shines-generated": "Effetti di luce generati"
   },
   "error": {
     "generic-dir-read": "Errore nella lettura della directory",
     "no-dir": "Non è stata selezionata alcuna directory di mod. Per iniziare, è necessario sfogliare la radice della cartella delle mod.",
-    "no-dir-short": "Non è stata selezionata alcuna directory di mod"
+    "no-dir-short": "Non è stata selezionata alcuna directory di mod",
+    "no-characters-to-export": "Non ci sono personaggi da esportare"
   },
   "others": {
     "shine": {

@@ -23,12 +23,14 @@
     "traits": "Traits",
     "actions": "Actions",
     "mod-dir": "Mod Directory",
-    "traits-def": "Traits Definitions"
+    "traits-def": "Traits Definitions",
+    "leader-roles": "Leader Roles"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Choose one",
+    "dropdown-multiple": "Choose multiple",
     "traits": "Enter traits here, make sure to separate by comma",
     "remaining": "{num} more"
   },

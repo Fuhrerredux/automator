@@ -198,7 +198,7 @@ async function submit() {
                 @update:model-value="addLeaderRole = $event" />
               <div v-if="addLeaderRole" class="mt-2 space-y-2">
                 <div>
-                  <span class="form-label">{{ t('field.ideology') }}</span>
+                  <span class="form-label">{{ t('field.leader-roles') }}</span>
                   <ideology-dropdown
                     :model-value="leaderIdeologies"
                     @update:model-value="leaderIdeologies = $event" />

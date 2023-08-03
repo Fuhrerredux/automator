@@ -23,12 +23,14 @@
     "traits": "Rasgos",
     "actions": "Acciones",
     "mod-dir": "Directorio del mod",
-    "traits-def": "Definiciones de rasgos"
+    "traits-def": "Definiciones de rasgos",
+    "leader-roles": "Roles de líder"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Elegir uno",
+    "dropdown-multiple": "Elegir varios",
     "traits": "Ingrese aquí los rasgos, asegúrese de separarlos por comas",
     "remaining": "{num} más"
   },
@@ -82,17 +84,23 @@
     "remove-character": {
       "heading": "¿Eliminar personaje?",
       "summary": "¿Estás seguro de que deseas eliminar al personaje \"{name}\" para la etiqueta {tag}? Esta acción no se puede deshacer."
+    },
+    "character-export": {
+      "heading": "Exportador de personajes",
+      "summary": "Todos los personajes definidos en la base de datos serán exportados a los archivos mod; en la carpeta characters. Sin embargo, esto sobrescribirá las definiciones actuales, asegúrate de crear una copia de seguridad antes de usar esta función."
     }
   },
   "status": {
-    "characters-exported": "Personajes exportados",
     "saved": "Guardado",
+    "characters-exported": "Personajes exportados",
+    "character-removed": "Character removed",
     "shines-generated": "Brillos generados"
   },
   "error": {
     "generic-dir-read": "Error al leer el directorio",
     "no-dir": "No se ha seleccionado ningún directorio mod. Necesitas navegar por la raíz de tu directorio mod para empezar",
-    "no-dir-short": "No se ha seleccionado ningún directorio mod."
+    "no-dir-short": "No se ha seleccionado ningún directorio mod.",
+    "no-characters-to-export": "No hay personajes para exportar"
   },
   "others": {
     "shine": {
