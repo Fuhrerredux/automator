@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toast-notification'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import CharacterRepository from '@database/repository'
 
 const { t } = useI18n()
+const $toast = useToast()
 const loading = ref(false)
 
-const props = defineProps<{
+const { character, refresh } = defineProps<{
   open: boolean
   character: CharacterWithId
   refresh: () => Promise<void>
 }>()
-defineEmits(['hide'])
+const emits = defineEmits(['hide'])
 
 async function submit() {
   try {
     loading.value = true
 
     const controller = CharacterRepository.getInstance()
-    await controller.remove(props.character)
-  } catch {
+    await controller.remove(character)
+    $toast.success(t('status.character-removed'))
+    await refresh()
+    emits('hide')
+  } catch (e) {
+    $toast.error(String(e))
   } finally {
     loading.value = false
   }

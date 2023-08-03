@@ -3,13 +3,13 @@ import { nanoid } from 'nanoid'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
-import CharacterRepository from '@/database/repository'
 import Dropdown from '@components/dropdown.vue'
 import FormGroup from '@components/form-group.vue'
 import IdeologyDropdown from '@components/ideology-dropdown.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import SwitchButton from '@components/switch.vue'
+import CharacterRepository from '@database/repository'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 import { ideologies } from '@shared/const/ideology'
 import { commanding, ministers, officers } from '@shared/const/roles'
@@ -71,6 +71,7 @@ onMounted(() => {
     addMinisterRole.value = character.roles.includes('minister')
     addOfficerRole.value = character.roles.includes('officer')
     leaderTraits.value = character.leaderTraits.join(',')
+    leaderIdeologies.value = character.leaderIdeologies as Ideology[]
     commanderTraits.value = character.commanderTraits.join(',')
     ministerTraits.value = character.ministerTraits
     officerTraits.value = character.officerTraits

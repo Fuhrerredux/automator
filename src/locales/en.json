@@ -90,8 +90,9 @@
     }
   },
   "status": {
-    "characters-exported": "Characters exported",
     "saved": "Saved",
+    "characters-exported": "Characters exported",
+    "character-removed": "Character removed",
     "shines-generated": "Shines generated"
   },
   "error": {
