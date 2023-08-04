@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import router from '@/router'
+import DropZone from '@components/drop-zone.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import { readCharacterFile } from '@shared/core/reader'
@@ -11,6 +12,7 @@ import useImportStore from '@stores/import'
 
 const { t } = useI18n()
 const $toast = useToast()
+const file = ref<File | null>(null)
 const loading = ref(false)
 const characters = ref<Record<string, any>[]>([])
 const { importData } = useImportStore()
@@ -20,15 +22,10 @@ defineProps<{
 }>()
 const emits = defineEmits(['hide'])
 
-async function onFileSelected(e: Event) {
-  const target = e.target as HTMLInputElement
-  const files = target.files
-
-  if (files && files.length > 0) {
-    const file = files[0]
-    const content = await readFileObject(file)
-    characters.value = readCharacterFile(content)
-  }
+async function onFileSelected(dropped: File) {
+  file.value = dropped
+  const content = await readFileObject(dropped)
+  characters.value = readCharacterFile(content)
 }
 
 async function triggerImport() {
@@ -58,9 +55,9 @@ async function triggerImport() {
     </template>
     <template #body>
       <div>
-        <label for="path">
-          <input type="file" name="path" id="path" class="form-file" @change="onFileSelected" />
-        </label>
+        <div>
+          <drop-zone :file="file" @dropped="onFileSelected" @reset="file = null" />
+        </div>
         <p v-if="characters.length > 0" class="text-sm text-center mt-4 text-zinc-500">
           {{ t('placeholder.character-parsed', { num: characters.length }) }}
         </p>

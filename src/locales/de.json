@@ -25,7 +25,9 @@
     "actions": "Aktionen",
     "mod-dir": "Mod-Verzeichnis",
     "traits-def": "Eigenschaftsdefinitionen",
-    "leader-roles": "Rollen der Führungskräfte"
+    "leader-roles": "Rollen der Führungskräfte",
+    "dropzone": "Ziehen Sie die Datei hierher, oder klicken Sie, um eine Datei zu suchen",
+    "dropzone-active": "Ablegen der Datei hier"
   },
   "placeholder": {
     "tag": "USA",

@@ -25,7 +25,9 @@
     "actions": "Azioni",
     "mod-dir": "Directory Mod",
     "traits-def": "Definizioni delle Caratteristiche",
-    "leader-roles": "Ruoli di leader"
+    "leader-roles": "Ruoli di leader",
+    "dropzone": "Trascinare il file qui o fare clic per sfogliare un file.",
+    "dropzone-active": "Lasciare il file qui"
   },
   "placeholder": {
     "tag": "USA",
