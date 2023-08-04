@@ -26,6 +26,10 @@ const useCharacterStore = defineStore({
       await repository.remove(character)
       this.characters = await repository.findAll()
     },
+    async purge() {
+      await repository.purge()
+      this.characters = await repository.findAll()
+    },
     async refresh() {
       try {
         this.characters = await repository.findAll()

@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <nav class="border-b bg-zinc-50 dark:bg-zinc-800 dark:border-b-zinc-700 sticky top-0 z-10">
+  <nav class="border-b bg-white dark:bg-zinc-800 dark:border-b-zinc-700 sticky top-0 z-10">
     <div class="content flex items-center justify-between px-8 py-2">
       <div class="flex items-center gap-4">
         <button type="button" class="dropdown-button" @click="router.back">

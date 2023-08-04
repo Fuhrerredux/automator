@@ -47,7 +47,7 @@ export default class DatabaseController {
     return await this.instance.select(query, bind)
   }
 
-  async execute<E>(query: string, bind: E[]): Promise<QueryResult> {
+  async execute<E>(query: string, bind?: E[]): Promise<QueryResult> {
     if (!this.instance) throw Error('Database is not yet initialized')
     return await this.instance.execute(query, bind)
   }

@@ -108,4 +108,8 @@ export default class CharacterRepository {
   async remove(character: CharacterWithId) {
     return await this.database.execute(`DELETE FROM characters WHERE id = $1`, [character.id])
   }
+
+  async purge() {
+    return await this.database.execute('DELETE FROM characters')
+  }
 }

@@ -6,6 +6,7 @@ import CharacterTable from '@components/character-table/table.vue'
 import CharacterEditor from '@components/characters/character-editor.vue'
 import ExportCharacters from '@components/characters/export-characters.vue'
 import ImportCharacters from '@components/characters/import-characters.vue'
+import PurgeCharacters from '@components/characters/purge-characters.vue'
 import RemoveCharacter from '@components/characters/remove-character.vue'
 import MenuDropdown from '@components/menu-dropdown.vue'
 import Page from '@components/page.vue'
@@ -22,12 +23,13 @@ import useCharacterStore from '@stores/characters'
 const { t } = useI18n()
 const editor = ref(false)
 const confirm = ref(false)
+const purgeConfirm = ref(false)
 const exportCharacters = ref(false)
 const importCharacters = ref(false)
 const character = ref<CharacterWithId | null>(null)
 const characterStore = useCharacterStore()
 const { characters } = storeToRefs(characterStore)
-const { update, create, remove } = characterStore
+const { update, create, remove, purge } = characterStore
 
 function handleNew() {
   character.value = null
@@ -71,9 +73,9 @@ function handleRemove(char: CharacterWithId) {
                 </button>
               </menu-item>
             </div>
-            <div class="p-1 hidden">
+            <div class="p-1">
               <menu-item as="div">
-                <button type="button" class="menu-item" @click="importCharacters = true">
+                <button type="button" class="menu-item" @click="purgeConfirm = true">
                   <no-symbol-icon class="h-5 w-5 mr-4" />
                   <span>{{ t('action.purge') }}</span>
                 </button>
@@ -100,6 +102,7 @@ function handleRemove(char: CharacterWithId) {
     :character="character!"
     :remove-fn="remove"
     @hide="confirm = false" />
+  <purge-characters :open="purgeConfirm" :purge-fn="purge" @hide="purgeConfirm = false" />
   <export-characters :open="exportCharacters" @hide="exportCharacters = false" />
   <import-characters :open="importCharacters" @hide="importCharacters = false" />
 </template>
