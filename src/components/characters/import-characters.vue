@@ -42,7 +42,6 @@ async function triggerImport() {
     importData(characters.value)
 
     loading.value = false
-    $toast.success(t('status.characters-imported'))
     emits('hide')
     router.push('/import')
   }
@@ -62,7 +61,7 @@ async function triggerImport() {
         <label for="path">
           <input type="file" name="path" id="path" class="form-file" @change="onFileSelected" />
         </label>
-        <p class="text-sm text-center mt-4">
+        <p v-if="characters.length > 0" class="text-sm text-center mt-4 text-zinc-500">
           {{ t('placeholder.character-parsed', { num: characters.length }) }}
         </p>
       </div>

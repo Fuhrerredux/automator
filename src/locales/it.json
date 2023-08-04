@@ -3,7 +3,8 @@
   "route": {
     "main": "Principale",
     "characters": "Personaggi",
-    "others": "Altro"
+    "others": "Altro",
+    "character-import": "Importatore di personaggi"
   },
   "theme": {
     "auto": "Sistema",
@@ -32,7 +33,8 @@
     "dropdown": "Scegli uno",
     "dropdown-multiple": "Scegliere più ruoli",
     "traits": "Inserisci qui le caratteristiche, assicurati di separarle con una virgola",
-    "remaining": "{num} rimanenti"
+    "remaining": "{num} rimanenti",
+    "character-parsed": "{num} carattere analizzato"
   },
   "action": {
     "create": "Crea",
@@ -44,11 +46,14 @@
     "row-actions": "Azioni",
     "browse": "Sfoglia",
     "generate": "Genera",
-    "load": "Carica"
+    "load": "Carica",
+    "purge": "Esportazione"
   },
   "loading": {
     "saving": "Salvataggio",
-    "removing": "Rimozione"
+    "removing": "Rimozione",
+    "exporting": "Spurgo",
+    "purging": "Epurazione"
   },
   "ideology": {
     "vanguardist": "Collettivismo Nazionale",
@@ -85,14 +90,23 @@
       "heading": "Rimuovere il personaggio?",
       "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per l'etichetta {tag}? Questa azione non può essere annullata."
     },
+    "purge-characters": {
+      "heading": "Rimuovere tutti i caratteri?",
+      "summary": "Siete sicuri di voler eliminare tutti i caratteri presenti nel database? Questa azione non può essere annullata."
+    },
     "character-export": {
       "heading": "Esportatore di personaggi",
       "summary": "Tutti i personaggi definiti nel database saranno esportati nei file della mod; nella cartella characters. Tuttavia, questa operazione sovrascriverà le definizioni correnti; assicurarsi di creare un backup prima di utilizzare questa funzione."
+    },
+    "character-import": {
+      "heading": "Importazione di caratteri",
+      "summary": "Importa le definizioni dei personaggi dai file del mod."
     }
   },
   "status": {
     "saved": "Salvato",
     "characters-exported": "Personaggi esportati",
+    "characters-imported": "Personaggi importati",
     "character-removed": "Character removed",
     "shines-generated": "Effetti di luce generati"
   },

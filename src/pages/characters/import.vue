@@ -76,6 +76,7 @@ function handleRemove(char: CharacterWithId) {
     :update-fn="upsert"
     @hide="editor = false" />
   <remove-character
+    v-if="confirm"
     :open="confirm"
     :character="character!"
     :remove-fn="remove"

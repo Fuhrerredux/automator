@@ -3,7 +3,8 @@
   "route": {
     "main": "Hauptmenü",
     "characters": "Charaktere",
-    "others": "Andere"
+    "others": "Andere",
+    "character-import": "Zeichen-Importer"
   },
   "theme": {
     "auto": "System",
@@ -32,7 +33,8 @@
     "dropdown": "Auswählen",
     "dropdown-multiple": "Wählen Sie mehrere",
     "traits": "Eigenschaften hier eingeben, mit Komma trennen",
-    "remaining": "noch {num} übrig"
+    "remaining": "noch {num} übrig",
+    "character-parsed": "{num} 1 Zeichen geparst"
   },
   "action": {
     "create": "Erstellen",
@@ -44,11 +46,14 @@
     "row-actions": "Aktionen",
     "browse": "Durchsuchen",
     "generate": "Generieren",
-    "load": "Laden"
+    "load": "Laden",
+    "purge": "Bereinigen"
   },
   "loading": {
     "saving": "Speichern",
-    "removing": "Entfernen"
+    "removing": "Entfernen",
+    "exporting": "Exportieren",
+    "purging": "Bereinigen"
   },
   "ideology": {
     "vanguardist": "Nationalkollektivist",
@@ -85,14 +90,23 @@
       "heading": "Charakter entfernen?",
       "summary": "Bist du sicher, dass du den Charakter \"{name}\" für die Kennung {tag} entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
     },
+    "purge-characters": {
+      "heading": "Alle Zeichen entfernen?",
+      "summary": "Sind Sie sicher, dass Sie alle Zeicheneinträge in der Datenbank bereinigen oder entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
     "character-export": {
       "heading": "Zeichen-Exporter",
       "summary": "Alle in der Datenbank definierten Charaktere werden in die Mod-Dateien exportiert, die sich im Ordner characters befinden. Dies überschreibt jedoch die aktuellen Definitionen, daher sollte man vor der Verwendung dieser Funktion ein Backup erstellen."
+    },
+    "character-import": {
+      "heading": "Charakter-Import",
+      "summary": "Importiert Charakterdefinitionen aus den Moddateien. Importierte Charaktere"
     }
   },
   "status": {
     "saved": "Gespeichert",
     "characters-exported": "Charaktere exportiert",
+    "characters-imported": "Characters imported",
     "character-removed": "Zeichen entfernt",
     "shines-generated": "Effekte generiert"
   },
