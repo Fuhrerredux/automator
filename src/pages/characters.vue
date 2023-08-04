@@ -5,21 +5,29 @@ import { useI18n } from 'vue-i18n'
 import CharacterTable from '@components/character-table/table.vue'
 import CharacterEditor from '@components/characters/character-editor.vue'
 import ExportCharacters from '@components/characters/export-characters.vue'
+import ImportCharacters from '@components/characters/import-characters.vue'
 import RemoveCharacter from '@components/characters/remove-character.vue'
 import MenuDropdown from '@components/menu-dropdown.vue'
+import Page from '@components/page.vue'
 import { MenuItem } from '@headlessui/vue'
-import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/vue/20/solid'
-import { DocumentArrowUpIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
+  EllipsisVerticalIcon,
+  NoSymbolIcon,
+  PlusIcon
+} from '@heroicons/vue/20/solid'
 import useCharacterStore from '@stores/characters'
 
 const { t } = useI18n()
 const editor = ref(false)
 const confirm = ref(false)
 const exportCharacters = ref(false)
+const importCharacters = ref(false)
 const character = ref<CharacterWithId | null>(null)
 const characterStore = useCharacterStore()
 const { characters } = storeToRefs(characterStore)
-const { refresh } = characterStore
+const { update, create, remove } = characterStore
 
 function handleNew() {
   character.value = null
@@ -29,21 +37,14 @@ function handleUpdate(char: CharacterWithId) {
   character.value = char
   editor.value = true
 }
-function handleEditorDismiss() {
-  editor.value = false
-}
-
 function handleRemove(char: CharacterWithId) {
   character.value = char
   confirm.value = true
 }
-function handleConfirmDismiss() {
-  confirm.value = false
-}
 </script>
 
 <template>
-  <main class="page">
+  <page>
     <div class="flex items-center justify-between">
       <h1 class="header">{{ t('route.characters') }}</h1>
       <div class="flex items-center gap-2">
@@ -59,8 +60,22 @@ function handleConfirmDismiss() {
             <div class="p-1">
               <menu-item as="div">
                 <button type="button" class="menu-item" @click="exportCharacters = true">
-                  <document-arrow-up-icon class="h-5 w-5 mr-2" />
+                  <arrow-up-tray-icon class="h-5 w-5 mr-4" />
                   <span>{{ t('action.export') }}</span>
+                </button>
+              </menu-item>
+              <menu-item as="div">
+                <button type="button" class="menu-item" @click="importCharacters = true">
+                  <arrow-down-tray-icon class="h-5 w-5 mr-4" />
+                  <span>{{ t('action.import') }}</span>
+                </button>
+              </menu-item>
+            </div>
+            <div class="p-1 hidden">
+              <menu-item as="div">
+                <button type="button" class="menu-item" @click="importCharacters = true">
+                  <no-symbol-icon class="h-5 w-5 mr-4" />
+                  <span>{{ t('action.purge') }}</span>
                 </button>
               </menu-item>
             </div>
@@ -71,17 +86,20 @@ function handleConfirmDismiss() {
     <div class="mt-4">
       <character-table :characters="characters" @update="handleUpdate" @remove="handleRemove" />
     </div>
-  </main>
+  </page>
   <character-editor
     v-if="editor"
     :open="editor"
     :character="character"
-    :refresh="refresh"
-    @hide="handleEditorDismiss" />
+    :update-fn="update"
+    :create-fn="create"
+    @hide="editor = false" />
   <remove-character
+    v-if="confirm"
     :open="confirm"
     :character="character!"
-    :refresh="refresh"
-    @hide="handleConfirmDismiss" />
+    :remove-fn="remove"
+    @hide="confirm = false" />
   <export-characters :open="exportCharacters" @hide="exportCharacters = false" />
+  <import-characters :open="importCharacters" @hide="importCharacters = false" />
 </template>

@@ -84,7 +84,7 @@ export default class CharacterRepository {
     return await this.database.execute(
       `
       UPDATE characters SET name = $1, tag = $2, ideology = $3, 
-        positions = $4, leaderTraits = $5, leaderIdeologies = $6 commanderTraits = $7, ministerTraits = $8, officerTraits = $9,
+        positions = $4, leaderTraits = $5, leaderIdeologies = $6, commanderTraits = $7, ministerTraits = $8, officerTraits = $9,
         roles = $10, cost = $11
       WHERE id = $12
       `,

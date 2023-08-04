@@ -5,15 +5,15 @@ export const commanding: DropdownOption<CommandingRole>[] = [
 ]
 
 export const ministers: DropdownOption<MinisterPosition>[] = [
-  { label: 'roles.head-of-government', value: 'head-of-government' },
-  { label: 'roles.foreign-minister', value: 'foreign-minister' },
-  { label: 'roles.economy-minister', value: 'economy-minister' },
-  { label: 'roles.security-minister', value: 'security-minister' }
+  { label: 'roles.head_of_government', value: 'head_of_government' },
+  { label: 'roles.foreign_minister', value: 'foreign_minister' },
+  { label: 'roles.economy_minister', value: 'economy_minister' },
+  { label: 'roles.security_minister', value: 'security_minister' }
 ]
 
 export const officers: DropdownOption<MilitaryPosition>[] = [
-  { label: 'roles.high-command', value: 'high-command' },
-  { label: 'roles.army-chief', value: 'army-chief' },
-  { label: 'roles.air-chief', value: 'air-chief' },
-  { label: 'roles.navy-chief', value: 'navy-chief' }
+  { label: 'roles.high_command', value: 'high_command' },
+  { label: 'roles.army_chief', value: 'army_chief' },
+  { label: 'roles.air_chief', value: 'air_chief' },
+  { label: 'roles.navy_chief', value: 'navy_chief' }
 ]

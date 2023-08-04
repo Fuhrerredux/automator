@@ -2,12 +2,13 @@
 import { useI18n } from 'vue-i18n'
 import ModDirectory from '@components/main/mod-directory.vue'
 import TraitsSource from '@components/main/traits-source.vue'
+import Page from '@components/page.vue'
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <main class="page">
+  <page>
     <div class="flex items-center justify-between">
       <h1 class="header">{{ t('route.main') }}</h1>
     </div>
@@ -17,5 +18,5 @@ const { t } = useI18n()
         <traits-source />
       </div>
     </div>
-  </main>
+  </page>
 </template>

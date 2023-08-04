@@ -51,6 +51,9 @@
   .form-label {
     @apply mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-50;
   }
+  .form-file {
+    @apply cursor-pointer truncate text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100;
+  }
   .dialog-actions {
     @apply mb-4 mt-6 flex items-center justify-end space-x-2;
   }
@@ -64,7 +67,7 @@
     @apply rounded-md border border-amber-500 bg-rose-50 p-4 text-sm font-medium text-amber-600 dark:border-amber-700 dark:bg-amber-900 dark:text-amber-400;
   }
   .dropdown-button {
-    @apply flex items-center rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 shadow-sm hover:bg-zinc-100 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:border-zinc-100 disabled:text-zinc-300 disabled:hover:bg-inherit dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700;
+    @apply z-0 flex items-center rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 shadow-sm hover:bg-zinc-100 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:border-zinc-100 disabled:text-zinc-300 disabled:hover:bg-inherit dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700;
   }
   .dropdown-panel {
     @apply absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base text-zinc-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm;

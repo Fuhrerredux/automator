@@ -7,14 +7,14 @@ const useTraitsStore = defineStore({
   state: () => {
     return {
       traits: {
-        'head-of-government': [],
-        'foreign-minister': [],
-        'economy-minister': [],
-        'security-minister': [],
-        'high-command': [],
-        'army-chief': [],
-        'navy-chief': [],
-        'air-chief': []
+        head_of_government: [],
+        foreign_minister: [],
+        economy_minister: [],
+        security_minister: [],
+        high_command: [],
+        army_chief: [],
+        navy_chief: [],
+        air_chief: []
       },
       files: [],
       trait: null

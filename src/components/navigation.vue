@@ -14,7 +14,7 @@ function isActive(link: string): string {
 </script>
 
 <template>
-  <nav class="border-b dark:border-b-zinc-700">
+  <nav class="border-b bg-zinc-50 dark:bg-zinc-800 dark:border-b-zinc-700 sticky top-0 z-10">
     <div class="content flex items-center justify-between px-8 py-2">
       <div class="font-bold">{{ t('app') }}</div>
       <div class="space-x-2 text-sm font-medium text-zinc-500">

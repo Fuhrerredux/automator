@@ -1,43 +1,50 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
+import router from '@/router'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
-import { exportCharacters } from '@shared/core/writer'
-import useCharacterStore from '@stores/characters'
-import useModStore from '@stores/mod'
+import { readCharacterFile } from '@shared/core/reader'
+import { readFileObject } from '@shared/utils/reader'
+import useImportStore from '@stores/import'
 
 const { t } = useI18n()
 const $toast = useToast()
 const loading = ref(false)
-const modStore = useModStore()
-const characterStore = useCharacterStore()
-const { characters } = storeToRefs(characterStore)
+const characters = ref<Record<string, any>[]>([])
+const { importData } = useImportStore()
 
 defineProps<{
   open: boolean
 }>()
 const emits = defineEmits(['hide'])
 
-async function triggerExports() {
+async function onFileSelected(e: Event) {
+  const target = e.target as HTMLInputElement
+  const files = target.files
+
+  if (files && files.length > 0) {
+    const file = files[0]
+    const content = await readFileObject(file)
+    characters.value = readCharacterFile(content)
+  }
+}
+
+async function triggerImport() {
   loading.value = true
-  if (modStore.directory.length <= 0) {
+  if (characters.value.length <= 0) {
     $toast.error(t('error.no-dir-selected'))
     return
   }
 
-  const data = characterStore.characters
-  const common = modStore.getCommonDirectory
-
-  if (Array.isArray(data) && common) {
-    await exportCharacters(data, common.path)
+  if (Array.isArray(characters.value)) {
+    importData(characters.value)
 
     loading.value = false
-    $toast.success(t('status.characters-exported'))
+    $toast.success(t('status.characters-imported'))
     emits('hide')
+    router.push('/import')
   }
 }
 </script>
@@ -45,16 +52,21 @@ async function triggerExports() {
 <template>
   <modal :hideable="!loading" :open="open" size="max-w-md" @hide="$emit('hide')">
     <template #title>
-      {{ t('modal.character-export.heading') }}
+      {{ t('modal.character-import.heading') }}
     </template>
     <template #description>
-      {{ t('modal.character-export.summary') }}
+      {{ t('modal.character-import.summary') }}
     </template>
     <template #body>
-      <div v-if="characters.length <= 0" class="banner-warning mx-auto w-2/3 text-center">
-        <exclamation-triangle-icon class="inline-block h-6 w-6" />
-        <p>{{ t('error.no-characters-to-export') }}</p>
+      <div>
+        <label for="path">
+          <input type="file" name="path" id="path" class="form-file" @change="onFileSelected" />
+        </label>
+        <p class="text-sm text-center mt-4">
+          {{ t('placeholder.character-parsed', { num: characters.length }) }}
+        </p>
       </div>
+
       <div>
         <div class="dialog-actions">
           <button type="button" class="button-secondary" @click="$emit('hide')">
@@ -65,12 +77,12 @@ async function triggerExports() {
             class="button-primary"
             :loading="loading"
             :disabled="characters.length <= 0 || loading"
-            @click="triggerExports">
+            @click="triggerImport">
             <template #content>
-              {{ t('action.export') }}
+              {{ t('action.import') }}
             </template>
             <template #loading>
-              <span>{{ t('loading.exporting') }}</span>
+              <span>{{ t('loading.importing') }}</span>
             </template>
           </spinner-button>
         </div>

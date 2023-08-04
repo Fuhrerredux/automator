@@ -14,10 +14,10 @@ export function getCommandingRole(character: CharacterWithId): CommandingRole | 
 
 export function isMinisterialRole(role: Position): boolean {
   return (
-    role === 'head-of-government' ||
-    role === 'foreign-minister' ||
-    role === 'economy-minister' ||
-    role === 'security-minister'
+    role === 'head_of_government' ||
+    role === 'foreign_minister' ||
+    role === 'economy_minister' ||
+    role === 'security_minister'
   )
 }
 
@@ -27,10 +27,10 @@ export function getMinisterialRoles(character: CharacterWithId): MinisterPositio
 
 export function isOfficerRole(role: Position): boolean {
   return (
-    role === 'high-command' ||
-    role === 'army-chief' ||
-    role === 'navy-chief' ||
-    role === 'air-chief'
+    role === 'high_command' ||
+    role === 'army_chief' ||
+    role === 'navy_chief' ||
+    role === 'air_chief'
   )
 }
 

@@ -3,7 +3,8 @@
   "route": {
     "main": "Main",
     "characters": "Characters",
-    "others": "Others"
+    "others": "Others",
+    "character-import": "Character Importer"
   },
   "theme": {
     "auto": "System",
@@ -32,7 +33,8 @@
     "dropdown": "Choose one",
     "dropdown-multiple": "Choose multiple",
     "traits": "Enter traits here, make sure to separate by comma",
-    "remaining": "{num} more"
+    "remaining": "{num} more",
+    "character-parsed": "{num} characters parsed"
   },
   "action": {
     "create": "Create",
@@ -54,28 +56,28 @@
   "ideology": {
     "vanguardist": "National Collectivist",
     "collectivist": "Socialist",
-    "libertarian-socialist": "Libertarian Socialist",
-    "social-democrat": "Social Democrat",
-    "social-liberal": "Social Liberal",
-    "market-liberal": "Market Liberal",
-    "social-conservative": "Social Conservative",
-    "authoritarian-democrat": "Authoritarian Democrat",
-    "paternal-autocrat": "Paternal Autocrat",
-    "national-populist": "National Populist",
+    "libertarian_socialist": "Libertarian Socialist",
+    "social_democrat": "Social Democrat",
+    "social_liberal": "Social Liberal",
+    "market_liberal": "Market Liberal",
+    "social_conservative": "Social Conservative",
+    "authoritarian_democrat": "Authoritarian Democrat",
+    "paternal_autocrat": "Paternal Autocrat",
+    "national_populist": "National Populist",
     "valkist": "Valkist"
   },
   "roles": {
     "marshal": "Field Marshal",
     "general": "Corps Commander",
     "admiral": "Admiral",
-    "head-of-government": "Head of Government",
-    "foreign-minister": "Foreign Minister",
-    "economy-minister": "Economy Minister",
-    "security-minister": "Security Minister",
-    "high-command": "Chief of Staff",
-    "army-chief": "Chief of Army",
-    "air-chief": "Chief of Air Force",
-    "navy-chief": "Chief of Navy"
+    "head_of_government": "Head of Government",
+    "foreign_minister": "Foreign Minister",
+    "economy_minister": "Economy Minister",
+    "security_minister": "Security Minister",
+    "high_command": "Chief of Staff",
+    "army_chief": "Chief of Army",
+    "air_chief": "Chief of Air Force",
+    "navy_chief": "Chief of Navy"
   },
   "modal": {
     "character-editor": {
@@ -89,11 +91,16 @@
     "character-export": {
       "heading": "Character Exporter",
       "summary": "Every characters defined in the database will be exported to the mod files; in the characters folder. This will however, overwrite the current definitions, be sure to create a backup before using this feature."
+    },
+    "character-import": {
+      "heading": "Character Import",
+      "summary": "Import character definitions from the mod files."
     }
   },
   "status": {
     "saved": "Saved",
     "characters-exported": "Characters exported",
+    "characters-imported": "Characters imported",
     "character-removed": "Character removed",
     "shines-generated": "Shines generated"
   },

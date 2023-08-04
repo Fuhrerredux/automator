@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import Dropdown from '@components/dropdown.vue'
@@ -9,7 +9,6 @@ import IdeologyDropdown from '@components/ideology-dropdown.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import SwitchButton from '@components/switch.vue'
-import CharacterRepository from '@database/repository'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 import { ideologies } from '@shared/const/ideology'
 import { commanding, ministers, officers } from '@shared/const/roles'
@@ -21,15 +20,15 @@ import {
 } from '@shared/utils/character'
 import useTraits from '@stores/traits'
 
-const repository = CharacterRepository.getInstance()
 const { traits } = useTraits()
 const { t } = useI18n({ useScope: 'local' })
 const $toast = useToast()
 const loading = ref(false)
-const { open, character, refresh } = defineProps<{
+const { open, character, updateFn, createFn } = defineProps<{
   open: boolean
   character: CharacterWithId | null
-  refresh: () => Promise<void>
+  updateFn: (character: CharacterWithId) => Promise<void>
+  createFn: (character: CharacterWithId) => Promise<void>
 }>()
 const emit = defineEmits(['hide'])
 
@@ -48,17 +47,17 @@ const commandingRole = ref<CommandingRole>(commanding[0].value)
 const commanderTraits = ref<string>('')
 const ministerRoles = ref<MinisterPosition[]>([])
 const ministerTraits = ref<Record<MinisterPosition, string>>({
-  'head-of-government': '',
-  'foreign-minister': '',
-  'economy-minister': '',
-  'security-minister': ''
+  head_of_government: '',
+  foreign_minister: '',
+  economy_minister: '',
+  security_minister: ''
 })
 const officerRoles = ref<MilitaryPosition[]>([])
 const officerTraits = ref<Record<MilitaryPosition, string>>({
-  'high-command': '',
-  'army-chief': '',
-  'air-chief': '',
-  'navy-chief': ''
+  high_command: '',
+  army_chief: '',
+  air_chief: '',
+  navy_chief: ''
 })
 
 onMounted(() => {
@@ -125,17 +124,17 @@ async function submit() {
       ideology: ideology.value,
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
-      leaderIdeologies: leaderIdeologies.value,
-      ministerTraits: ministerTraits.value,
-      officerTraits: officerTraits.value,
+      leaderIdeologies: toRaw(leaderIdeologies.value),
+      ministerTraits: toRaw(ministerTraits.value),
+      officerTraits: toRaw(officerTraits.value),
       positions,
       roles
     }
 
-    if (character) await repository.update(data)
-    else await repository.create(data)
+    if (character) await updateFn(data)
+    else await createFn(data)
     $toast.success(t('status.saved'))
-    await refresh()
+
     emit('hide')
   } catch (e) {
     $toast.error(String(e))

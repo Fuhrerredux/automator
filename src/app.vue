@@ -3,7 +3,6 @@ import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import Navigation from '@components/navigation.vue'
 import DatabaseController from '@database/controller'
 import useCharactersStore from '@stores/characters'
 import useModStore from '@stores/mod'
@@ -41,8 +40,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <navigation />
-  <div class="content px-8">
-    <router-view />
-  </div>
+  <router-view />
 </template>

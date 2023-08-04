@@ -1,7 +1,7 @@
 import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
-import { getIdeologySuffix, getIdeologyToken } from '@shared/utils/ideology'
+import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 
@@ -51,7 +51,7 @@ function definePortraits(character: CharacterWithId): string {
 function defineCountryLeader(character: CharacterWithId): string {
   return character.roles.includes('leader')
     ? `country_leader = {
-      ideology = ${getIdeologyToken(character.ideology)}_subtype
+      ideology = ${character.ideology}_subtype
       traits = {
         ${character.leaderTraits.join('\n')}
       }
@@ -101,13 +101,13 @@ function defineMinisterialRole(character: CharacterWithId): string {
   let advisor = ''
   const ministerPositions = positions.filter((e) => isCivilianPosition(e))
   for (const position of ministerPositions) {
-    const ideology = getIdeologyToken(character.ideology)
+    const ideology = character.ideology
     const trait = ministerTraits[position as MinisterPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
 
     const template = `advisor = {
       cost = ${cost}
-      slot = ${buildToken(position)}
+      slot = ${position}
       available = { 
         hidden_trigger = { has_country_flag = ${idea}_hired }
       }
@@ -143,7 +143,7 @@ function defineOfficerRole(character: CharacterWithId): string {
 
     const template = `advisor = {
       cost = ${cost}
-      slot = ${buildToken(position)}
+      slot = ${position}
       idea_token = ${idea}
       traits = {
         ${trait}
