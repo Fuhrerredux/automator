@@ -192,7 +192,3 @@ function extractAdvisorRoles(content: string): string[] {
 
   return roles
 }
-
-export function readIdeasFile(content: string): Record<string, any>[] {
-  return []
-}
