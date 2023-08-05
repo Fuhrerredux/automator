@@ -1,5 +1,10 @@
-import { isIdeologyToken } from '@shared/utils/ideology'
-import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
+import { isIdeologyToken, parseIdeology } from '@shared/utils/ideology'
+import {
+  getPositionSuffix,
+  isCivilianPosition,
+  isMilitaryPosition,
+  parsePosition
+} from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 
 const positions: Position[] = [
@@ -191,4 +196,82 @@ function extractAdvisorRoles(content: string): string[] {
   })
 
   return roles
+}
+
+export function readLocalisationFile(content: string) {
+  if (content.length <= 0) return []
+
+  function extractPosition(token: string) {
+    const positions = ['hog', 'for', 'eco', 'sec', 'cos', 'carm', 'cnav', 'cair']
+    return positions.find((e) => token.includes(`_${e}`))
+  }
+  function extractIdeology(token: string) {
+    const ideologies = ['van', 'col', 'lib', 'sde', 'sli', 'mli', 'sco', 'ade', 'pau', 'npo', 'val']
+    return ideologies.find((e) => token.includes(`_${e}`))
+  }
+
+  const records: Character[] = []
+  const lines = content.split('\n')
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed.length <= 0) continue
+
+    const token = trimmed.substring(0, trimmed.indexOf(':'))
+    const tag = token.substring(0, 3)
+    const position = parsePosition(extractPosition(token))
+    const ideology = extractIdeology(token)
+
+    const start = trimmed.indexOf('"')
+    const name = trimmed.substring(start, trimmed.length)
+
+    const record: Character = {
+      name,
+      tag,
+      cost: 150,
+      ideology: parseIdeology(ideology) ?? 'vanguardist',
+      roles: [],
+      leaderTraits: [],
+      leaderIdeologies: [],
+      commanderTraits: [],
+      positions: [],
+      ministerTraits: {
+        head_of_government: '',
+        foreign_minister: '',
+        economy_minister: '',
+        security_minister: ''
+      },
+      officerTraits: {
+        high_command: '',
+        army_chief: '',
+        air_chief: '',
+        navy_chief: ''
+      }
+    }
+
+    const index = records.findIndex((e) => e.name === name)
+    if (index >= 0) {
+      const curr = records[index]
+      if (position) {
+        curr.positions = [...curr.positions, position]
+        if (isCivilianPosition(position) && !curr.roles.includes('minister')) {
+          curr.roles = [...curr.roles, 'minister']
+        } else if (isMilitaryPosition(position) && !curr.roles.includes('officer')) {
+          curr.roles = [...curr.roles, 'officer']
+        }
+      }
+      records[index] = curr
+    } else {
+      if (position) {
+        record.positions = [...record.positions, position]
+        if (isCivilianPosition(position) && !record.roles.includes('minister')) {
+          record.roles = [...record.roles, 'minister']
+        } else if (isMilitaryPosition(position) && !record.roles.includes('officer')) {
+          record.roles = [...record.roles, 'officer']
+        }
+      }
+      records.push(record)
+    }
+  }
+
+  return records
 }

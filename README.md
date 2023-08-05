@@ -39,27 +39,21 @@ implemented in the future.
 While the aim of the creation of this tool is to automate the creation of the
 characters used in the mod; there are also manual work involved. Currently,
 there are three ways in adding characters. One is adding a single character
-through the character editor clicking the "Add" button, this is ideal when
+through the character editor clicking the "Create" button, this is ideal when
 adding or editing single characters, not ideal when creating batches.
 The other one is adding through the "Importer", by clicking the "Import" button,
-this needs a CSV file, containing the names of the characters.
+this either needs a character file from the mod itself to be reimported or a
+localization file that doesn't have any other stuff inside except for the
+localization for the idea-based ministers.
 
-Sample content of CSV file:
-
-```
-Rodrigo Duterte,Emmanuel Pacquiao,Ferdinand Marcos Jr.
-```
-
-And the final one if through extracting the names in the localization files.
-This only work for idea-style ministers though, and will parse the names based
+This will only work for idea-style ministers though, and will parse the names based
 on the prefixes of the positions of the ministers, (Head of Government is `hog`).
 
 Sample Idea-Style Minister Localization file:
 
 ```yaml
-PHI_Rodrigo_Duterte_hog_sde:0 "Rodrigo Duterte"
-PHI_Ferdinand_Marcos_Jr_hog_sde:0 "Ferdinand Marcos Jr."
-PHI_Emmanuel_Pacquiao_hog_sco:0 "Emmanuel Pacquiao"
+USA_Douglas_MacArthur_hog_pau:0 "Douglas MacArthur"
+USA_Herbert_Clark_Hoover_hog_mli:0 "Herbert Clark Hoover"
 ```
 
 A successfull import will direct you to a screen where you can tweak the details

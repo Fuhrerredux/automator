@@ -6,9 +6,11 @@ import router from '@/router'
 import DropZone from '@components/drop-zone.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
-import { readCharacterFile } from '@shared/core/reader'
+import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { readCharacterFile, readLocalisationFile } from '@shared/core/reader'
 import { readFileObject } from '@shared/utils/reader'
 import useImportStore from '@stores/import'
+import { open as openTauri } from '@tauri-apps/api/shell'
 
 const { t } = useI18n()
 const $toast = useToast()
@@ -25,7 +27,12 @@ const emits = defineEmits(['hide'])
 async function onFileSelected(dropped: File) {
   file.value = dropped
   const content = await readFileObject(dropped)
-  characters.value = readCharacterFile(content)
+
+  if (dropped.type === 'application/x-yaml') {
+    characters.value = readLocalisationFile(content)
+  } else if (dropped.type === 'text/plain') {
+    characters.value = readCharacterFile(content)
+  }
 }
 
 async function triggerImport() {
@@ -43,6 +50,9 @@ async function triggerImport() {
     router.push('/import')
   }
 }
+
+const handleClick = () =>
+  openTauri('https://github.com/dax0102/automator#how-do-i-automate-creation-of-characters')
 </script>
 
 <template>
@@ -54,15 +64,25 @@ async function triggerImport() {
       {{ t('modal.character-import.summary') }}
     </template>
     <template #body>
-      <div>
+      <div class="space-y-4">
         <div>
           <drop-zone :file="file" @dropped="onFileSelected" @reset="file = null" />
+          <p v-if="characters.length > 0" class="text-sm text-center text-zinc-500">
+            {{ t('placeholder.character-parsed', { num: characters.length }) }}
+          </p>
         </div>
-        <p v-if="characters.length > 0" class="text-sm text-center mt-4 text-zinc-500">
-          {{ t('placeholder.character-parsed', { num: characters.length }) }}
-        </p>
-      </div>
+        <div class="text-sm text-zinc-500 flex items-center">
+          <information-circle-icon class="h-6 w-6 shrink-0 mr-4" />
 
+          <i18n-t keypath="info.import-ext" tag="p">
+            <template #end>
+              <button type="button" class="text-link" @click="handleClick">
+                {{ t('action.learn-more') }}
+              </button>
+            </template>
+          </i18n-t>
+        </div>
+      </div>
       <div>
         <div class="dialog-actions">
           <button type="button" class="button-secondary" @click="$emit('hide')">

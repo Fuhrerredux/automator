@@ -48,3 +48,32 @@ export function getIdeologySuffix(ideology: Ideology): string {
 export function isIdeologyToken(ideology: string) {
   return ideologies.includes(ideology.trim() as Ideology)
 }
+
+export function parseIdeology(ideology: string | null | undefined): Ideology | null {
+  switch (ideology) {
+    case 'van':
+      return 'vanguardist'
+    case 'col':
+      return 'collectivist'
+    case 'lib':
+      return 'libertarian_socialist'
+    case 'sde':
+      return 'social_democrat'
+    case 'sli':
+      return 'social_liberal'
+    case 'mli':
+      return 'market_liberal'
+    case 'sco':
+      return 'social_conservative'
+    case 'ade':
+      return 'authoritarian_democrat'
+    case 'pau':
+      return 'paternal_autocrat'
+    case 'npo':
+      return 'national_populist'
+    case 'val':
+      return 'valkist'
+    default:
+      return null
+  }
+}

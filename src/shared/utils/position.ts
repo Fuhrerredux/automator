@@ -36,3 +36,26 @@ export function isMilitaryPosition(position: Position) {
     position === 'air_chief'
   )
 }
+
+export function parsePosition(position: string | null | undefined): Position | null {
+  switch (position) {
+    case 'hog':
+      return 'head_of_government'
+    case 'for':
+      return 'foreign_minister'
+    case 'eco':
+      return 'economy_minister'
+    case 'sec':
+      return 'security_minister'
+    case 'cos':
+      return 'high_command'
+    case 'carm':
+      return 'army_chief'
+    case 'cnav':
+      return 'navy_chief'
+    case 'cair':
+      return 'air_chief'
+    default:
+      return null
+  }
+}
