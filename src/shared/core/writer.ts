@@ -49,14 +49,19 @@ function definePortraits(character: CharacterWithId): string {
 }
 
 function defineCountryLeader(character: CharacterWithId): string {
-  return character.roles.includes('leader')
-    ? `country_leader = {
-      ideology = ${character.ideology}_subtype
+  const roles: string[] = []
+  const ideologies = Array.from(new Set(character.leaderIdeologies))
+  ideologies.forEach((ideology, index) => {
+    const padding = index > 0 ? '\n\t\t' : ''
+    roles.push(`${padding}country_leader = {
+      ideology = ${ideology}_subtype
       traits = {
         ${character.leaderTraits.join('\n')}
       }
-    }`
-    : ''
+    }`)
+  })
+
+  return roles.join('')
 }
 
 function defineCommandingRole(character: CharacterWithId): string {
@@ -100,12 +105,13 @@ function defineMinisterialRole(character: CharacterWithId): string {
 
   let advisor = ''
   const ministerPositions = positions.filter((e) => isCivilianPosition(e))
-  for (const position of ministerPositions) {
+  ministerPositions.forEach((position, index) => {
     const ideology = character.ideology
     const trait = ministerTraits[position as MinisterPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
+    const padding = index > 0 ? '\n\t\t' : ''
 
-    const template = `advisor = {
+    const template = `${padding}advisor = {
       cost = ${cost}
       slot = ${position}
       available = { 
@@ -123,10 +129,9 @@ function defineMinisterialRole(character: CharacterWithId): string {
         ${ideology}
         ${trait}
       }
-    }
-    `
+    }`
     advisor = advisor.concat(template)
-  }
+  })
 
   return advisor
 }
@@ -137,21 +142,21 @@ function defineOfficerRole(character: CharacterWithId): string {
 
   let advisor = ''
   const officerPositions = positions.filter((e) => isMilitaryPosition(e))
-  for (const position of officerPositions) {
+  officerPositions.forEach((position, index) => {
     const trait = officerTraits[position as MilitaryPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
+    const padding = index > 0 ? '\n\t\t' : ''
 
-    const template = `advisor = {
+    const template = `${padding}advisor = {
       cost = ${cost}
       slot = ${position}
       idea_token = ${idea}
       traits = {
         ${trait}
       }
-    }
-    `
+    }`
     advisor = advisor.concat(template)
-  }
+  })
 
   return advisor
 }

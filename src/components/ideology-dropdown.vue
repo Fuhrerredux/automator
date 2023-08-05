@@ -8,6 +8,7 @@ import { ideologies } from '@shared/const/ideology'
 const { t } = useI18n()
 
 const props = defineProps<{
+  current: Ideology
   disabled?: boolean
   modelValue: Ideology[]
 }>()
@@ -15,6 +16,7 @@ defineEmits<{
   (e: 'update:modelValue', value: Ideology[]): void
 }>()
 
+const additional = computed(() => ideologies.filter((e) => e.value !== props.current))
 const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).join(', '))
 </script>
 
@@ -41,7 +43,7 @@ const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).joi
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option
-          v-for="option in ideologies"
+          v-for="option in additional"
           v-slot="{ selected }"
           :value="option.value"
           as="template">

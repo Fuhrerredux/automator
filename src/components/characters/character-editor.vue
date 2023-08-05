@@ -124,7 +124,7 @@ async function submit() {
       ideology: ideology.value,
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
-      leaderIdeologies: toRaw(leaderIdeologies.value),
+      leaderIdeologies: toRaw(leaderIdeologies.value).concat([ideology.value]),
       ministerTraits: toRaw(ministerTraits.value),
       officerTraits: toRaw(officerTraits.value),
       positions,
@@ -199,6 +199,7 @@ async function submit() {
                 <div>
                   <span class="form-label">{{ t('field.leader-roles') }}</span>
                   <ideology-dropdown
+                    :current="ideology"
                     :model-value="leaderIdeologies"
                     @update:model-value="leaderIdeologies = $event" />
                 </div>
@@ -336,7 +337,7 @@ async function submit() {
           <spinner-button type="submit" class="button-primary" :loading="loading">
             <template #content>
               <check-icon class="mr-2 h-4 w-4" />
-              {{ t('action.create') }}
+              {{ character ? t('action.edit') : t('action.create') }}
             </template>
             <template #loading>
               <span>{{ t('loading.saving') }}</span>

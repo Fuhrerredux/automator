@@ -49,7 +49,8 @@
     "browse": "Durchsuchen",
     "generate": "Generieren",
     "load": "Laden",
-    "purge": "Bereinigen"
+    "purge": "Bereinigen",
+    "learn-more": "Mehr erfahren"
   },
   "loading": {
     "saving": "Speichern",
@@ -117,6 +118,9 @@
     "no-dir": "Kein Mod-Verzeichnis ausgewählt. Sie müssen das Stammverzeichnis Ihres Mod-Verzeichnisses durchsuchen, um loszulegen.",
     "no-dir-short": "Kein Mod-Verzeichnis ausgewählt",
     "no-characters-to-export": "Es sind keine Zeichen zu exportieren"
+  },
+  "info": {
+    "import-ext": "Sie können die Zeichendatei oder die Lokalisierungsdatei verwenden, die Definitionen für die zu importierenden Minister enthält. {end}"
   },
   "others": {
     "shine": {
