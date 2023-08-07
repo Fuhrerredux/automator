@@ -14,7 +14,11 @@ const useThemeStore = defineStore({
     },
     change(theme: Theme) {
       this.theme = theme
-      if (this.theme === 'dark') document.body.classList.add('dark')
+      if (
+        this.theme === 'dark' ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme === 'auto')
+      )
+        document.body.classList.add('dark')
       else document.body.classList.remove('dark')
       localStorage.setItem('theme', theme)
     }
