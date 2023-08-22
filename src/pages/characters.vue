@@ -19,6 +19,7 @@ import {
   PlusIcon
 } from '@heroicons/vue/20/solid'
 import useCharacterStore from '@stores/characters'
+import useModStore from '@stores/mod'
 
 const { t } = useI18n()
 const editor = ref(false)
@@ -28,7 +29,9 @@ const exportCharacters = ref(false)
 const importCharacters = ref(false)
 const character = ref<CharacterWithId | null>(null)
 const characterStore = useCharacterStore()
+const modStore = useModStore()
 const { characters } = storeToRefs(characterStore)
+const { directory } = storeToRefs(modStore)
 const { update, create, remove, purge } = characterStore
 
 function handleNew() {
@@ -50,7 +53,11 @@ function handleRemove(char: CharacterWithId) {
     <div class="flex items-center justify-between">
       <h1 class="header">{{ t('route.characters') }}</h1>
       <div class="flex items-center gap-2">
-        <button type="button" class="button-primary flex items-center" @click="handleNew">
+        <button
+          type="button"
+          class="button-primary flex items-center"
+          :disabled="directory.trim().length <= 0"
+          @click="handleNew">
           <plus-icon class="mr-2 h-5 w-5" />
           <span>{{ t('action.create') }}</span>
         </button>
