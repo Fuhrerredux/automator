@@ -23,26 +23,34 @@ function definePortraits(character: CharacterWithId): string {
 
   let portraits = ''
   if (hasCivillian) {
-    const template = `\tcivilian = {
-        ${roles.includes('leader') && `large = ${buildLargePortaitPath(name, tag)}`}
-        ${roles.includes('minister') && `small = ${buildSmallPortraitPath(name, tag)}`}
-      }`
+    let template = '\t\t\tcivilian = {'
+
+    if (roles.includes('leader'))
+      template = template.concat(`\n\t\t\t\tlarge = ${buildLargePortaitPath(name, tag)}`)
+    if (roles.includes('minister'))
+      template = template.concat(`\n\t\t\t\tsmall = ${buildSmallPortraitPath(name, tag)}`)
+
+    template = template.concat('\n\t\t\t}')
     portraits = portraits.concat(template)
   }
   if (hasArmyWithOfficer) {
-    const template = `
-      army = {
-        ${hasArmy && `large = ${buildLargePortaitPath(name, tag)})`}
-        ${roles.includes('officer') && `small = ${buildSmallPortraitPath(name, tag)}`}
-      }
-    `
+    let template = ''
+    // spacing issues
+    if (hasCivillian) template = '\n'
+    template = template.concat('\t\t\tarmy = {')
+
+    if (hasArmy)
+      template = template.concat(`\n\t\t\t\tlarge = ${buildLargePortaitPath(name, tag)})`)
+    if (roles.includes('officer'))
+      template = template.concat('\n\t\t\t\tsmall = ${buildSmallPortraitPath(name, tag)}')
+
+    template = template.concat('\n\t\t\t}')
     portraits = portraits.concat(template)
   }
   if (hasNavy) {
-    const template = `navy = {
+    let template = `\n\t\t\tnavy = {
         large = ${buildLargePortaitPath(name, tag)}
-      }
-    `
+      }`
     portraits = portraits.concat(template)
   }
   return portraits
@@ -51,9 +59,8 @@ function definePortraits(character: CharacterWithId): string {
 function defineCountryLeader(character: CharacterWithId): string {
   const roles: string[] = []
   const ideologies = Array.from(new Set(character.leaderIdeologies))
-  ideologies.forEach((ideology, index) => {
-    const padding = index > 0 ? '\n\t\t' : ''
-    roles.push(`${padding}country_leader = {
+  ideologies.forEach((ideology) => {
+    roles.push(`\n\t\tcountry_leader = {
       ideology = ${ideology}_subtype
       traits = {
         ${character.leaderTraits.join('\n')}
@@ -66,7 +73,7 @@ function defineCountryLeader(character: CharacterWithId): string {
 
 function defineCommandingRole(character: CharacterWithId): string {
   if (character.roles.includes('marshal')) {
-    return `field_marshal = {
+    return `\n\t\tfield_marshal = {
       traits = { ${character.commanderTraits.join(' ')} }
       skill = 1
       attack_skill = 1
@@ -76,7 +83,7 @@ function defineCommandingRole(character: CharacterWithId): string {
     }`
   }
   if (character.roles.includes('general')) {
-    return `corps_commander = {
+    return `\n\t\tcorps_commander = {
       traits = { ${character.commanderTraits.join(' ')} }
       skill = 1
       attack_skill = 1
@@ -86,7 +93,7 @@ function defineCommandingRole(character: CharacterWithId): string {
     }`
   }
   if (character.roles.includes('admiral')) {
-    return `navy_leader = {
+    return `\n\t\tnavy_leader = {
       traits = { ${character.commanderTraits.join(' ')} }
       skill = 1
       attack_skill = 1
@@ -105,13 +112,12 @@ function defineMinisterialRole(character: CharacterWithId): string {
 
   let advisor = ''
   const ministerPositions = positions.filter((e) => isCivilianPosition(e))
-  ministerPositions.forEach((position, index) => {
+  ministerPositions.forEach((position) => {
     const ideology = character.ideology
     const trait = ministerTraits[position as MinisterPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
-    const padding = index > 0 ? '\n\t\t' : ''
 
-    const template = `${padding}advisor = {
+    const template = `\n\t\tadvisor = {
       cost = ${cost}
       slot = ${position}
       available = { 
@@ -142,12 +148,11 @@ function defineOfficerRole(character: CharacterWithId): string {
 
   let advisor = ''
   const officerPositions = positions.filter((e) => isMilitaryPosition(e))
-  officerPositions.forEach((position, index) => {
+  officerPositions.forEach((position) => {
     const trait = officerTraits[position as MilitaryPosition]
     const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
-    const padding = index > 0 ? '\n\t\t' : ''
 
-    const template = `${padding}advisor = {
+    const template = `\n\t\tadvisor = {
       cost = ${cost}
       slot = ${position}
       idea_token = ${idea}
@@ -165,16 +170,25 @@ export function writeCharacter(characters: CharacterWithId[]) {
   let content: string = ''
   for (const character of characters) {
     const portraits = definePortraits(character)
+    const hasLeaderRole = character.roles.includes('leader')
 
-    const data = `\t${buildCharacterToken(character)} = {
+    let data = `\t${buildCharacterToken(character)} = {
     name = "${character.name}"
     portraits = {
-    ${portraits}}
-    ${defineCountryLeader(character)}
-    ${defineCommandingRole(character)}
-    ${defineMinisterialRole(character)}
-    ${defineOfficerRole(character)}
-  }`
+${portraits}
+    }`
+
+    const leaders = defineCountryLeader(character)
+    const commanding = defineCommandingRole(character)
+    const minister = defineMinisterialRole(character)
+    const officer = defineOfficerRole(character)
+
+    if (hasLeaderRole && leaders.trim().length > 0) data = data.concat(leaders)
+    if (commanding.trim().length > 0) data = data.concat(commanding)
+    if (minister.trim().length > 0) data = data.concat(minister)
+    if (officer.trim().length > 0) data = data.concat(officer)
+
+    data = data.concat('\n\t}\n')
     content = content.concat(data)
   }
 
