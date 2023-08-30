@@ -26,9 +26,9 @@ function definePortraits(character: CharacterWithId): string {
     let template = '\t\t\tcivilian = {'
 
     if (roles.includes('leader'))
-      template = template.concat(`\n\t\t\t\tlarge = ${buildLargePortaitPath(name, tag)}`)
+      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
     if (roles.includes('minister'))
-      template = template.concat(`\n\t\t\t\tsmall = ${buildSmallPortraitPath(name, tag)}`)
+      template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
 
     template = template.concat('\n\t\t\t}')
     portraits = portraits.concat(template)
@@ -40,9 +40,9 @@ function definePortraits(character: CharacterWithId): string {
     template = template.concat('\t\t\tarmy = {')
 
     if (hasArmy)
-      template = template.concat(`\n\t\t\t\tlarge = ${buildLargePortaitPath(name, tag)})`)
+      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}")`)
     if (roles.includes('officer'))
-      template = template.concat('\n\t\t\t\tsmall = ${buildSmallPortraitPath(name, tag)}')
+      template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
 
     template = template.concat('\n\t\t\t}')
     portraits = portraits.concat(template)
