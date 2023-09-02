@@ -14,7 +14,7 @@ import { open as openTauri } from '@tauri-apps/api/shell'
 
 const { t } = useI18n()
 const $toast = useToast()
-const file = ref<File | null>(null)
+const files = ref<File[]>([])
 const loading = ref(false)
 const characters = ref<Record<string, any>[]>([])
 const { importData } = useImportStore()
@@ -25,7 +25,7 @@ defineProps<{
 const emits = defineEmits(['hide'])
 
 async function onFileSelected(dropped: File) {
-  file.value = dropped
+  files.value = [dropped]
   const content = await readFileObject(dropped)
 
   if (dropped.type === 'application/x-yaml') {
@@ -66,7 +66,7 @@ const handleClick = () =>
     <template #body>
       <div class="space-y-4">
         <div>
-          <drop-zone :file="file" @dropped="onFileSelected" @reset="file = null" />
+          <drop-zone :files="files" @dropped="onFileSelected" @reset="files = []" />
           <p v-if="characters.length > 0" class="text-sm text-center text-zinc-500">
             {{ t('placeholder.character-parsed', { num: characters.length }) }}
           </p>

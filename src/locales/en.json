@@ -120,7 +120,8 @@
     "generic-dir-read": "Error reading directory",
     "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
     "no-dir-short": "No mod directory selected",
-    "no-characters-to-export": "There are no characters to export"
+    "no-characters-to-export": "There are no characters to export",
+    "file-not-found": "File not found"
   },
   "others": {
     "shine": {

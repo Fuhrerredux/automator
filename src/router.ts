@@ -3,6 +3,7 @@ import CharactersPage from '@pages/characters.vue'
 import ImportCharacters from '@pages/characters/import.vue'
 import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
+import AnalyzePage from '@pages/others/analyze.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/import',
     name: 'Import Characters',
     component: ImportCharacters
+  },
+  {
+    path: '/analyze',
+    name: 'Analyze',
+    component: AnalyzePage
   }
 ]
 

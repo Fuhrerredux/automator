@@ -22,7 +22,7 @@ defineEmits(['action'])
     </div>
     <div class="shrink-0">
       <button type="button" class="button-secondary" @click="$emit('action')">
-        <check-icon v-if="finished" class="h-5 w-5" />
+        <check-icon v-if="finished && !loading" class="h-5 w-5" />
         <chevron-right-icon v-if="!finished && !loading" class="h-5 w-5 text-zinc-500" />
         <spinner v-if="loading" dimensions="w-5 h-5" />
       </button>

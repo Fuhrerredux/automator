@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import AnalyzeGfx from '@components/others/analyze-gfx.vue'
 import CharacterRecruit from '@components/others/character-recruit.vue'
 import ShineGeneration from '@components/others/shine-generation.vue'
 import Page from '@components/page.vue'
@@ -16,6 +17,7 @@ const { t } = useI18n()
       <ul class="space-y-4">
         <shine-generation />
         <character-recruit />
+        <analyze-gfx />
       </ul>
     </div>
   </page>

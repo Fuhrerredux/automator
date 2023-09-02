@@ -7,6 +7,24 @@ import {
 } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 
+export function readSpriteDefinitions(content: string): Sprite[] {
+  const sprites: Sprite[] = []
+  const lines = content.split('\n')
+  lines.forEach((str, index) => {
+    if (str.includes('spriteType')) {
+      if (lines.length > index + 2) {
+        let name = lines[index + 1]
+        let dir = lines[index + 2]
+
+        name = name.substring(name.indexOf('"') + 1, name.lastIndexOf('"')).trim()
+        dir = dir.substring(dir.indexOf('"') + 1, dir.lastIndexOf('"')).trim()
+        sprites.push({ name, path: dir })
+      }
+    }
+  })
+  return sprites
+}
+
 const positions: Position[] = [
   'head_of_government',
   'foreign_minister',

@@ -4,6 +4,7 @@ import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
+import { readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -209,33 +210,34 @@ ${content}
   }
 }
 
-export async function exportShine(dir: string) {
-  const source = `${dir}/FX_goals.gfx`
-  const file = await readTextFile(source)
-  const src = file.split('\n')
+export async function writeSprites(sprites: Sprite[], out: string) {
+  const content: string[] = []
+  sprites.forEach((e) => {
+    let template = `\tspriteType = {
+    name = "${e.name}"
+    texturefile = "${e.path}"
+  }`
 
-  const content = new Map()
-  src.forEach((str, index) => {
-    if (str.includes('spriteType')) {
-      if (src.length > index + 2) {
-        let name = src[index + 1]
-        let dir = src[index + 2]
-
-        name = name.substring(name.indexOf('"') + 1, name.lastIndexOf('"')).trim()
-        dir = dir.substring(dir.indexOf('"') + 1, dir.lastIndexOf('"')).trim()
-        content.set(name, dir)
-      }
-    }
+    if (e.name.trim().length > 0 && e.path.trim().length > 0) content.push(template)
   })
 
+  let shine = `# Generated\nspriteTypes = {
+${content.join('\n')}
+}`
+  await writeTextFile(out, shine)
+}
+
+export async function exportShine(content: string, out: string) {
+  const sprites = readSpriteDefinitions(content)
+
   let shines: string[] = []
-  content.forEach((value, key) => {
+  sprites.forEach(({ name, path }) => {
     let shine = `\tspriteType = {
-    name = "${key}_shine"
-    texturefile = "${value}"
+    name = "${name}_shine"
+    texturefile = "${path}"
     effectFile = "gfx/FX/buttonstate.lua"
     animation = {
-      animationmaskfile = "${value}"
+      animationmaskfile = "${path}"
       animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
       animationrotation = -90.0
       animationlooping = no
@@ -248,7 +250,7 @@ export async function exportShine(dir: string) {
     }
 
     animation = {
-      animationmaskfile = "${value}"
+      animationmaskfile = "${path}"
       animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
       animationrotation = 90.0
       animationlooping = no
@@ -262,13 +264,13 @@ export async function exportShine(dir: string) {
     legacy_lazy_load = no
   }\n`
 
-    if (key && value) shines.push(shine)
+    shines.push(shine)
   })
 
   let shine = `spriteTypes = {
 ${shines.join('\n')}
 }`
-  await writeTextFile(`${dir}/FX_goals_shine.gfx`, shine)
+  await writeTextFile(out, shine)
 }
 
 export async function appendToHistory(characters: CharacterWithId[], destination: string) {

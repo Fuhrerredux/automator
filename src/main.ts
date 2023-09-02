@@ -1,6 +1,8 @@
 import { createPinia } from 'pinia'
+import 'tippy.js/dist/tippy.css'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
+import VueTippy from 'vue-tippy'
 import 'vue-toast-notification/dist/theme-sugar.css'
 import Automator from './app.vue'
 import './assets/app.css'
@@ -23,4 +25,5 @@ const app = createApp(Automator)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+app.use(VueTippy, { directive: 'tippy', component: 'tippy' })
 app.mount('#app')

@@ -20,7 +20,7 @@ async function submit() {
     loading.value = true
 
     await purgeFn()
-    $toast.success(t('status.database-purged'))
+    $toast.success(t('status.database-removed'))
 
     emits('hide')
   } catch (e) {

@@ -14,3 +14,7 @@ export function extractValue(string: string, withQuotes?: boolean): string {
 
   return data.substring(first, last).trim()
 }
+
+export function removeBaseDirectoryFromPath(base: string, path: string) {
+  return path.substring(base.length + 1)
+}

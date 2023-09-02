@@ -1,3 +1,4 @@
+import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
 import type { FileEntry } from '@tauri-apps/api/fs'
 
@@ -70,6 +71,17 @@ declare global {
     cost: number
   }
   type CharacterWithId = Character & { id: string }
+  type Sprite = {
+    name: string
+    path: string
+    file?: string
+    exists?: boolean
+  }
+
+  type TabData = {
+    panel: Component
+    label: string
+  }
 }
 
 declare module 'vue' {
