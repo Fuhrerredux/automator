@@ -7,7 +7,7 @@ import { type FileEntry } from '@tauri-apps/api/fs'
 
 defineProps<{ entry: FileEntry; checked: boolean }>()
 defineEmits<{
-  (e: string, v: FileEntry): void
+  (e: 'remove', v: FileEntry): void
 }>()
 
 const { t } = useI18n()

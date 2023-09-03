@@ -11,7 +11,8 @@ const props = defineProps<{
   selected: string[]
 }>()
 const emit = defineEmits<{
-  (v: string): void
+  (e: 'hide'): void
+  (e: 'success'): void
 }>()
 
 const { t } = useI18n()
