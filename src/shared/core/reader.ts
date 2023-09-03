@@ -18,7 +18,8 @@ export function readSpriteDefinitions(content: string): Sprite[] {
 
         name = name.substring(name.indexOf('"') + 1, name.lastIndexOf('"')).trim()
         dir = dir.substring(dir.indexOf('"') + 1, dir.lastIndexOf('"')).trim()
-        sprites.push({ name, path: dir })
+
+        if (name.trim().length > 0 && dir.trim().length > 0) sprites.push({ name, path: dir })
       }
     }
   })

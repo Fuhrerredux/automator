@@ -80,6 +80,7 @@ const useSpriteDefinitions = defineStore({
 
       for (const entry of entries) {
         const path = removeBaseDirectoryFromPath(baseDir, entry.path)
+
         if (!this.unique.find((e) => e.path === path)) orphaned.push(entry)
       }
       this.orphaned = orphaned

@@ -48,7 +48,7 @@ async function handleImport() {
       await writeSprites(value, output)
     }
 
-    $toast.success(t('status.characters-imported'))
+    $toast.success(t('status.gfx-written'))
   } catch (e) {
     $toast.error(String(e))
   } finally {
@@ -66,11 +66,11 @@ async function handleImport() {
       @click="handleImport">
       <template #content>
         <check-icon class="h-5 w-5 mr-2" />
-        <span>{{ t('action.save') }}</span>
+        <span>{{ t('action.export') }}</span>
       </template>
       <template #loading>
         <check-icon class="h-5 w-5 mr-2" />
-        <span>{{ t('loading.saving') }}</span>
+        <span>{{ t('loading.exporting') }}</span>
       </template>
     </spinner-button>
   </app-header>

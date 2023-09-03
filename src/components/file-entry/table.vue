@@ -2,16 +2,23 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
-import SpinnerButton from '@components/spinner-button.vue'
+import RemovedOrphanedModal from '@components/analyze/remove-orphaned-modal.vue'
+import Spinner from '@components/spinner.vue'
+import { TrashIcon } from '@heroicons/vue/24/outline'
+import useSpriteDefinitions from '@stores/definitions'
+import useModStore from '@stores/mod'
 import { type FileEntry, removeFile } from '@tauri-apps/api/fs'
 import EntryRow from './row.vue'
 
 const props = defineProps<{ entries: FileEntry[] }>()
 
 const { t } = useI18n()
+const toast = useToast()
+const open = ref(false)
 const loading = ref(false)
 const selected = ref<string[]>([])
-const $toast = useToast()
+const modStore = useModStore()
+const spriteDefinitionsStore = useSpriteDefinitions()
 
 function handleCheckboxHeader(event: Event) {
   const target = event.target as HTMLInputElement
@@ -34,37 +41,42 @@ function handleCheckbox(entry: FileEntry) {
 }
 
 async function removeFileEntry(file: FileEntry) {
-  return await removeFile(file.path)
-}
-
-async function removeAll() {
+  const baseDir = modStore.directory
+  loading.value = true
   try {
-    loading.value = true
-    const promises = selected.value.map((e) => removeFile(e))
-    await Promise.all(promises)
+    await removeFile(file.path)
+    await spriteDefinitionsStore.findOrphaned(baseDir)
 
-    $toast.success(t('status.file-removed'))
+    open.value = false
   } catch (e) {
-    $toast.error(String(e))
+    toast.error(String(e))
   } finally {
     loading.value = false
   }
+}
+
+async function handleRemoveSuccess() {
+  const baseDir = modStore.directory
+  await spriteDefinitionsStore.findOrphaned(baseDir)
 }
 </script>
 
 <template>
   <div>
     <div class="mb-4 flex items-center justify-end">
-      <spinner-button type="button" class="button-primary" :loading="loading" @click="removeAll">
-        <template #content>
-          {{ t('action.purge') }}
-        </template>
-        <template #loading>
-          <span>{{ t('loading.purging') }}</span>
-        </template>
-      </spinner-button>
+      <button
+        type="button"
+        class="button-primary flex items-center"
+        :disabled="selected.length <= 0"
+        @click="open = true">
+        <trash-icon class="h-5 w-5 mr-2" />
+        <span>{{ t('action.purge') }}</span>
+      </button>
     </div>
-    <table>
+    <div v-if="loading" class="flex items-center justify-center">
+      <spinner class="h-6 w-6" />
+    </div>
+    <table v-else>
       <thead>
         <tr>
           <th scope="col">
@@ -93,4 +105,9 @@ async function removeAll() {
       </tbody>
     </table>
   </div>
+  <removed-orphaned-modal
+    :open="open"
+    :selected="selected"
+    @hide="open = false"
+    @success="handleRemoveSuccess" />
 </template>
