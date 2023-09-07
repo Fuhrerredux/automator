@@ -6,6 +6,26 @@ import {
   parsePosition
 } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
+import { readDir, readTextFile } from '@tauri-apps/api/fs'
+
+export async function readSpriteUsage(sprite: SpriteType, base: string) {
+  const dir = `${base}/${sprite.directory}`
+
+  const entries = await readDir(dir)
+  const sprites: string[] = []
+  for (const entry of entries) {
+    const data = await readTextFile(entry.path)
+    const lines = data.split('\n')
+    for (const line of lines) {
+      if (line.trim().includes(sprite.property)) {
+        let content = line.replace(/ /g, '')
+        sprites.push(content.substring(content.lastIndexOf('=') + 1).trim())
+      }
+    }
+  }
+
+  return Array.from(new Set(sprites))
+}
 
 export function readSpriteDefinitions(content: string): Sprite[] {
   const sprites: Sprite[] = []

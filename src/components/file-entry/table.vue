@@ -2,9 +2,10 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
-import RemovedOrphanedModal from '@components/analyze/remove-orphaned-modal.vue'
+import RemovedOrphanedModal from '@components/optimize/remove-orphaned-modal.vue'
 import Spinner from '@components/spinner.vue'
 import { TrashIcon } from '@heroicons/vue/24/outline'
+import { goals } from '@shared/const/sprites'
 import useSpriteDefinitions from '@stores/definitions'
 import useModStore from '@stores/mod'
 import { type FileEntry, removeFile } from '@tauri-apps/api/fs'
@@ -45,7 +46,7 @@ async function removeFileEntry(file: FileEntry) {
   loading.value = true
   try {
     await removeFile(file.path)
-    await spriteDefinitionsStore.findOrphaned(baseDir)
+    await spriteDefinitionsStore.findOrphaned(baseDir, goals)
 
     open.value = false
   } catch (e) {
@@ -57,7 +58,7 @@ async function removeFileEntry(file: FileEntry) {
 
 async function handleRemoveSuccess() {
   const baseDir = modStore.directory
-  await spriteDefinitionsStore.findOrphaned(baseDir)
+  await spriteDefinitionsStore.findOrphaned(baseDir, goals)
 }
 </script>
 

@@ -82,6 +82,18 @@ declare global {
     panel: Component
     label: string
   }
+
+  type AnalyzeData = {
+    sprite: string
+    path: string | null
+    status: 'undef' | 'missing' | 'good'
+  }
+  type SpriteType = {
+    type: 'idea' | 'focus'
+    property: string
+    directory: string
+    res: string
+  }
 }
 
 declare module 'vue' {

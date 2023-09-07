@@ -84,4 +84,10 @@
   .chip-primary {
     @apply rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300;
   }
+  .chip-warning {
+    @apply rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900 dark:text-amber-300;
+  }
+  .chip-error {
+    @apply rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-medium text-rose-800 dark:bg-rose-900 dark:text-rose-300;
+  }
 }

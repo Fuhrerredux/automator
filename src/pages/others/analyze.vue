@@ -1,80 +1,70 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useToast } from 'vue-toast-notification'
+import { useRoute, useRouter } from 'vue-router'
+import useModStore from '@/stores/mod'
+import AnalyzeTable from '@components/analyze-table/table.vue'
+import FileSelectModal from '@components/file-select-modal.vue'
 import AppHeader from '@components/header.vue'
-import SpinnerButton from '@components/spinner-button.vue'
-import TabGroup from '@components/tab-group.vue'
-import { CheckIcon } from '@heroicons/vue/20/solid'
-import tabs from '@shared/const/tabs-analyze'
-import { writeSprites } from '@shared/core/writer'
-import { groupBy } from '@shared/utils/core'
-import useSpriteDefinitionsStore from '@stores/definitions'
-import useModStore from '@stores/mod'
+import { ArrowPathIcon } from '@heroicons/vue/20/solid'
+import types from '@shared/const/sprites'
+import { readSpriteUsage } from '@shared/core/reader'
+import useSpriteDefinitions from '@stores/definitions'
 
+const router = useRouter()
+const route = useRoute()
 const { t } = useI18n()
-const $toast = useToast()
-const store = useModStore()
-const spriteDefinitionsStore = useSpriteDefinitionsStore()
-const { duplicates } = storeToRefs(spriteDefinitionsStore)
-const saving = ref(false)
+const type = ref<string>('')
+const open = ref(false)
+const sprites = ref<string[]>([])
+const parsedType = ref<SpriteType | null>(null)
+const data = ref<AnalyzeData[]>([])
+const modStore = useModStore()
+const { unique, findDuplicates, importToFiles } = useSpriteDefinitions()
 
-function filter() {
-  const base = 'FX_goals.gfx'
-  const { unique } = spriteDefinitionsStore
-  const grouped = groupBy(unique, 'file')
-  const pruned: Map<string, Sprite[]> = new Map()
-  const names = Array.from(duplicates.value.keys())
+onMounted(async () => {
+  await router.isReady()
+  const routeType = route.query.type
 
-  pruned.set(base, grouped[base])
-  for (const [key, value] of Object.entries(grouped)) {
-    if (key === base) continue
+  if (routeType && typeof routeType === 'string') {
+    type.value = routeType
 
-    const filtered = value.filter((e) => !names.includes(e.name))
-    pruned.set(key, filtered)
-  }
-
-  return pruned
-}
-
-async function handleImport() {
-  saving.value = true
-
-  try {
-    const sprites = filter()
-    for (const [key, value] of sprites) {
-      const output = `${store.directory}/interface/${key}`
-      await writeSprites(value, output)
+    const spriteType = types.find((e) => e.value.type === routeType)
+    if (spriteType) {
+      parsedType.value = spriteType.value
+      sprites.value = await readSpriteUsage(spriteType.value, modStore.directory)
     }
-
-    $toast.success(t('status.gfx-written'))
-  } catch (e) {
-    $toast.error(String(e))
-  } finally {
-    saving.value = false
   }
+})
+
+async function handleFileChanged(files: File[]) {
+  if (!parsedType.value) return
+
+  await importToFiles(files)
+  findDuplicates()
+
+  data.value = sprites.value.map((e) => {
+    const sprite = unique.find((u) => u.name === e)
+
+    return {
+      sprite: e,
+      path: sprite ? sprite.path : null,
+      status: !sprite ? 'undef' : sprite.exists ? 'missing' : 'good'
+    }
+  }) as AnalyzeData[]
+  open.value = false
 }
 </script>
 
 <template>
-  <app-header title="route.analyze-gfx">
-    <spinner-button
-      type="button"
-      class="button-primary flex items-center"
-      :loading="saving"
-      @click="handleImport">
-      <template #content>
-        <check-icon class="h-5 w-5 mr-2" />
-        <span>{{ t('action.export') }}</span>
-      </template>
-      <template #loading>
-        <check-icon class="h-5 w-5 mr-2" />
-        <span>{{ t('loading.exporting') }}</span>
-      </template>
-    </spinner-button>
+  <app-header title="route.analyze-sprites">
+    <button type="button" class="button-primary flex items-center" @click="open = true">
+      <arrow-path-icon class="h-5 w-5 mr-2" />
+      <span>{{ t('action.load') }}</span>
+    </button>
   </app-header>
   <main class="content px-8 page">
-    <tab-group :tabs="tabs" />
+    <analyze-table :data="data" />
   </main>
+  <file-select-modal multiple :open="open" @hide="open = false" @select="handleFileChanged" />
 </template>

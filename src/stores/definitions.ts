@@ -73,15 +73,19 @@ const useSpriteDefinitions = defineStore({
       this.unique = Array.from(unique)
       this.duplicates = duplicates
     },
-    async findOrphaned(baseDir: string) {
-      const target = `${baseDir}/gfx/interface/goals`
+    async findOrphaned(baseDir: string, type: SpriteType) {
+      const target = `${baseDir}/${type.res}`
       const entries = await readDir(target)
       const orphaned: FileEntry[] = []
 
       for (const entry of entries) {
-        const path = removeBaseDirectoryFromPath(baseDir, entry.path)
+        if (entry.children) {
+          await this.findOrphaned(baseDir, type)
+        } else {
+          const path = removeBaseDirectoryFromPath(baseDir, entry.path)
 
-        if (!this.unique.find((e) => e.path === path)) orphaned.push(entry)
+          if (!this.unique.find((e) => e.path === path)) orphaned.push(entry)
+        }
       }
       this.orphaned = orphaned
     }

@@ -41,7 +41,7 @@ function definePortraits(character: CharacterWithId): string {
     template = template.concat('\t\t\tarmy = {')
 
     if (hasArmy)
-      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}")`)
+      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
     if (roles.includes('officer'))
       template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
 

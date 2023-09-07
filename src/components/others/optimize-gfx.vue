@@ -22,7 +22,7 @@ async function handleFileSelection(files: File[]) {
     findDuplicates()
     await findOrphaned(modStore.directory)
 
-    router.push('/analyze')
+    router.push('/optimize')
   } catch (e) {
     console.error(e)
   } finally {
@@ -33,8 +33,8 @@ async function handleFileSelection(files: File[]) {
 
 <template>
   <action-item
-    :title="t('others.analyze-gfx.heading')"
-    :summary="t('others.analyze-gfx.summary')"
+    :title="t('others.optimize-gfx.heading')"
+    :summary="t('others.optimize-gfx.summary')"
     :loading="false"
     :finished="false"
     @action="open = true">

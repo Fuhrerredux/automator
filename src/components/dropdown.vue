@@ -1,7 +1,10 @@
 <script
   setup
   lang="ts"
-  generic="V extends string | number | boolean | object | null | undefined, I extends object | string">
+  generic="
+    V extends string | number | boolean | object | null | undefined,
+    I extends object | string
+  ">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useKeys from '@composables/use-keys'
@@ -18,7 +21,7 @@ const props = defineProps<{
   localise?: boolean
   multiple?: boolean
 }>()
-const emit = defineEmits<{
+defineEmits<{
   (e: 'update:modelValue', value: V): void
 }>()
 const { valueFunc, displayFunc } = useKeys<V, I>(props)
@@ -30,7 +33,7 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
   <listbox
     :model-value="item"
     :disabled="disabled"
-    @update:model-value="emit('update:modelValue', valueFunc($event))"
+    @update:model-value="$emit('update:modelValue', valueFunc($event))"
     as="div"
     class="relative">
     <listbox-button class="dropdown-button w-full">

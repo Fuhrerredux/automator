@@ -1,5 +1,5 @@
-import DuplicateTab from '@/components/analyze/duplicate-tab.vue'
-import OrphanedTab from '@/components/analyze/orphaned-tab.vue'
+import DuplicateTab from '@components/optimize/duplicate-tab.vue'
+import OrphanedTab from '@components/optimize/orphaned-tab.vue'
 
 const tabs: TabData[] = [
   { panel: DuplicateTab, label: 'tab.duplicate' },
