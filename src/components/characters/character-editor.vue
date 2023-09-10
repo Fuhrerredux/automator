@@ -273,7 +273,7 @@ async function submit() {
                       <dropdown
                         v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
-                        :display-key="(e) => e"
+                        :display-key="(e) => String(e)"
                         :value-key="(e) => e"
                         :model-value="ministerTraits[position.value]"
                         @update:model-value="ministerTraits[position.value] = $event" />
@@ -313,7 +313,7 @@ async function submit() {
                       <dropdown
                         v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
-                        :display-key="(e) => e"
+                        :display-key="(e) => String(e)"
                         :value-key="(e) => e"
                         :model-value="officerTraits[position.value]"
                         @update:model-value="officerTraits[position.value] = $event" />
