@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
+import { goals } from '@/shared/const/sprites'
 import ActionItem from '@components/action-item.vue'
 import FileSelectModal from '@components/file-select-modal.vue'
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
@@ -20,7 +21,7 @@ async function handleFileSelection(files: File[]) {
     await importToFiles(files)
     await checkExistence(modStore.directory)
     findDuplicates()
-    await findOrphaned(modStore.directory)
+    await findOrphaned(modStore.directory, goals)
 
     router.push('/optimize')
   } catch (e) {

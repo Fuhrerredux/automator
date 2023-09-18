@@ -22,6 +22,7 @@
     "vue": "3.3.4",
     "vue-i18n": "9.3.0-beta.24",
     "vue-router": "4.2.4",
+    "vue-tippy": "^6.3.1",
     "vue-toast-notification": "3.1.1",
     "vue3-dropzone": "2.0.1"
   },
