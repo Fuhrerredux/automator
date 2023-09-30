@@ -11,9 +11,11 @@ const modStore = useModStore()
 const traitStore = useTraitsStore()
 const { files, trait } = storeToRefs(traitStore)
 
-function handleChange(event: string) {
-  traitStore.$patch({ trait: event })
-  localStorage.setItem('trait', event)
+function handleChange(event: string | null) {
+  if (event) {
+    traitStore.$patch({ trait: event })
+    localStorage.setItem('trait', event)
+  }
 }
 </script>
 

@@ -7,6 +7,7 @@ import { type FileEntry } from '@tauri-apps/api/fs'
 
 defineProps<{ entry: FileEntry; checked: boolean }>()
 defineEmits<{
+  (e: 'selected', v: FileEntry): void
   (e: 'remove', v: FileEntry): void
 }>()
 

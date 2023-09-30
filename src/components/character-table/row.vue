@@ -7,8 +7,8 @@ import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 
 defineProps<{ character: CharacterWithId }>()
 defineEmits<{
-  (e: 'update', value: Character): void
-  (e: 'remove', value: Character): void
+  (e: 'update', value: CharacterWithId): void
+  (e: 'remove', value: CharacterWithId): void
 }>()
 
 const { t } = useI18n()
