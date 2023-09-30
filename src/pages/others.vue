@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AnalyzeSprites from '@components/others/analyze-sprites.vue'
 import CharacterRecruit from '@components/others/character-recruit.vue'
 import OptimizeGfx from '@components/others/optimize-gfx.vue'
 import ShineGeneration from '@components/others/shine-generation.vue'
@@ -19,7 +18,6 @@ const { t } = useI18n()
         <shine-generation />
         <character-recruit />
         <optimize-gfx />
-        <analyze-sprites />
       </ul>
     </div>
   </page>

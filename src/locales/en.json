@@ -4,7 +4,8 @@
     "main": "Main",
     "characters": "Characters",
     "others": "Others",
-    "character-import": "Character Importer"
+    "character-import": "Character Importer",
+    "analyze-gfx": "Analyze GFX"
   },
   "theme": {
     "auto": "System",
@@ -50,7 +51,8 @@
     "generate": "Generate",
     "load": "Load",
     "purge": "Purge",
-    "learn-more": "Learn more"
+    "learn-more": "Learn more",
+    "select": "Select"
   },
   "loading": {
     "saving": "Saving",
@@ -104,6 +106,10 @@
     "character-import": {
       "heading": "Character Import",
       "summary": "Import character definitions from the mod files."
+    },
+    "file-select": {
+      "heading": "Choose a file",
+      "summary": "Browse and select a file to process"
     }
   },
   "status": {
@@ -131,6 +137,14 @@
     "character-recruit": {
       "heading": "Append Characters to History Files",
       "summary": "Adds 'recruit_character' effects to the end of the history files"
+    },
+    "optimize-gfx": {
+      "heading": "Optimize Sprite Definitions",
+      "summary": "Check whether sprite definitions does not have missing file paths."
     }
+  },
+  "tab": {
+    "orphaned": "Ophaned",
+    "duplicate": "Duplicate"
   }
 }

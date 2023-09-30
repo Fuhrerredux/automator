@@ -3,7 +3,6 @@ import CharactersPage from '@pages/characters.vue'
 import ImportCharacters from '@pages/characters/import.vue'
 import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
-import AnalyzePage from '@pages/others/analyze.vue'
 import OptimizePage from '@pages/others/optimize.vue'
 
 const routes = [
@@ -31,11 +30,6 @@ const routes = [
     path: '/optimize',
     name: 'Optimize',
     component: OptimizePage
-  },
-  {
-    path: '/analyze',
-    name: 'Analyze',
-    component: AnalyzePage
   }
 ]
 
