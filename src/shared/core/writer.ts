@@ -12,7 +12,7 @@ function buildLargePortaitPath(name: string, tag: string) {
   return `gfx/leaders/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 function buildSmallPortraitPath(name: string, tag: string) {
-  return `gfx/ministers/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+  return `gfx/interface/ministers/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 
 function definePortraits(character: CharacterWithId): string {
