@@ -55,7 +55,7 @@ declare global {
     | 'foreign_minister'
     | 'economy_minister'
     | 'security_minister'
-  type MilitaryPosition = 'high_command' | 'army_chief' | 'air_chief' | 'navy_chief'
+  type MilitaryPosition = 'high_command' | 'army_chief' | 'air_chief' | 'navy_chief' | 'theorist'
   type Position = MinisterPosition | MilitaryPosition
   type Character = {
     name: string

@@ -15,5 +15,6 @@ export const officers: DropdownOption<MilitaryPosition>[] = [
   { label: 'roles.high_command', value: 'high_command' },
   { label: 'roles.army_chief', value: 'army_chief' },
   { label: 'roles.air_chief', value: 'air_chief' },
-  { label: 'roles.navy_chief', value: 'navy_chief' }
+  { label: 'roles.navy_chief', value: 'navy_chief' },
+  { label: 'roles.theorist', value: 'theorist'}
 ]

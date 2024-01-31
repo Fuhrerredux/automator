@@ -4,6 +4,8 @@ import { RouterLink } from 'vue-router'
 import { useRoute } from 'vue-router'
 import localeSwitcher from '@components/navigation/locale-switcher.vue'
 import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
+import Settings from '@components/navigation/settings.vue'
+import { ref } from "vue";
 
 const { t } = useI18n()
 const route = useRoute()
@@ -11,6 +13,9 @@ const route = useRoute()
 function isActive(link: string): string {
   return route.path === link ? 'text-zinc-800 dark:text-zinc-50' : ''
 }
+
+const settingsBool = ref(false)
+
 </script>
 
 <template>
@@ -29,6 +34,7 @@ function isActive(link: string): string {
         </router-link>
       </div>
       <div class="flex items-center gap-4">
+        <settings :open="settingsBool" />
         <locale-switcher />
         <theme-switcher />
       </div>

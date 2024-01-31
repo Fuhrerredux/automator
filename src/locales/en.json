@@ -12,6 +12,10 @@
     "dark": "Dark",
     "light": "Light"
   },
+  "settings": {
+    "header": "Settings",
+    "positionPrevention": "Prevent an officer from having more than 1 role at a time."
+  },
   "field": {
     "tag": "Country Tag",
     "name": "Character Name",
@@ -52,7 +56,8 @@
     "load": "Load",
     "purge": "Purge",
     "learn-more": "Learn more",
-    "select": "Select"
+    "select": "Select",
+    "save": "Save"
   },
   "loading": {
     "saving": "Saving",
@@ -84,7 +89,8 @@
     "high_command": "Chief of Staff",
     "army_chief": "Chief of Army",
     "air_chief": "Chief of Air Force",
-    "navy_chief": "Chief of Navy"
+    "navy_chief": "Chief of Navy",
+    "theorist": "Theorist"
   },
   "modal": {
     "character-editor": {

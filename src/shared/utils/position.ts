@@ -16,6 +16,8 @@ export function getPositionSuffix(position: Position) {
       return 'cair'
     case 'navy_chief':
       return 'cnav'
+    case 'theorist':
+      return 'theo'
   }
 }
 
@@ -33,7 +35,8 @@ export function isMilitaryPosition(position: Position) {
     position === 'high_command' ||
     position === 'army_chief' ||
     position === 'navy_chief' ||
-    position === 'air_chief'
+    position === 'air_chief'  ||
+    position === 'theorist' 
   )
 }
 
@@ -55,6 +58,8 @@ export function parsePosition(position: string | null | undefined): Position | n
       return 'navy_chief'
     case 'cair':
       return 'air_chief'
+    case 'theo':
+      return 'theorist'
     default:
       return null
   }

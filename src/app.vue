@@ -8,6 +8,7 @@ import useCharactersStore from '@stores/characters'
 import useModStore from '@stores/mod'
 import useThemeStore from '@stores/theme'
 import useTraitsStore from '@stores/traits'
+import useSettingsStore from '@stores/settings'
 
 const { t } = useI18n()
 const $toast = useToast()
@@ -16,12 +17,15 @@ const characterStore = useCharactersStore()
 const modStore = useModStore()
 const themeStore = useThemeStore()
 const traitsStore = useTraitsStore()
+const settingsStore = useSettingsStore()
 
 onMounted(async () => {
   await database.init()
   characterStore.refresh()
 
   themeStore.fetch()
+  settingsStore.fetch()
+
   const directory = localStorage.getItem('directory')
   if (directory) {
     modStore.$patch({ directory })

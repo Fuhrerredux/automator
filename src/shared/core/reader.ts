@@ -54,7 +54,8 @@ const positions: Position[] = [
   'high_command',
   'army_chief',
   'navy_chief',
-  'air_chief'
+  'air_chief',
+  'theorist'
 ]
 
 export function extractTraits(content: string): Record<Position, string[]> {
@@ -66,7 +67,8 @@ export function extractTraits(content: string): Record<Position, string[]> {
     high_command: [],
     army_chief: [],
     navy_chief: [],
-    air_chief: []
+    air_chief: [],
+    theorist: []
   }
 
   const extract = (prefix: string, s: string) => {
@@ -135,7 +137,8 @@ export function readCharacterFile(content: string): Record<string, any>[] {
         high_command: '',
         army_chief: '',
         air_chief: '',
-        navy_chief: ''
+        navy_chief: '',
+        theorist: ''
       }
 
       const advisor = extractAdvisorRoles(character)
@@ -241,7 +244,7 @@ export function readLocalisationFile(content: string) {
   if (content.length <= 0) return []
 
   function extractPosition(token: string) {
-    const positions = ['hog', 'for', 'eco', 'sec', 'cos', 'carm', 'cnav', 'cair']
+    const positions = ['hog', 'for', 'eco', 'sec', 'cos', 'carm', 'cnav', 'cair', 'theo']
     return positions.find((e) => token.includes(`_${e}`))
   }
   function extractIdeology(token: string) {
@@ -283,7 +286,8 @@ export function readLocalisationFile(content: string) {
         high_command: '',
         army_chief: '',
         air_chief: '',
-        navy_chief: ''
+        navy_chief: '',
+        theorist: ''
       }
     }
 

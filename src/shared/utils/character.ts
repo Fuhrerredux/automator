@@ -30,7 +30,8 @@ export function isOfficerRole(role: Position): boolean {
     role === 'high_command' ||
     role === 'army_chief' ||
     role === 'navy_chief' ||
-    role === 'air_chief'
+    role === 'air_chief'  ||
+    role === 'theorist'
   )
 }
 

@@ -8,6 +8,8 @@ export default function getLanguageName(locale: string): string {
       return 'Italiano'
     case 'de':
       return 'Deutsch'
+    case 'fr':
+      return 'Français'
     default:
       return locale
   }
