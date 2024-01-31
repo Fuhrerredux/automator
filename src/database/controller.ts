@@ -13,7 +13,7 @@ const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS characters (
   officerTraits TEXT,
   roles TEXT,
   cost INTEGER
-)`
+)`;
 
 export default class DatabaseController {
   static controller: DatabaseController | null = null
@@ -27,10 +27,16 @@ export default class DatabaseController {
   }
 
   async init() {
-    const name = 'automator'
-    this.instance = await Database.load(`sqlite:${name}.db`)
-
-    await this.instance.execute(CREATE_TABLE)
+    try {
+      const name = 'automator'
+      this.instance = await Database.load(`sqlite:${name}.db`)
+      await this.instance.execute(CREATE_TABLE)
+    } catch (error) {
+      console.error('Error initializing database:', error)
+      throw error; // Rethrow the error to notify the caller
+    }
+    await this.instance.execute('DROP TABLE IF EXISTS characters');
+    await this.instance.execute(CREATE_TABLE);
   }
 
   async close() {
@@ -51,4 +57,5 @@ export default class DatabaseController {
     if (!this.instance) throw Error('Database is not yet initialized')
     return await this.instance.execute(query, bind)
   }
+  
 }

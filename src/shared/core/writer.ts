@@ -5,6 +5,7 @@ import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { readSpriteDefinitions } from './reader'
+import { ministers } from '../const/roles'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -144,27 +145,39 @@ function defineMinisterialRole(character: CharacterWithId): string {
 }
 
 function defineOfficerRole(character: CharacterWithId): string {
-  const { positions, officerTraits, cost } = character
-  const token = `${buildCharacterToken(character)}`
+  const { positions, officerTraits, cost } = character;
+  const token = `${buildCharacterToken(character)}`;
 
-  let advisor = ''
-  const officerPositions = positions.filter((e) => isMilitaryPosition(e))
-  officerPositions.forEach((position) => {
-    const trait = officerTraits[position as MilitaryPosition]
-    const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
+  let advisor = '';
+  const officerPositions = positions.filter((e) => isMilitaryPosition(e));
 
-    const template = `\n\t\tadvisor = {
+  officerPositions.forEach((position, index) => {
+    const trait = officerTraits[position as MilitaryPosition];
+    const idea = `${token}_${getPositionSuffix(position)}`;
+    const hasMoreThanOneRoles = officerPositions.length > 1;
+
+    // Add the position to the new array
+    const allOtherPositions = officerPositions.filter((p, i) => i !== index);
+
+    const availableBlock = hasMoreThanOneRoles
+      ? `available = {\n${allOtherPositions.map(otherPosition => `        is_${otherPosition} = no`).join('\n')}\n      }`
+      : '';
+
+    // Add available block inline before traits conditionally
+    const templateWithAvailable = `\n\t\tadvisor = {
       cost = ${cost}
       slot = ${position}
       idea_token = ${idea}
+      ${availableBlock}
       traits = {
         ${trait}
       }
-    }`
-    advisor = advisor.concat(template)
-  })
+    }`;
 
-  return advisor
+    advisor = advisor.concat(templateWithAvailable);
+  });
+
+  return advisor;
 }
 
 export function writeCharacter(characters: CharacterWithId[]) {

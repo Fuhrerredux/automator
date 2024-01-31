@@ -57,7 +57,8 @@ const officerTraits = ref<Record<MilitaryPosition, string>>({
   high_command: '',
   army_chief: '',
   air_chief: '',
-  navy_chief: ''
+  navy_chief: '',
+  theorist: ''
 })
 
 onMounted(() => {

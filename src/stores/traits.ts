@@ -14,7 +14,8 @@ const useTraitsStore = defineStore({
         high_command: [],
         army_chief: [],
         navy_chief: [],
-        air_chief: []
+        air_chief: [],
+        theorist: []
       },
       files: [],
       trait: null

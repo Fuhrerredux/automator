@@ -84,7 +84,8 @@
     "high_command": "Chief of Staff",
     "army_chief": "Chief of Army",
     "air_chief": "Chief of Air Force",
-    "navy_chief": "Chief of Navy"
+    "navy_chief": "Chief of Navy",
+    "theorist": "Theorist"
   },
   "modal": {
     "character-editor": {
