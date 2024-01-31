@@ -5,6 +5,7 @@ import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { readSpriteDefinitions } from './reader'
+import useSettingsStore from '@/stores/settings'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -146,6 +147,7 @@ function defineMinisterialRole(character: CharacterWithId): string {
 function defineOfficerRole(character: CharacterWithId): string {
   const { positions, officerTraits, cost } = character;
   const token = `${buildCharacterToken(character)}`;
+  const positionPrevention = useSettingsStore().$state.positionPrevention;
 
   let advisor = '';
   const officerPositions = positions.filter((e) => isMilitaryPosition(e));
@@ -153,7 +155,7 @@ function defineOfficerRole(character: CharacterWithId): string {
   officerPositions.forEach((position, index) => {
     const trait = officerTraits[position as MilitaryPosition];
     const idea = `${token}_${getPositionSuffix(position)}`;
-    const hasMoreThanOneRoles = officerPositions.length > 1;
+    const hasMoreThanOneRoles = officerPositions.length > 1 && !positionPrevention;
 
     // Add the position to the new array
     const allOtherPositions = officerPositions.filter((_, i) => i !== index);
@@ -175,6 +177,8 @@ function defineOfficerRole(character: CharacterWithId): string {
 
     advisor = advisor.concat(templateWithAvailable);
   });
+  const lines = advisor.split('\n');
+  advisor = lines[0] + '\n' + lines.slice(1).filter(line => line.trim() !== '').join('\n');
 
   return advisor;
 }
