@@ -52,7 +52,7 @@ async function triggerImport() {
 }
 
 const handleClick = () =>
-  openTauri('https://github.com/dax0102/automator#how-do-i-automate-creation-of-characters')
+  openTauri('https://github.com/Fuhrerredux/automator#how-do-i-automate-creation-of-characters')
 </script>
 
 <template>

@@ -5,9 +5,7 @@ import { useToast } from 'vue-toast-notification'
 import Modal from '@components/modal.vue'
 import { AdjustmentsHorizontalIcon } from "@heroicons/vue/24/outline"
 import useSettingsStore from '@/stores/settings'
-// import { storeToRefs } from 'pinia'
 import SwitchButton from '@components/switch.vue'
-import { CheckIcon } from '@heroicons/vue/20/solid'
 
 const emit = defineEmits(['hide'])
 const { t } = useI18n()
@@ -17,7 +15,6 @@ const settingsBool = ref(false)
 const settingsStore = useSettingsStore()
 
 const positionPrevention = ref(settingsStore.positionPrevention)
-// const { change } = settingsStore
 
 const { open } = defineProps<{
 	open: boolean
@@ -45,12 +42,9 @@ async function submit() {
 
 <template>
 	<div>
-		<!-- Button to open Settings modal -->
 		<button type="button" @click="openSettingsModal">
 			<AdjustmentsHorizontalIcon class="h-6 w-6 text-gray-500" />
 		</button>
-
-		<!-- Settings modal using the modal.vue component -->
 		<modal :hideable="false" :open="open" size="max-w-2xl" @hide="$emit('hide')">
 			<template #title>
 				<h3>{{ t('settings.header') }}</h3>

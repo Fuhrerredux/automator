@@ -1,10 +1,10 @@
 [package]
 name = "automator"
-version = "0.0.0"
-description = "A Tauri App"
+version = "0.0.6"
+description = "Automator"
 authors = ["dax0102"]
-license = "MIT"
-repository = "https://github.com/dax0102/automator"
+license = "GPL-3.0"
+repository = "https://github.com/Fuhrerredux/automator"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
