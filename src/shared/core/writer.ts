@@ -5,7 +5,6 @@ import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { readSpriteDefinitions } from './reader'
-import { ministers } from '../const/roles'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -157,7 +156,7 @@ function defineOfficerRole(character: CharacterWithId): string {
     const hasMoreThanOneRoles = officerPositions.length > 1;
 
     // Add the position to the new array
-    const allOtherPositions = officerPositions.filter((p, i) => i !== index);
+    const allOtherPositions = officerPositions.filter((_, i) => i !== index);
 
     const availableBlock = hasMoreThanOneRoles
       ? `available = {\n${allOtherPositions.map(otherPosition => `        is_${otherPosition} = no`).join('\n')}\n      }`
