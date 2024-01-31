@@ -3,8 +3,9 @@
   "route": {
     "main": "Principale",
     "characters": "Personaggi",
-    "others": "Altro",
-    "character-import": "Importatore di personaggi"
+    "others": "Altri",
+    "character-import": "Importazione personaggi",
+    "analyze-gfx": "Analizza GFX"
   },
   "theme": {
     "auto": "Sistema",
@@ -12,31 +13,31 @@
     "light": "Chiaro"
   },
   "field": {
-    "tag": "Etichetta del Paese",
-    "name": "Nome del Personaggio",
+    "tag": "Tag Paese",
+    "name": "Nome personaggio",
     "ideology": "Ideologia",
-    "leader-role": "Aggiungi Ruolo del Leader",
-    "commanding-role": "Aggiungi Ruolo di Comando",
-    "minister-role": "Aggiungi Ruolo di Ministro",
-    "officer-role": "Aggiungi Ruolo di Ufficiale",
+    "leader-role": "Aggiungi ruolo leader",
+    "commanding-role": "Aggiungi ruolo comandante",
+    "minister-role": "Aggiungi ruolo ministro",
+    "officer-role": "Aggiungi ruolo ufficiale",
     "role": "Ruolo",
     "roles": "Ruoli",
     "traits": "Caratteristiche",
     "actions": "Azioni",
     "mod-dir": "Directory Mod",
-    "traits-def": "Definizioni delle Caratteristiche",
-    "leader-roles": "Ruoli di leader",
-    "dropzone": "Trascinare il file qui o fare clic per sfogliare un file.",
-    "dropzone-active": "Lasciare il file qui"
+    "traits-def": "Definizioni caratteristiche",
+    "leader-roles": "Ruoli leader",
+    "dropzone": "Trascina e rilascia il file qui o clicca per cercare un file",
+    "dropzone-active": "Rilascia il file qui"
   },
   "placeholder": {
     "tag": "USA",
     "name": "Douglas MacArthur",
     "dropdown": "Scegli uno",
-    "dropdown-multiple": "Scegliere più ruoli",
-    "traits": "Inserisci qui le caratteristiche, assicurati di separarle con una virgola",
+    "dropdown-multiple": "Scegli multipli",
+    "traits": "Inserisci qui le caratteristiche, assicurati di separarle con la virgola",
     "remaining": "{num} rimanenti",
-    "character-parsed": "{num} carattere analizzato"
+    "character-parsed": "{num} personaggi analizzati"
   },
   "action": {
     "create": "Crea",
@@ -45,91 +46,106 @@
     "remove": "Rimuovi",
     "cancel": "Annulla",
     "export": "Esporta",
-    "row-actions": "Azioni",
+    "row-actions": "Azioni riga",
     "browse": "Sfoglia",
     "generate": "Genera",
     "load": "Carica",
-    "purge": "Esportazione",
-    "learn-more": "Per saperne di più"
+    "purge": "Pulisci",
+    "learn-more": "Scopri di più",
+    "select": "Seleziona"
   },
   "loading": {
     "saving": "Salvataggio",
     "removing": "Rimozione",
-    "exporting": "Spurgo",
-    "purging": "Epurazione"
+    "exporting": "Esportazione",
+    "purging": "Pulizia"
   },
   "ideology": {
-    "vanguardist": "Collettivismo Nazionale",
+    "vanguardist": "Collettivista nazionale",
     "collectivist": "Socialista",
-    "libertarian-socialist": "Socialista Libertario",
-    "social-democrat": "Socialdemocratico",
-    "social-liberal": "Social-Liberale",
-    "market-liberal": "Liberale di Mercato",
-    "social-conservative": "Conservatore Sociale",
-    "authoritarian-democrat": "Democratico Autoritario",
-    "paternal-autocrat": "Autocrate Paternalista",
-    "national-populist": "Populista Nazionale",
-    "valkist": "Valkista"
+    "libertarian_socialist": "Socialista libertario",
+    "social_democrat": "Socialdemocratico",
+    "social_liberal": "Liberal socialista",
+    "market_liberal": "Liberal di mercato",
+    "social_conservative": "Conservatore sociale",
+    "authoritarian_democrat": "Democratico autoritario",
+    "paternal_autocrat": "Autocrate paternale",
+    "national_populist": "Populista nazionale",
+    "valkist": "Valkist"
   },
   "roles": {
-    "marshal": "Maresciallo di Campo",
-    "general": "Comandante di Corpo",
+    "marshal": "Feldmaresciallo",
+    "general": "Comandante di corpo",
     "admiral": "Ammiraglio",
-    "head-of-government": "Capo di Governo",
-    "foreign-minister": "Ministro degli Esteri",
-    "economy-minister": "Ministro dell'Economia",
-    "security-minister": "Ministro della Sicurezza",
-    "high-command": "Capo di Stato Maggiore",
-    "army-chief": "Capo dell'Esercito",
-    "air-chief": "Capo dell'Aeronautica",
-    "navy-chief": "Capo della Marina"
+    "head_of_government": "Capo di governo",
+    "foreign_minister": "Ministro degli Esteri",
+    "economy_minister": "Ministro dell'Economia",
+    "security_minister": "Ministro della Sicurezza",
+    "high_command": "Capo di stato maggiore",
+    "army_chief": "Capo dell'esercito",
+    "air_chief": "Capo dell'aeronautica",
+    "navy_chief": "Capo della marina",
+    "theorist": "Teorico"
   },
   "modal": {
     "character-editor": {
-      "create": "Crea Personaggio",
-      "update": "Aggiorna Personaggio"
+      "create": "Crea personaggio",
+      "update": "Aggiorna personaggio"
     },
     "remove-character": {
       "heading": "Rimuovere il personaggio?",
-      "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per l'etichetta {tag}? Questa azione non può essere annullata."
+      "summary": "Sei sicuro di voler rimuovere il personaggio \"{name}\" per il tag {tag}? Questa azione non può essere annullata."
     },
     "purge-characters": {
-      "heading": "Rimuovere tutti i caratteri?",
-      "summary": "Siete sicuri di voler eliminare tutti i caratteri presenti nel database? Questa azione non può essere annullata."
+      "heading": "Rimuovere tutti i personaggi?",
+      "summary": "Sei sicuro di voler pulire o rimuovere ogni voce di personaggio nel database? Questa azione non può essere annullata."
     },
     "character-export": {
       "heading": "Esportatore di personaggi",
-      "summary": "Tutti i personaggi definiti nel database saranno esportati nei file della mod; nella cartella characters. Tuttavia, questa operazione sovrascriverà le definizioni correnti; assicurarsi di creare un backup prima di utilizzare questa funzione."
+      "summary": "Tutti i personaggi definiti nel database saranno esportati nei file mod; nella cartella dei personaggi. Questo sovrascriverà le definizioni attuali, assicurati di creare un backup prima di utilizzare questa funzione."
     },
     "character-import": {
-      "heading": "Importazione di caratteri",
-      "summary": "Importa le definizioni dei personaggi dai file del mod."
+      "heading": "Importazione personaggi",
+      "summary": "Importa le definizioni dei personaggi dai file mod."
+    },
+    "file-select": {
+      "heading": "Scegli un file",
+      "summary": "Sfoglia e seleziona un file da elaborare"
     }
   },
   "status": {
     "saved": "Salvato",
     "characters-exported": "Personaggi esportati",
     "characters-imported": "Personaggi importati",
-    "character-removed": "Character removed",
-    "shines-generated": "Effetti di luce generati"
+    "character-removed": "Personaggio rimosso",
+    "shines-generated": "Shines generati"
+  },
+  "info": {
+    "import-ext": "Puoi utilizzare un file di personaggi o il file di localizzazione che contiene le definizioni per i ministri che saranno importati. {end}"
   },
   "error": {
     "generic-dir-read": "Errore nella lettura della directory",
-    "no-dir": "Non è stata selezionata alcuna directory di mod. Per iniziare, è necessario sfogliare la radice della cartella delle mod.",
-    "no-dir-short": "Non è stata selezionata alcuna directory di mod",
-    "no-characters-to-export": "Non ci sono personaggi da esportare"
-  },
-  "info": {
-    "import-ext": "È possibile utilizzare il file dei caratteri o il file di localizzazione che contiene le definizioni dei ministri da importare. {end}"
+    "no-dir": "Nessuna directory mod selezionata. Devi sfogliare la radice della tua directory mod per iniziare.",
+    "no-dir-short": "Nessuna directory mod selezionata",
+    "no-characters-to-export": "Non ci sono personaggi da esportare",
+    "file-not-found": "File non trovato"
   },
   "others": {
     "shine": {
-      "heading": "Generatore di Effetti di Luce GFX",
-      "summary": "Genera effetti di luce per le sprites definite nel file FX_goals.gfx."
+      "heading": "Generatore di effetti di luce GFX",
+      "summary": "Genera effetti di luce per le sprite definite nel file FX_goals.gfx."
     },
     "character-recruit": {
       "heading": "Aggiungi personaggi ai file di storia",
-      "summary": "Aggiunge gli effetti \"recluta_personaggio\" alla fine dei file di cronologia."
+      "summary": "Aggiunge effetti 'recruit_character' alla fine dei file di storia"
+    },
+    "optimize-gfx": {
+      "heading": "Ottimizza le definizioni delle sprite",
+      "summary": "Verifica se le definizioni delle sprite non hanno percorsi di file mancanti."
     }
+  },
+  "tab": {
+    "orphaned": "Orfane",
+    "duplicate": "Duplicato"
   }
 }

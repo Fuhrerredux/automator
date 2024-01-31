@@ -1,10 +1,11 @@
 {
   "app": "Automator",
   "route": {
-    "main": "Hauptmenü",
+    "main": "Haupt",
     "characters": "Charaktere",
     "others": "Andere",
-    "character-import": "Zeichen-Importer"
+    "character-import": "Charakter-Importer",
+    "analyze-gfx": "GFX analysieren"
   },
   "theme": {
     "auto": "System",
@@ -16,8 +17,8 @@
     "name": "Charaktername",
     "ideology": "Ideologie",
     "leader-role": "Führungsrolle hinzufügen",
-    "commanding-role": "Kommandorolle hinzufügen",
-    "minister-role": "Ministerrolle hinzufügen",
+    "commanding-role": "Befehlshaber-Rolle hinzufügen",
+    "minister-role": "Minister-Rolle hinzufügen",
     "officer-role": "Offiziersrolle hinzufügen",
     "role": "Rolle",
     "roles": "Rollen",
@@ -25,18 +26,18 @@
     "actions": "Aktionen",
     "mod-dir": "Mod-Verzeichnis",
     "traits-def": "Eigenschaftsdefinitionen",
-    "leader-roles": "Rollen der Führungskräfte",
-    "dropzone": "Ziehen Sie die Datei hierher, oder klicken Sie, um eine Datei zu suchen",
-    "dropzone-active": "Ablegen der Datei hier"
+    "leader-roles": "Führungsrollen",
+    "dropzone": "Datei hierher ziehen oder klicken, um eine Datei zu durchsuchen",
+    "dropzone-active": "Datei hier ablegen"
   },
   "placeholder": {
-    "tag": "USA",
-    "name": "Douglas MacArthur",
-    "dropdown": "Auswählen",
-    "dropdown-multiple": "Wählen Sie mehrere",
-    "traits": "Eigenschaften hier eingeben, mit Komma trennen",
-    "remaining": "noch {num} übrig",
-    "character-parsed": "{num} 1 Zeichen geparst"
+    "tag": "GER",
+    "name": "Adam Dressler",
+    "dropdown": "Wähle eins",
+    "dropdown-multiple": "Wähle mehrere",
+    "traits": "Geben Sie hier Eigenschaften ein und stellen Sie sicher, dass sie durch Kommas getrennt sind",
+    "remaining": "{num} mehr",
+    "character-parsed": "{num} Charaktere analysiert"
   },
   "action": {
     "create": "Erstellen",
@@ -50,7 +51,8 @@
     "generate": "Generieren",
     "load": "Laden",
     "purge": "Bereinigen",
-    "learn-more": "Mehr erfahren"
+    "learn-more": "Erfahren Sie mehr",
+    "select": "Auswählen"
   },
   "loading": {
     "saving": "Speichern",
@@ -59,30 +61,31 @@
     "purging": "Bereinigen"
   },
   "ideology": {
-    "vanguardist": "Nationalkollektivist",
+    "vanguardist": "Nationaler Kollektivist",
     "collectivist": "Sozialist",
-    "libertarian-socialist": "Libertärer Sozialist",
-    "social-democrat": "Sozialdemokrat",
-    "social-liberal": "Sozialliberal",
-    "market-liberal": "Marktliberal",
-    "social-conservative": "Sozialkonservativ",
-    "authoritarian-democrat": "Autoritärer Demokrat",
-    "paternal-autocrat": "Väterlicher Autokrat",
-    "national-populist": "Nationalpopulist",
+    "libertarian_socialist": "Libertärer Sozialist",
+    "social_democrat": "Sozialdemokrat",
+    "social_liberal": "Sozialliberal",
+    "market_liberal": "Marktliberal",
+    "social_conservative": "Sozialkonservativ",
+    "authoritarian_democrat": "Autoritärer Demokrat",
+    "paternal_autocrat": "Väterlicher Autokrat",
+    "national_populist": "Nationalpopulist",
     "valkist": "Valkist"
   },
   "roles": {
     "marshal": "Feldmarschall",
-    "general": "Korpskommandeur",
+    "general": "Korpskommandant",
     "admiral": "Admiral",
-    "head-of-government": "Regierungschef",
-    "foreign-minister": "Außenminister",
-    "economy-minister": "Wirtschaftsminister",
-    "security-minister": "Sicherheitsminister",
-    "high-command": "Generalstab",
-    "army-chief": "Heereschef",
-    "air-chief": "Luftwaffenchef",
-    "navy-chief": "Marinechef"
+    "head_of_government": "Regierungschef",
+    "foreign_minister": "Außenminister",
+    "economy_minister": "Wirtschaftsminister",
+    "security_minister": "Sicherheitsminister",
+    "high_command": "Generalstab",
+    "army_chief": "Heereschef",
+    "air_chief": "Luftwaffenchef",
+    "navy_chief": "Marinechef",
+    "theorist": "Theoretiker"
   },
   "modal": {
     "character-editor": {
@@ -91,45 +94,58 @@
     },
     "remove-character": {
       "heading": "Charakter entfernen?",
-      "summary": "Bist du sicher, dass du den Charakter \"{name}\" für die Kennung {tag} entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+      "summary": "Sind Sie sicher, dass Sie den Charakter \"{name}\" für die {tag}-Markierung entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
     },
     "purge-characters": {
-      "heading": "Alle Zeichen entfernen?",
-      "summary": "Sind Sie sicher, dass Sie alle Zeicheneinträge in der Datenbank bereinigen oder entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+      "heading": "Alle Charaktere entfernen?",
+      "summary": "Sind Sie sicher, dass Sie jede Charaktereinträge in der Datenbank bereinigen oder entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
     },
     "character-export": {
-      "heading": "Zeichen-Exporter",
-      "summary": "Alle in der Datenbank definierten Charaktere werden in die Mod-Dateien exportiert, die sich im Ordner characters befinden. Dies überschreibt jedoch die aktuellen Definitionen, daher sollte man vor der Verwendung dieser Funktion ein Backup erstellen."
+      "heading": "Charakterexporteur",
+      "summary": "Alle in der Datenbank definierten Charaktere werden in die Mod-Dateien exportiert; im Ordner 'characters'. Dies überschreibt jedoch die aktuellen Definitionen. Stellen Sie sicher, dass Sie vor der Verwendung dieser Funktion eine Sicherungskopie erstellen."
     },
     "character-import": {
-      "heading": "Charakter-Import",
-      "summary": "Importiert Charakterdefinitionen aus den Moddateien. Importierte Charaktere"
+      "heading": "Charakterimport",
+      "summary": "Importieren Sie Charakterdefinitionen aus den Mod-Dateien."
+    },
+    "file-select": {
+      "heading": "Wählen Sie eine Datei",
+      "summary": "Durchsuchen und wählen Sie eine Datei zum Verarbeiten"
     }
   },
   "status": {
     "saved": "Gespeichert",
     "characters-exported": "Charaktere exportiert",
-    "characters-imported": "Characters imported",
-    "character-removed": "Zeichen entfernt",
-    "shines-generated": "Effekte generiert"
+    "characters-imported": "Charaktere importiert",
+    "character-removed": "Charakter entfernt",
+    "shines-generated": "Shines generiert"
+  },
+  "info": {
+    "import-ext": "Sie können eine Zeichen- oder Lokalisierungsdatei verwenden, die Definitionen für die Minister enthält, die importiert werden sollen. {end}"
   },
   "error": {
     "generic-dir-read": "Fehler beim Lesen des Verzeichnisses",
     "no-dir": "Kein Mod-Verzeichnis ausgewählt. Sie müssen das Stammverzeichnis Ihres Mod-Verzeichnisses durchsuchen, um loszulegen.",
     "no-dir-short": "Kein Mod-Verzeichnis ausgewählt",
-    "no-characters-to-export": "Es sind keine Zeichen zu exportieren"
-  },
-  "info": {
-    "import-ext": "Sie können die Zeichendatei oder die Lokalisierungsdatei verwenden, die Definitionen für die zu importierenden Minister enthält. {end}"
+    "no-characters-to-export": "Es gibt keine Charaktere zum Exportieren",
+    "file-not-found": "Datei nicht gefunden"
   },
   "others": {
     "shine": {
-      "heading": "Effekt-GFX-Gerätegenerator",
-      "summary": "Generiere Effekte für die in der Datei FX_goals.gfx definierten Sprites."
+      "heading": "Fokus-GFX-Shine-Generator",
+      "summary": "Generieren Sie Glanz für in der Datei FX_goals.gfx definierte Sprites."
     },
     "character-recruit": {
-      "heading": "Anhängen von Zeichen an Verlaufsdateien",
-      "summary": "Fügt die Effekte \"recruit_character\" am Ende der Geschichtsdateien hinzu"
+      "heading": "Charaktere am Ende der Geschichtsdateien hinzufügen",
+      "summary": "Fügt 'recruit_character'-Effekte am Ende der Geschichtsdateien hinzu"
+    },
+    "optimize-gfx": {
+      "heading": "Sprite-Definitionen optimieren",
+      "summary": "Überprüfen Sie, ob Sprite-Definitionen keine fehlenden Dateipfade haben."
     }
+  },
+  "tab": {
+    "orphaned": "Verwaist",
+    "duplicate": "Duplikat"
   }
 }

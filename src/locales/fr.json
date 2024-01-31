@@ -1,0 +1,151 @@
+{
+	"app": "Automator",
+	"route": {
+		"main": "Principal",
+		"characters": "Personnages",
+		"others": "Autres",
+		"character-import": "Importateur de personnages",
+		"analyze-gfx": "Analyser GFX"
+	},
+	"theme": {
+		"auto": "Système",
+		"dark": "Foncé",
+		"light": "Clair"
+	},
+	"field": {
+		"tag": "Tag du pays",
+		"name": "Nom du personnage",
+		"ideology": "Idéologie",
+		"leader-role": "Ajouter un rôle de leader",
+		"commanding-role": "Ajouter un rôle de commandant",
+		"minister-role": "Ajouter un rôle de ministre",
+		"officer-role": "Ajouter un rôle d'officier",
+		"role": "Rôle",
+		"roles": "Rôles",
+		"traits": "Traits",
+		"actions": "Actions",
+		"mod-dir": "Répertoire Mod",
+		"traits-def": "Définitions des traits",
+		"leader-roles": "Rôles de leader",
+		"dropzone": "Glissez-déposez le fichier ici ou cliquez pour parcourir un fichier",
+		"dropzone-active": "Déposez le fichier ici"
+	},
+	"placeholder": {
+		"tag": "USA",
+		"name": "Douglas MacArthur",
+		"dropdown": "Choisissez-en un",
+		"dropdown-multiple": "Choisissez plusieurs",
+		"traits": "Saisissez les traits ici, assurez-vous de les séparer par une virgule",
+		"remaining": "{num} restants",
+		"character-parsed": "{num} personnages analysés"
+	},
+	"action": {
+		"create": "Créer",
+		"edit": "Modifier",
+		"import": "Importer",
+		"remove": "Supprimer",
+		"cancel": "Annuler",
+		"export": "Exporter",
+		"row-actions": "Actions de ligne",
+		"browse": "Parcourir",
+		"generate": "Générer",
+		"load": "Charger",
+		"purge": "Purger",
+		"learn-more": "En savoir plus",
+		"select": "Sélectionner"
+	},
+	"loading": {
+		"saving": "Enregistrement",
+		"removing": "Suppression",
+		"exporting": "Exportation",
+		"purging": "Purge"
+	},
+	"ideology": {
+		"vanguardist": "Collectiviste national",
+		"collectivist": "Socialiste",
+		"libertarian_socialist": "Socialiste libertaire",
+		"social_democrat": "Social-démocrate",
+		"social_liberal": "Libéral social",
+		"market_liberal": "Libéral de marché",
+		"social_conservative": "Conservateur social",
+		"authoritarian_democrat": "Démocrate autoritaire",
+		"paternal_autocrat": "Autocrate paternaliste",
+		"national_populist": "Populiste national",
+		"valkist": "Valkiste"
+	},
+	"roles": {
+		"marshal": "Maréchal de champ",
+		"general": "Commandant de corps",
+		"admiral": "Amiral",
+		"head_of_government": "Chef de gouvernement",
+		"foreign_minister": "Ministre des Affaires étrangères",
+		"economy_minister": "Ministre de l'Économie",
+		"security_minister": "Ministre de la Sécurité",
+		"high_command": "Chef d'état-major",
+		"army_chief": "Chef d'armée",
+		"air_chief": "Chef de l'armée de l'air",
+		"navy_chief": "Chef de la marine",
+		"theorist": "Théoricien"
+	},
+	"modal": {
+		"character-editor": {
+			"create": "Créer un personnage",
+			"update": "Mettre à jour le personnage"
+		},
+		"remove-character": {
+			"heading": "Supprimer le personnage ?",
+			"summary": "Êtes-vous sûr de vouloir supprimer le personnage \"{name}\" pour le tag {tag} ? Cette action est irréversible."
+		},
+		"purge-characters": {
+			"heading": "Supprimer tous les personnages ?",
+			"summary": "Êtes-vous sûr de vouloir purger ou supprimer chaque entrée de personnage dans la base de données ? Cette action est irréversible."
+		},
+		"character-export": {
+			"heading": "Exportateur de personnages",
+			"summary": "Tous les personnages définis dans la base de données seront exportés vers les fichiers mod ; dans le dossier des personnages. Cela écrasera cependant les définitions actuelles, assurez-vous de créer une sauvegarde avant d'utiliser cette fonction."
+		},
+		"character-import": {
+			"heading": "Importateur de personnages",
+			"summary": "Importez les définitions de personnages à partir des fichiers mod."
+		},
+		"file-select": {
+			"heading": "Choisissez un fichier",
+			"summary": "Parcourez et sélectionnez un fichier à traiter"
+		}
+	},
+	"status": {
+		"saved": "Enregistré",
+		"characters-exported": "Personnages exportés",
+		"characters-imported": "Personnages importés",
+		"character-removed": "Personnage supprimé",
+		"shines-generated": "Shines générés"
+	},
+	"info": {
+		"import-ext": "Vous pouvez utiliser un fichier de personnages ou le fichier de localisation qui contient des définitions pour les ministres qui seront importés. {end}"
+	},
+	"error": {
+		"generic-dir-read": "Erreur de lecture du répertoire",
+		"no-dir": "Aucun répertoire mod sélectionné. Vous devez parcourir la racine de votre répertoire mod pour commencer.",
+		"no-dir-short": "Aucun répertoire mod sélectionné",
+		"no-characters-to-export": "Il n'y a aucun personnage à exporter",
+		"file-not-found": "Fichier introuvable"
+	},
+	"others": {
+		"shine": {
+			"heading": "Générateur de brillance GFX",
+			"summary": "Génère des effets de brillance pour les sprites définies dans le fichier FX_goals.gfx."
+		},
+		"character-recruit": {
+			"heading": "Ajouter des personnages aux fichiers d'histoire",
+			"summary": "Ajoute des effets 'recruit_character' à la fin des fichiers d'histoire"
+		},
+		"optimize-gfx": {
+			"heading": "Optimiser les définitions des sprites",
+			"summary": "Vérifiez si les définitions des sprites n'ont pas de chemins de fichiers manquants."
+		}
+	},
+	"tab": {
+		"orphaned": "Orphelin",
+		"duplicate": "Dupliqué"
+	}
+}
