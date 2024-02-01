@@ -12,6 +12,10 @@
     "dark": "Σκοτεινό",
     "light": "Φωτεινό"
   },
+  "settings": {
+    "header": "Ρυθμίσεις",
+    "positionPrevention": "Prevent an officer from having more than 1 role at a time."
+  },
   "field": {
     "tag": "Ετικέτα Χώρας (Tag)",
     "name": "Όνομα Χαρακτήρα",
