@@ -4,6 +4,7 @@ import ImportCharacters from '@pages/characters/import.vue'
 import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
 import OptimizePage from '@pages/others/optimize.vue'
+import SettingsPage from '@pages/settings.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/optimize',
     name: 'Optimize',
     component: OptimizePage
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: SettingsPage
   }
 ]
 

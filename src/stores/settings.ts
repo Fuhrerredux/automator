@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 interface AppSettings {
     positionPrevention: boolean;
+    language: string;
 }
 
 const useSettingsStore = defineStore({
@@ -9,6 +10,7 @@ const useSettingsStore = defineStore({
     state: (): AppSettings => {
         return {
             positionPrevention: false,
+            language: 'en',
         };
     },
     actions: {
@@ -29,6 +31,13 @@ const useSettingsStore = defineStore({
         updatePositionPrevention(value: boolean) {
             this.$state.positionPrevention = value;
             this.save();
+        },
+        setLanguage(language: string) {
+            this.$state.language = language;
+            this.save();
+        },
+        getLanguage(): string {
+            return this.$state.language;
         },      
     },
 });
