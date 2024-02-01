@@ -6,11 +6,8 @@
   import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
   import { AdjustmentsHorizontalIcon } from "@heroicons/vue/24/outline"
 
-  import { ref } from 'vue';
-
   const { t } = useI18n()
   const route = useRoute()
-  const isIconHighlighted = ref(false);
 
   function isActive(link: string): string {
     return route.path === link ? 'text-zinc-800 dark:text-zinc-50' : ''
@@ -18,10 +15,6 @@
 
   function isActiveIcon(link: string): string {
     return route.path === link ? '' : 'text-gray-500'
-  }
-
-  function toggleElementClasses(): void {
-    
   }
 
 
