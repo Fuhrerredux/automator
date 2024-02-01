@@ -10,13 +10,12 @@
         :class="checked ? 'translate-x-6' : 'translate-x-1'"
         class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
     </Switch>
-    <div class="ml-2 text-sm font-medium">{{ label }}</div>
+    <div :class="labelClass ? labelClass : 'ml-2 text-sm font-medium'">{{ label }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Switch } from '@headlessui/vue'
-
-defineProps({ checked: Boolean, label: String })
-defineEmits(['update:modelValue'])
+  import { Switch } from '@headlessui/vue';
+  defineProps({ checked: Boolean, label: String, labelClass: String });
+  defineEmits(['update:modelValue']);
 </script>
