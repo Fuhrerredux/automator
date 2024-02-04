@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 interface AppSettings {
     positionPrevention: boolean;
+    optionLogging: boolean;
     language: string;
 }
 
@@ -10,6 +11,7 @@ const useSettingsStore = defineStore({
     state: (): AppSettings => {
         return {
             positionPrevention: false,
+            optionLogging: true,
             language: 'en',
         };
     },
@@ -31,6 +33,20 @@ const useSettingsStore = defineStore({
         updatePositionPrevention(value: boolean) {
             this.$state.positionPrevention = value;
             this.save();
+        },
+        getPositionPrevention(): boolean {
+            return this.$state.positionPrevention;
+        },
+        toggleOptionLogging() {
+            this.$state.optionLogging = !this.$state.optionLogging;
+            this.save();
+        },
+        updateOptionLogging(value: boolean) {
+            this.$state.optionLogging = value;
+            this.save();
+        },
+        getOptionLogging(): boolean {
+            return this.$state.optionLogging;
         },
         setLanguage(language: string) {
             this.$state.language = language;

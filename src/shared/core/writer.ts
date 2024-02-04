@@ -289,6 +289,42 @@ ${shines.join('\n')}
   await writeTextFile(out, shine)
 }
 
+export async function removeLogging(content:string, path:string):Promise<void> {
+  const lines = content.split('\n').filter((e) => !/\blog\b/.test(e)).join('\n')
+  try {
+    await writeTextFile(path, lines)
+  } catch (error) {
+    console.error(`Error writing file ${path}: ${error}`)
+    throw error;
+  }
+}
+
+export async function eventLogging(content:string, path:string):Promise<void> {
+  const newContent: string[] = []
+  const lines = content.split('\n')
+  const optionLogging:boolean = useSettingsStore().$state.optionLogging
+  let eventId:string;
+  lines.forEach((line, _) => {
+    let nLine = line
+    if (/\bid\b/.test(line) && !line.includes('days') && !line.trim().startsWith('#')) {
+      const id = line.substring(line.indexOf('=')).trim().split('#')[0].replace(' ', '').replace(/=([a-zA-Z])/g, "= $1").trim() //trimming 2 times because if you don't trim the 1st time it will match the wrong ids
+      eventId = id
+      nLine = `${line}\n    immediate = { log = "[GetLogInfo]: event ${id}" }`
+    } else if (optionLogging && /\bname\b/.test(line) && !line.trim().startsWith('#')) {
+      const name = line.substring(line.indexOf('=')).trim().split('#')[0].replace(' ', '').replace(/=([a-zA-Z])/g, "= $1").trim()
+      nLine = `        log = "[GetLogInfo]: event ${eventId} option ${name}"\n${line}`
+    }
+    newContent.push(nLine)
+  })
+  const result = newContent.join('\n')
+  try {
+    await writeTextFile(path, result)
+  } catch (error) {
+    console.error(`Error writing file ${path}: ${error}`)
+    throw error;
+  }
+}
+
 export async function appendToHistory(characters: CharacterWithId[], destination: string) {
   if (Array.isArray(characters)) {
     const history = `${destination}/history/countries/`
