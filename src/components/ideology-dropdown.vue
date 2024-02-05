@@ -8,7 +8,7 @@ import { ideologies } from '@shared/const/ideology'
 const { t } = useI18n()
 
 const props = defineProps<{
-  current: Ideology
+  current: Ideology | null
   disabled?: boolean
   modelValue: Ideology[]
 }>()

@@ -1,23 +1,21 @@
 <script setup lang="ts">
-  import { useI18n } from 'vue-i18n'
-  import { RouterLink } from 'vue-router'
-  import { useRoute } from 'vue-router'
-  import localeSwitcher from '@components/navigation/locale-switcher.vue'
-  import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
-  import { AdjustmentsHorizontalIcon } from "@heroicons/vue/24/outline"
+import { useI18n } from 'vue-i18n'
+import { RouterLink } from 'vue-router'
+import { useRoute } from 'vue-router'
+import localeSwitcher from '@components/navigation/locale-switcher.vue'
+import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
+import { Cog6ToothIcon } from '@heroicons/vue/24/outline'
 
-  const { t } = useI18n()
-  const route = useRoute()
+const { t } = useI18n()
+const route = useRoute()
 
-  function isActive(link: string): string {
-    return route.path === link ? 'text-zinc-800 dark:text-zinc-50' : ''
-  }
+function isActive(link: string): string {
+  return route.path === link ? 'text-zinc-800 dark:text-zinc-50' : ''
+}
 
-  function isActiveIcon(link: string): string {
-    return route.path === link ? '' : 'text-gray-500'
-  }
-
-
+function isActiveIcon(link: string): string {
+  return route.path === link ? '' : 'text-gray-500'
+}
 </script>
 
 <template>
@@ -36,8 +34,11 @@
         </router-link>
       </div>
       <div class="flex items-center gap-4">
-        <router-link to="/settings" class="link rounded-md p-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50 dark:hover:bg-zinc-700" :class="isActiveIcon('/settings')">
-          <AdjustmentsHorizontalIcon class="h-6 w-6 " />
+        <router-link
+          to="/settings"
+          class="link rounded-md p-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50 dark:hover:bg-zinc-700"
+          :class="isActiveIcon('/settings')">
+          <Cog6ToothIcon class="h-6 w-6" />
         </router-link>
         <locale-switcher />
         <theme-switcher />

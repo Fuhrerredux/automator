@@ -1,3 +1,4 @@
+import useSettingsStore from '@/stores/settings'
 import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
@@ -5,7 +6,6 @@ import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { readSpriteDefinitions } from './reader'
-import useSettingsStore from '@/stores/settings'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -117,7 +117,8 @@ function defineMinisterialRole(character: CharacterWithId): string {
   ministerPositions.forEach((position) => {
     const ideology = character.ideology
     const trait = ministerTraits[position as MinisterPosition]
-    const idea = `${token}_${getPositionSuffix(position)}_${getIdeologySuffix(character.ideology)}`
+    const suffix = ideology ? getIdeologySuffix(ideology) : ''
+    const idea = `${token}_${getPositionSuffix(position)}_${suffix}`
 
     const template = `\n\t\tadvisor = {
       cost = ${cost}
@@ -145,24 +146,24 @@ function defineMinisterialRole(character: CharacterWithId): string {
 }
 
 function defineOfficerRole(character: CharacterWithId): string {
-  const { positions, officerTraits, cost } = character;
-  const token = `${buildCharacterToken(character)}`;
-  const positionPrevention = useSettingsStore().$state.positionPrevention;
+  const { positions, officerTraits, cost } = character
+  const token = `${buildCharacterToken(character)}`
+  const positionPrevention = useSettingsStore().$state.positionPrevention
 
-  let advisor = '';
-  const officerPositions = positions.filter((e) => isMilitaryPosition(e));
+  let advisor = ''
+  const officerPositions = positions.filter((e) => isMilitaryPosition(e))
 
   officerPositions.forEach((position, index) => {
-    const trait = officerTraits[position as MilitaryPosition];
-    const idea = `${token}_${getPositionSuffix(position)}`;
-    const hasMoreThanOneRoles = officerPositions.length > 1 && !positionPrevention;
+    const trait = officerTraits[position as MilitaryPosition]
+    const idea = `${token}_${getPositionSuffix(position)}`
+    const hasMoreThanOneRoles = officerPositions.length > 1 && !positionPrevention
 
     // Add the position to the new array
-    const allOtherPositions = officerPositions.filter((_, i) => i !== index);
+    const allOtherPositions = officerPositions.filter((_, i) => i !== index)
 
     const availableBlock = hasMoreThanOneRoles
-      ? `available = {\n${allOtherPositions.map(otherPosition => `        is_${otherPosition} = no`).join('\n')}\n      }`
-      : '';
+      ? `available = {\n${allOtherPositions.map((otherPosition) => `        is_${otherPosition} = no`).join('\n')}\n      }`
+      : ''
 
     // Add available block inline before traits conditionally
     const templateWithAvailable = `\n\t\tadvisor = {
@@ -173,14 +174,20 @@ function defineOfficerRole(character: CharacterWithId): string {
       traits = {
         ${trait}
       }
-    }`;
+    }`
 
-    advisor = advisor.concat(templateWithAvailable);
-  });
-  const lines = advisor.split('\n');
-  advisor = lines[0] + '\n' + lines.slice(1).filter(line => line.trim() !== '').join('\n');
+    advisor = advisor.concat(templateWithAvailable)
+  })
+  const lines = advisor.split('\n')
+  advisor =
+    lines[0] +
+    '\n' +
+    lines
+      .slice(1)
+      .filter((line) => line.trim() !== '')
+      .join('\n')
 
-  return advisor;
+  return advisor
 }
 
 export function writeCharacter(characters: CharacterWithId[]) {

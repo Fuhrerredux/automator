@@ -34,7 +34,7 @@ const emit = defineEmits(['hide'])
 
 const tag = ref<string>('')
 const name = ref<string>('')
-const ideology = ref<Ideology>(ideologies[0].value)
+const ideology = ref<Ideology | null>(null)
 const addLeaderRole = ref(false)
 const addCommandingRole = ref(false)
 const addMinisterRole = ref(false)
@@ -125,7 +125,9 @@ async function submit() {
       ideology: ideology.value,
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
-      leaderIdeologies: toRaw(leaderIdeologies.value).concat([ideology.value]),
+      leaderIdeologies: ideology.value
+        ? toRaw(leaderIdeologies.value).concat([ideology.value])
+        : toRaw(leaderIdeologies.value),
       ministerTraits: toRaw(ministerTraits.value),
       officerTraits: toRaw(officerTraits.value),
       positions,
