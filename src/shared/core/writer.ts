@@ -290,7 +290,7 @@ ${shines.join('\n')}
 }
 
 export async function removeLogging(content:string, path:string):Promise<void> {
-  const lines = content.split('\n').filter((e) => !/\blog\b/.test(e)).join('\n')
+  const lines = content.split('\n').filter((e) => !/\blog\b/.test(e)).join('\n') //split, filter on if it includes word 'log' (using regex so it is a word match and words that include log in their letters not match), and after join.
   try {
     await writeTextFile(path, lines)
   } catch (error) {
@@ -301,16 +301,21 @@ export async function removeLogging(content:string, path:string):Promise<void> {
 
 export async function eventLogging(content:string, path:string):Promise<void> {
   const newContent: string[] = []
-  const lines = content.split('\n')
-  const optionLogging:boolean = useSettingsStore().$state.optionLogging
+  const lines = content.split('\n') //split lines
+  const optionLogging:boolean = useSettingsStore().$state.optionLogging //if we log or not log options
   let eventId:string;
-  lines.forEach((line, _) => {
-    let nLine = line
+  lines.forEach((line, _) => { //iterate through each line
+    let nLine = line //variable used so we have a back-up of our value
+
+    //if line includes 'id' as a word match (so hidden_effect for example doesn't get matched), does not include days (is an event triggered on an option block), and does not start with # (so it is not a comment)
     if (/\bid\b/.test(line) && !line.includes('days') && !line.trim().startsWith('#')) {
+      //substring with the index of equals, trim it, split it into the # (so we check for comments), take the 1st part, and replace all spaces with nothing. After, add a space on the equals so the resulting log says event = id and not event =id, and trim
       const id = line.substring(line.indexOf('=')).trim().split('#')[0].replace(' ', '').replace(/=([a-zA-Z])/g, "= $1").trim() //trimming 2 times because if you don't trim the 1st time it will match the wrong ids
       eventId = id
       nLine = `${line}\n    immediate = { log = "[GetLogInfo]: event ${id}" }`
+    // if line includes name as a word match, does not start with a comment and optionLogging setting is on
     } else if (optionLogging && /\bname\b/.test(line) && !line.trim().startsWith('#')) {
+      //same logic with const id in the if statement
       const name = line.substring(line.indexOf('=')).trim().split('#')[0].replace(' ', '').replace(/=([a-zA-Z])/g, "= $1").trim()
       nLine = `        log = "[GetLogInfo]: event ${eventId} option ${name}"\n${line}`
     }
