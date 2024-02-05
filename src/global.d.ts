@@ -60,7 +60,7 @@ declare global {
   type Character = {
     name: string
     tag: string
-    ideology: Ideology
+    ideology: Ideology | null
     positions: Position[]
     leaderTraits: string[]
     leaderIdeologies: string[]
