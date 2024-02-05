@@ -14,7 +14,8 @@
   },
   "settings": {
     "header": "Settings",
-    "positionPrevention": "Prevent an officer from having more than 1 role at a time."
+    "positionPrevention": "Prevent an officer from having more than 1 role at a time.",
+    "optionLogging": "Add log statements on options as well as events."
   },
   "field": {
     "tag": "Country Tag",
@@ -123,7 +124,9 @@
     "characters-exported": "Characters exported",
     "characters-imported": "Characters imported",
     "character-removed": "Character removed",
-    "shines-generated": "Shines generated"
+    "shines-generated": "Shines generated",
+    "event-logged": "Event Logging Added",
+    "log-removed": "Logging Removed"
   },
   "info": {
     "import-ext": "You can use characters file or the localization file which has definitions for the ministers that will be imported. {end}"
@@ -139,6 +142,14 @@
     "shine": {
       "heading": "Focus GFX Shine Generator",
       "summary": "Generate shines for sprites defined in FX_goals.gfx file."
+    },
+    "logremoving": {
+      "heading": "Remove Logging",
+      "summary": "Removes log statements added in files. It is tested on events, but may work on others like focuses or decisions. Always do before attempting to add logging to events."
+    },
+    "eventlogging": {
+      "heading": "Log Events",
+      "summary": "Adds log statements to events and their options. WARNING: If the event already has an immediate block, a new one will be created regardless. WARNING: If event blocks inside options encompass multiple blocks, logging will be added as well."
     },
     "character-recruit": {
       "heading": "Append Characters to History Files",
