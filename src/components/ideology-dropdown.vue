@@ -4,30 +4,42 @@ import { useI18n } from 'vue-i18n'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ideologies } from '@shared/const/ideology'
+import useCustomConfig from '@/stores/config'
+import useSettingsStore from '@/stores/settings'
 
 const { t } = useI18n()
+const configStore = useCustomConfig()
+const settingsStore = useSettingsStore()
 
 const props = defineProps<{
-  current: Ideology | null
+  current: string | null
   disabled?: boolean
-  modelValue: Ideology[]
+  modelValue: string[]
 }>()
 defineEmits<{
-  (e: 'update:modelValue', value: Ideology[]): void
+  (e: 'update:modelValue', value: string[]): void
 }>()
 
-const additional = computed(() => ideologies.filter((e) => e.value !== props.current))
+const ideologyOptions = computed(() => {
+  if (settingsStore.customConfig) {
+    return Object.entries(configStore.config.ideologies as Record<string, string>)
+      .map(([key, value]) => ({ value: key, label: value }))
+      .filter((e) => e.value !== props.current)
+  }
+
+  return ideologies.filter((e) => e.value !== props.current)
+})
 const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).join(', '))
 </script>
 
 <template>
   <listbox
     multiple
+    as="div"
+    class="relative"
     :model-value="modelValue"
     :disabled="disabled"
-    @update:model-value="$emit('update:modelValue', $event)"
-    as="div"
-    class="relative">
+    @update:model-value="$emit('update:modelValue', $event)">
     <listbox-button class="dropdown-button w-full">
       <span class="truncate inline-block flex-1 text-left">
         {{ modelValue.length > 0 ? label : t('placeholder.dropdown-multiple') }}
@@ -43,7 +55,7 @@ const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).joi
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option
-          v-for="option in additional"
+          v-for="option in ideologyOptions"
           v-slot="{ selected }"
           :value="option.value"
           as="template">

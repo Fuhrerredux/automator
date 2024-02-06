@@ -14,8 +14,9 @@
   },
   "settings": {
     "header": "Settings",
-    "positionPrevention": "Prevent an officer from having more than 1 role at a time.",
-    "optionLogging": "Add log statements on options as well as events."
+    "position-prevention": "Prevent an officer from having more than 1 role at a time.",
+    "custom-config": "Use custom configuration",
+    "option-logging": "Add log statements on options as well as events."
   },
   "field": {
     "tag": "Country Tag",

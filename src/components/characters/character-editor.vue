@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import { onMounted, ref, toRaw } from 'vue'
+import { computed, onMounted, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import Dropdown from '@components/dropdown.vue'
@@ -19,8 +19,12 @@ import {
   hasCommandingRole
 } from '@shared/utils/character'
 import useTraits from '@stores/traits'
+import useCustomConfig from '@/stores/config'
+import useSettingsStore from '@/stores/settings'
 
 const { traits } = useTraits()
+const configStore = useCustomConfig()
+const settingsStore = useSettingsStore()
 const { t } = useI18n({ useScope: 'local' })
 const $toast = useToast()
 const loading = ref(false)
@@ -34,14 +38,14 @@ const emit = defineEmits(['hide'])
 
 const tag = ref<string>('')
 const name = ref<string>('')
-const ideology = ref<Ideology | null>(null)
+const ideology = ref<string | null>(null)
 const addLeaderRole = ref(false)
 const addCommandingRole = ref(false)
 const addMinisterRole = ref(false)
 const addOfficerRole = ref(false)
 
 const leaderTraits = ref<string>('')
-const leaderIdeologies = ref<Ideology[]>([])
+const leaderIdeologies = ref<string[]>([])
 
 const commandingRole = ref<CommandingRole>(commanding[0].value)
 const commanderTraits = ref<string>('')
@@ -61,6 +65,15 @@ const officerTraits = ref<Record<MilitaryPosition, string>>({
   theorist: ''
 })
 
+const ideologyOptions = computed(() => {
+  if (settingsStore.customConfig) {
+    return Object.entries(configStore.config.ideologies)
+      .map(([key, value]) => ({ value: key, label: value }))
+  }
+
+  return ideologies
+})
+
 onMounted(() => {
   if (character) {
     tag.value = character.tag
@@ -71,7 +84,7 @@ onMounted(() => {
     addMinisterRole.value = character.roles.includes('minister')
     addOfficerRole.value = character.roles.includes('officer')
     leaderTraits.value = character.leaderTraits.join(',')
-    leaderIdeologies.value = character.leaderIdeologies as Ideology[]
+    leaderIdeologies.value = character.leaderIdeologies
     commanderTraits.value = character.commanderTraits.join(',')
     ministerTraits.value = character.ministerTraits
     officerTraits.value = character.officerTraits
@@ -193,7 +206,7 @@ async function submit() {
                   value-key="value"
                   display-key="label"
                   :model-value="ideology"
-                  :options="ideologies"
+                  :options="ideologyOptions"
                   @update:model-value="ideology = $event" />
               </label>
             </div>
