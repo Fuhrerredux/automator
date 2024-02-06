@@ -36,18 +36,6 @@ declare global {
     trait: string | null
   }
 
-  type Ideology =
-    | 'vanguardist'
-    | 'collectivist'
-    | 'libertarian_socialist'
-    | 'social_democrat'
-    | 'social_liberal'
-    | 'market_liberal'
-    | 'social_conservative'
-    | 'authoritarian_democrat'
-    | 'paternal_autocrat'
-    | 'national_populist'
-    | 'valkist'
   type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
   type CharacterRole = CommandingRole | 'leader' | 'minister'
   type MinisterPosition =
@@ -60,7 +48,7 @@ declare global {
   type Character = {
     name: string
     tag: string
-    ideology: Ideology | null
+    ideology: string | null
     positions: Position[]
     leaderTraits: string[]
     leaderIdeologies: string[]
@@ -98,6 +86,10 @@ declare global {
   type TauriStatus = {
     kind: string
     message: string
+  }
+
+  type CustomConfig = {
+    ideologies: Record<string, string>
   }
 }
 
