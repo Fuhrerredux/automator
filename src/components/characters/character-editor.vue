@@ -28,7 +28,7 @@ const { open, character, updateFn, createFn } = defineProps<{
   open: boolean
   character: CharacterWithId | null
   updateFn: (character: CharacterWithId) => Promise<void>
-  createFn: (character: CharacterWithId) => Promise<void>
+  createFn: (character: CharacterWithId) => Promise<TauriStatus>
 }>()
 const emit = defineEmits(['hide'])
 
@@ -70,9 +70,9 @@ onMounted(() => {
     addCommandingRole.value = hasCommandingRole(character)
     addMinisterRole.value = character.roles.includes('minister')
     addOfficerRole.value = character.roles.includes('officer')
-    leaderTraits.value = character.leaderTraits.join(',')
+    leaderTraits.value = (character.leaderTraits ?? []).join(',')
     leaderIdeologies.value = character.leaderIdeologies as Ideology[]
-    commanderTraits.value = character.commanderTraits.join(',')
+    commanderTraits.value = (character.commanderTraits ?? []).join(',')
     ministerTraits.value = character.ministerTraits
     officerTraits.value = character.officerTraits
 

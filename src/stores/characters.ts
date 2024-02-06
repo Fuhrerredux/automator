@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import CharacterRepository from '@database/repository'
+import CharacterRepository from '@database/character'
 
-const repository = CharacterRepository.getInstance()
 const useCharacterStore = defineStore({
   id: 'characters',
   state: () => {
@@ -11,28 +10,32 @@ const useCharacterStore = defineStore({
   },
   actions: {
     async importAll(characters: CharacterWithId[]) {
-      const promises = characters.map((e) => repository.create(e))
+      const promises = characters.map((e) => CharacterRepository.create(e))
       return await Promise.all(promises)
     },
-    async create(character: CharacterWithId) {
-      await repository.create(character)
-      this.characters = await repository.findAll()
+    async create(character: CharacterWithId): Promise<TauriStatus> {
+      const status = await CharacterRepository.create(character)
+      if (status.kind === 'success')
+        this.characters = await CharacterRepository.findAll()
+
+      return status
     },
     async update(character: CharacterWithId) {
-      await repository.update(character)
-      this.characters = await repository.findAll()
+      const status = await CharacterRepository.update(character.id, character)
+      if (status.kind === 'success')
+        this.characters = await CharacterRepository.findAll()
     },
     async remove(character: CharacterWithId) {
-      await repository.remove(character)
-      this.characters = await repository.findAll()
+      await CharacterRepository.remove(character.id)
+      this.characters = await CharacterRepository.findAll()
     },
     async purge() {
-      await repository.purge()
-      this.characters = await repository.findAll()
+      // await CharacterRepository.purge()
+      this.characters = await CharacterRepository.findAll()
     },
     async refresh() {
       try {
-        this.characters = await repository.findAll()
+        this.characters = await CharacterRepository.findAll()
       } catch {}
     }
   }
