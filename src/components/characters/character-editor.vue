@@ -27,8 +27,8 @@ const loading = ref(false)
 const { open, character, updateFn, createFn } = defineProps<{
   open: boolean
   character: CharacterWithId | null
-  updateFn: (character: CharacterWithId) => Promise<void>
-  createFn: (character: CharacterWithId) => Promise<void>
+  updateFn: (character: CharacterWithId) => Promise<TauriStatus>
+  createFn: (character: CharacterWithId) => Promise<TauriStatus>
 }>()
 const emit = defineEmits(['hide'])
 
@@ -134,10 +134,14 @@ async function submit() {
       roles
     }
 
-    if (character) await updateFn(data)
-    else await createFn(data)
-    $toast.success(t('status.saved'))
-
+    if (character) {
+      const status = await updateFn(data)
+      $toast.success(t(status.message))
+    } else {
+      const status = await createFn(data)
+      $toast.success(t(status.message))
+    } 
+  
     emit('hide')
   } catch (e) {
     $toast.error(String(e))

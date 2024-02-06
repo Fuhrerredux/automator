@@ -94,6 +94,11 @@ declare global {
     directory: string
     res: string
   }
+
+  type TauriStatus = {
+    kind: string
+    message: string
+  }
 }
 
 declare module 'vue' {
