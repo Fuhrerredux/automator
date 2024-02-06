@@ -11,7 +11,7 @@ const useSettingsStore = defineStore({
   id: 'settings',
   state: (): AppSettings => {
     return {
-      customConfig: true,
+      customConfig: false,
       positionPrevention: false,
       optionLogging: true,
       language: 'en',
@@ -56,7 +56,29 @@ const useSettingsStore = defineStore({
     },
     getLanguage(): string {
       return this.$state.language;
-    },      
+    },
+    getCustomConfig(): boolean {
+      return this.$state.customConfig
+    },
+    toggleCustomConfig() {
+      this.$state.customConfig = !this.$state.customConfig
+      this.save()
+    },
+    updateCustomConfig(value:boolean) {
+      this.$state.customConfig = value;
+      this.save()
+    },
+    toggleSetting(setting: keyof AppSettings) {
+      (this.$state[setting] as boolean) = !(this.$state[setting] as boolean);
+      this.save();    
+    },
+    updateSetting(setting: keyof AppSettings, value: boolean) {
+      (this.$state[setting] as boolean) = (value as boolean);
+      this.save();
+    },
+    getSetting(setting: keyof AppSettings): boolean {
+      return this.$state[setting] as boolean;
+    },
   },
 });
 export default useSettingsStore;

@@ -21,7 +21,7 @@ defineEmits<{
 }>()
 
 const ideologyOptions = computed(() => {
-  if (settingsStore.customConfig) {
+  if (settingsStore.getCustomConfig()) {
     return Object.entries(configStore.config.ideologies as Record<string, string>)
       .map(([key, value]) => ({ value: key, label: value }))
       .filter((e) => e.value !== props.current)

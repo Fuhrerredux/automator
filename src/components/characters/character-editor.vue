@@ -66,7 +66,7 @@ const officerTraits = ref<Record<MilitaryPosition, string>>({
 })
 
 const ideologyOptions = computed(() => {
-  if (settingsStore.customConfig) {
+  if (settingsStore.getCustomConfig()) {
     return Object.entries(configStore.config.ideologies)
       .map(([key, value]) => ({ value: key, label: value }))
   }
