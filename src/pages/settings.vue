@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useSettingsStore from '@/stores/settings'
 import Page from '@components/page.vue'
