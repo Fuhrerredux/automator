@@ -43,6 +43,7 @@ async fn main() {
       create_character,
       update_character,
       delete_character,
+      purge_characters,
       list_characters
     ])
     .run(tauri::generate_context!())
@@ -59,7 +60,7 @@ async fn create_character(state: tauri::State<'_, AppState>, form: characters::M
 
   let data = FlashData {
     kind: "success".to_owned(),
-    message: "character:create".to_owned()
+    message: "status.character.created".to_owned()
   };
   Ok(data)
 }
@@ -76,7 +77,7 @@ async fn update_character(
 
   let data = FlashData {
     kind: "success".to_owned(),
-    message: "character:update".to_owned(),
+    message: "status.character.updated".to_owned(),
   };
 
   Ok(data)
@@ -93,7 +94,23 @@ async fn delete_character(
 
   let data = FlashData {
     kind: "success".to_owned(),
-    message: "character:remove".to_owned(),
+    message: "status.character.removed".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn purge_characters(
+  state: tauri::State<'_, AppState>,
+) -> Result<FlashData, ()> {
+  MutationCore::delete_all_characters(&state.conn)
+    .await
+    .expect("could not purge all characters");
+
+  let data = FlashData {
+    kind: "success".to_owned(),
+    message: "status.character.purged".to_owned()
   };
 
   Ok(data)

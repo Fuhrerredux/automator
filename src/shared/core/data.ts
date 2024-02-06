@@ -6,6 +6,19 @@ export function denormalize<T extends object>(data: string) {
   return JSON.parse(data) as T
 }
 
+export function toCamelCase(key: string) {
+  return key.toLowerCase().replace(/([-_][a-z])/g, group =>
+  group
+    .toUpperCase()
+    .replace('-', '')
+    .replace('_', '')
+);
+}
+
+export function toSnakeCase(key: string) {
+  return key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+}
+
 /**
  * Function to serialize unsupported data types such as array and object that will
  * be flush in the SQLite Database.
@@ -16,9 +29,10 @@ export function denormalize<T extends object>(data: string) {
  */
 export function serializeObject<T extends object>(obj: T, keys: (keyof T)[]): Record<keyof T, string | number> {
   return Object.entries(obj).reduce((prev, [key, value]) => {
+    const propertyKey = toSnakeCase(key) as keyof T
     if (keys.includes(key as keyof T)) {
-      prev[key as keyof T] = JSON.stringify(value)
-    } else prev[key as keyof T] = value
+      prev[propertyKey] = JSON.stringify(value)
+    } else prev[propertyKey] = value
     return prev
   }, {} as Record<keyof T, string | number>)
 }
@@ -33,9 +47,10 @@ export function serializeObject<T extends object>(obj: T, keys: (keyof T)[]): Re
  */
 export function deserializeObject<T extends object, E extends object>(obj: T, keys: (keyof T)[]) {
   return Object.entries(obj).reduce((prev, [key, value]) => {
-    if (keys.includes(key as keyof T)) {
-      prev[key as keyof E] = JSON.parse(value)
-    } else prev[key as keyof E] = value
+    const propertyKey = toCamelCase(key) as keyof E
+    if (keys.includes(toCamelCase(key) as keyof T)) {
+      prev[propertyKey] = JSON.parse(value)
+    } else prev[propertyKey] = value
     return prev
   }, {} as E)
 }

@@ -120,6 +120,12 @@
     }
   },
   "status": {
+    "character": {
+      "created": "Character created",
+      "updated": "Character updated",
+      "removed": "Character deleted",
+      "purged": "Characters purged"
+    },
     "saved": "Saved",
     "characters-exported": "Characters exported",
     "characters-imported": "Characters imported",

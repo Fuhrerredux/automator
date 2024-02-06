@@ -11,7 +11,7 @@ async function create(character: CharacterWithId) {
 async function update(id: String, character: CharacterWithId) {
   return invoke<TauriStatus>("update_character", {
     id,
-    form: character
+    form: serializeObject(character, keys)
   })
 }
 
@@ -19,6 +19,10 @@ async function remove(id: string) {
   return invoke<TauriStatus>("delete_character", {
     id
   })
+}
+
+async function purge() {
+  return invoke<TauriStatus>("purge_characters")
 }
 
 async function findAll(): Promise<CharacterWithId[]> {
@@ -29,6 +33,6 @@ async function findAll(): Promise<CharacterWithId[]> {
 }
 
 const characterRepository = {
-  create, update, remove, findAll
+  create, update, remove, purge, findAll
 }
 export default characterRepository

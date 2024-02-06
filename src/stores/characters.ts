@@ -20,18 +20,26 @@ const useCharacterStore = defineStore({
 
       return status
     },
-    async update(character: CharacterWithId) {
+    async update(character: CharacterWithId): Promise<TauriStatus> {
       const status = await CharacterRepository.update(character.id, character)
       if (status.kind === 'success')
         this.characters = await CharacterRepository.findAll()
+
+      return status
     },
-    async remove(character: CharacterWithId) {
-      await CharacterRepository.remove(character.id)
-      this.characters = await CharacterRepository.findAll()
+    async remove(character: CharacterWithId): Promise<TauriStatus> {
+      const status = await CharacterRepository.remove(character.id)
+      if (status.kind === 'success')
+        this.characters = await CharacterRepository.findAll()
+
+      return status
     },
-    async purge() {
-      // await CharacterRepository.purge()
-      this.characters = await CharacterRepository.findAll()
+    async purge(): Promise<TauriStatus> {
+      const status = await CharacterRepository.purge()
+      if (status.kind === 'success')
+        this.characters = await CharacterRepository.findAll()
+      
+      return status
     },
     async refresh() {
       try {
