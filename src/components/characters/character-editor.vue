@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import { computed, onMounted, ref, toRaw } from 'vue'
+import { onMounted, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
+import { getIdeology } from '@/shared/utils/ideology'
+import useConfiguration from '@/stores/config'
 import Dropdown from '@components/dropdown.vue'
 import FormGroup from '@components/form-group.vue'
 import IdeologyDropdown from '@components/ideology-dropdown.vue'
@@ -10,7 +12,6 @@ import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import SwitchButton from '@components/switch.vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
-import { ideologies } from '@shared/const/ideology'
 import { commanding, ministers, officers } from '@shared/const/roles'
 import {
   getCommandingRole,
@@ -19,33 +20,30 @@ import {
   hasCommandingRole
 } from '@shared/utils/character'
 import useTraits from '@stores/traits'
-import useCustomConfig from '@/stores/config'
-import useSettingsStore from '@/stores/settings'
 
-const { traits } = useTraits()
-const configStore = useCustomConfig()
-const settingsStore = useSettingsStore()
 const { t } = useI18n({ useScope: 'local' })
+const { traits } = useTraits()
+const { config } = useConfiguration()
 const $toast = useToast()
 const loading = ref(false)
 const { open, character, updateFn, createFn } = defineProps<{
   open: boolean
   character: CharacterWithId | null
-  updateFn: (character: CharacterWithId) => Promise<TauriStatus>
-  createFn: (character: CharacterWithId) => Promise<TauriStatus>
+  updateFn: (character: CharacterWithId) => Promise<Tauri.Broadcast>
+  createFn: (character: CharacterWithId) => Promise<Tauri.Broadcast>
 }>()
 const emit = defineEmits(['hide'])
 
 const tag = ref<string>('')
 const name = ref<string>('')
-const ideology = ref<string | null>(null)
+const ideology = ref<Ideology | null>(null)
 const addLeaderRole = ref(false)
 const addCommandingRole = ref(false)
 const addMinisterRole = ref(false)
 const addOfficerRole = ref(false)
 
 const leaderTraits = ref<string>('')
-const leaderIdeologies = ref<string[]>([])
+const leaderIdeologies = ref<Ideology[]>([])
 
 const commandingRole = ref<CommandingRole>(commanding[0].value)
 const commanderTraits = ref<string>('')
@@ -65,26 +63,19 @@ const officerTraits = ref<Record<MilitaryPosition, string>>({
   theorist: ''
 })
 
-const ideologyOptions = computed(() => {
-  if (settingsStore.getCustomConfig() && configStore.config.ideologies) {
-    return Object.entries(configStore.config.ideologies)
-      .map(([key, value]) => ({ value: key, label: value }))
-  } else {
-    return ideologies
-  }
-})
-
 onMounted(() => {
   if (character) {
     tag.value = character.tag
     name.value = character.name
-    ideology.value = character.ideology
+    ideology.value = getIdeology(character.ideology, config)
     addLeaderRole.value = character.roles.includes('leader')
     addCommandingRole.value = hasCommandingRole(character)
     addMinisterRole.value = character.roles.includes('minister')
     addOfficerRole.value = character.roles.includes('officer')
     leaderTraits.value = character.leaderTraits.join(',')
     leaderIdeologies.value = character.leaderIdeologies
+      .map((e) => getIdeology(e, config))
+      .filter((e) => !e) as Ideology[]
     commanderTraits.value = character.commanderTraits.join(',')
     ministerTraits.value = character.ministerTraits
     officerTraits.value = character.officerTraits
@@ -130,17 +121,21 @@ async function submit() {
     const officers: Position[] = officerRoles.value
     const positions: Position[] = ministers.concat(officers)
 
+    const ideologyKey = ideology.value?.key
+
     const data: CharacterWithId = {
       id: character ? character.id : nanoid(),
       name: name.value,
       tag: tag.value,
       cost: 150,
-      ideology: ideology.value,
+      ideology: toRaw(ideologyKey) ?? null,
       commanderTraits: commanderTraits.value.split(','),
       leaderTraits: leaderTraits.value.split(','),
-      leaderIdeologies: ideology.value
-        ? toRaw(leaderIdeologies.value).concat([ideology.value])
-        : toRaw(leaderIdeologies.value),
+      leaderIdeologies: ideologyKey
+        ? toRaw(leaderIdeologies.value)
+            .map((e) => e.key)
+            .concat([ideologyKey])
+        : toRaw(leaderIdeologies.value).map((e) => e.key),
       ministerTraits: toRaw(ministerTraits.value),
       officerTraits: toRaw(officerTraits.value),
       positions,
@@ -153,8 +148,8 @@ async function submit() {
     } else {
       const status = await createFn(data)
       $toast.success(t(status.message))
-    } 
-  
+    }
+
     emit('hide')
   } catch (e) {
     $toast.error(String(e))
@@ -201,13 +196,10 @@ async function submit() {
             <div>
               <label for="ideology">
                 <span class="form-label">{{ t('field.ideology') }}</span>
-                <dropdown
-                  localise
-                  value-key="value"
-                  display-key="label"
+                <ideology-dropdown
+                  :multiple="false"
                   :model-value="ideology"
-                  :options="ideologyOptions"
-                  @update:model-value="ideology = $event" />
+                  @update:model-value="ideology = $event as Ideology" />
               </label>
             </div>
             <div>
@@ -219,9 +211,10 @@ async function submit() {
                 <div>
                   <span class="form-label">{{ t('field.leader-roles') }}</span>
                   <ideology-dropdown
+                    multiple
                     :current="ideology"
                     :model-value="leaderIdeologies"
-                    @update:model-value="leaderIdeologies = $event" />
+                    @update:model-value="leaderIdeologies = $event as Ideology[]" />
                 </div>
                 <div>
                   <label for="traits">
@@ -294,7 +287,7 @@ async function submit() {
                         v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
                         :display-key="(e) => String(e)"
-                        :value-key="(e) => e"
+                        :value-key="(e: string) => e"
                         :model-value="ministerTraits[position.value]"
                         @update:model-value="ministerTraits[position.value] = $event" />
                       <form-group
@@ -334,7 +327,7 @@ async function submit() {
                         v-if="traits[position.value].length > 0"
                         :options="traits[position.value]"
                         :display-key="(e) => String(e)"
-                        :value-key="(e) => e"
+                        :value-key="(e: string) => e"
                         :model-value="officerTraits[position.value]"
                         @update:model-value="officerTraits[position.value] = $event" />
                       <form-group

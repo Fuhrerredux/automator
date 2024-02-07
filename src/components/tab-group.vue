@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/vue'
 
-defineProps<{ tabs: TabData[] }>()
+defineProps<{ tabs: UserInterface.TabData[] }>()
 
 const { t } = useI18n()
 </script>

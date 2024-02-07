@@ -67,19 +67,6 @@
     "exporting": "Exporting",
     "purging": "Purging"
   },
-  "ideology": {
-    "vanguardist": "National Collectivist",
-    "collectivist": "Socialist",
-    "libertarian_socialist": "Libertarian Socialist",
-    "social_democrat": "Social Democrat",
-    "social_liberal": "Social Liberal",
-    "market_liberal": "Market Liberal",
-    "social_conservative": "Social Conservative",
-    "authoritarian_democrat": "Authoritarian Democrat",
-    "paternal_autocrat": "Paternal Autocrat",
-    "national_populist": "National Populist",
-    "valkist": "Valkist"
-  },
   "roles": {
     "marshal": "Field Marshal",
     "general": "Corps Commander",

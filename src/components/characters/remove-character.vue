@@ -12,7 +12,7 @@ const loading = ref(false)
 const { character, removeFn } = defineProps<{
   open: boolean
   character: CharacterWithId
-  removeFn: (character: CharacterWithId) => Promise<TauriStatus>
+  removeFn: (character: CharacterWithId) => Promise<Tauri.Broadcast>
 }>()
 const emits = defineEmits(['hide'])
 

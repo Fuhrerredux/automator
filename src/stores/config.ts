@@ -1,21 +1,25 @@
-import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
+import defaultIdeologies from '@/shared/const/ideology'
+import { BaseDirectory, readTextFile } from '@tauri-apps/api/fs'
 
-const useCustomConfig = defineStore({
+type ConfigurationStore = {
+  config: Automator.Configuration
+}
+
+const useConfiguration = defineStore({
   id: 'customConfig',
-  state: () => {
+  state: (): ConfigurationStore => {
     return {
       config: {
-        ideologies: {}
+        ideologies: defaultIdeologies
       }
     }
   },
   actions: {
     async import() {
       const json = await readTextFile('.automator/data/config.json', { dir: BaseDirectory.Home })
-      console.log(json)
-      this.config = JSON.parse(json)
+      this.$state = JSON.parse(json)
     }
   }
 })
-export default useCustomConfig
+export default useConfiguration

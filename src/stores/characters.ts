@@ -13,32 +13,28 @@ const useCharacterStore = defineStore({
       const promises = characters.map((e) => CharacterRepository.create(e))
       return await Promise.all(promises)
     },
-    async create(character: CharacterWithId): Promise<TauriStatus> {
+    async create(character: CharacterWithId): Promise<Tauri.Broadcast> {
       const status = await CharacterRepository.create(character)
-      if (status.kind === 'success')
-        this.characters = await CharacterRepository.findAll()
+      if (status.kind === 'success') this.characters = await CharacterRepository.findAll()
 
       return status
     },
-    async update(character: CharacterWithId): Promise<TauriStatus> {
+    async update(character: CharacterWithId): Promise<Tauri.Broadcast> {
       const status = await CharacterRepository.update(character.id, character)
-      if (status.kind === 'success')
-        this.characters = await CharacterRepository.findAll()
+      if (status.kind === 'success') this.characters = await CharacterRepository.findAll()
 
       return status
     },
-    async remove(character: CharacterWithId): Promise<TauriStatus> {
+    async remove(character: CharacterWithId): Promise<Tauri.Broadcast> {
       const status = await CharacterRepository.remove(character.id)
-      if (status.kind === 'success')
-        this.characters = await CharacterRepository.findAll()
+      if (status.kind === 'success') this.characters = await CharacterRepository.findAll()
 
       return status
     },
-    async purge(): Promise<TauriStatus> {
+    async purge(): Promise<Tauri.Broadcast> {
       const status = await CharacterRepository.purge()
-      if (status.kind === 'success')
-        this.characters = await CharacterRepository.findAll()
-      
+      if (status.kind === 'success') this.characters = await CharacterRepository.findAll()
+
       return status
     },
     async refresh() {

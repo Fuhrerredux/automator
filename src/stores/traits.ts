@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { extractTraits } from '@shared/core/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
+import type { FileEntry } from '@tauri-apps/api/fs'
+
+type TraitsStore = {
+  traits: Record<Position, string[]>
+  files: FileEntry[]
+  trait: string | null
+}
 
 const useTraitsStore = defineStore({
   id: 'traits',

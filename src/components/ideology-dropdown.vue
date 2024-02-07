@@ -1,48 +1,61 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import useCustomConfig from '@/stores/config'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
-import { ideologies } from '@shared/const/ideology'
-import useCustomConfig from '@/stores/config'
-import useSettingsStore from '@/stores/settings'
+
+type IdeologyDropdownProps = {
+  current?: Ideology | null
+  disabled?: boolean
+} & (
+  | {
+      modelValue: Ideology | null
+      multiple?: false
+    }
+  | {
+      modelValue: Ideology[]
+      multiple?: true
+    }
+)
+type IdeologyDropdownType = IdeologyDropdownProps['multiple']
+type IdeologyDropdownEmits<T extends boolean | undefined> = {
+  (e: 'update:modelValue', value: T extends true ? Ideology[] : Ideology): void
+}
+
+const props = defineProps<IdeologyDropdownProps>()
+defineEmits<IdeologyDropdownEmits<IdeologyDropdownType>>()
 
 const { t } = useI18n()
 const configStore = useCustomConfig()
-const settingsStore = useSettingsStore()
-
-const props = defineProps<{
-  current: string | null
-  disabled?: boolean
-  modelValue: string[]
-}>()
-defineEmits<{
-  (e: 'update:modelValue', value: string[]): void
-}>()
 
 const ideologyOptions = computed(() => {
-  if (settingsStore.getCustomConfig()) {
-    return Object.entries(configStore.config.ideologies as Record<string, string>)
-      .map(([key, value]) => ({ value: key, label: value }))
-      .filter((e) => e.value !== props.current)
-  }
-
-  return ideologies.filter((e) => e.value !== props.current)
+  return Object.entries(configStore.config.ideologies)
+    .map(([key, value]) => ({ key, name: value.name, short: value.short }))
+    .filter((e) => e.key !== props.current?.key)
 })
-const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).join(', '))
+const label = computed(() => {
+  if (props.multiple) return props.modelValue.map((e) => e.name).join(', ')
+  else return props.modelValue?.name
+})
 </script>
 
 <template>
   <listbox
-    multiple
     as="div"
     class="relative"
+    :multiple="multiple"
     :model-value="modelValue"
     :disabled="disabled"
     @update:model-value="$emit('update:modelValue', $event)">
     <listbox-button class="dropdown-button w-full">
       <span class="truncate inline-block flex-1 text-left">
-        {{ modelValue.length > 0 ? label : t('placeholder.dropdown-multiple') }}
+        {{
+          (Array.isArray(modelValue) && modelValue.length > 0) ||
+          (typeof modelValue === 'object' && !Array.isArray(modelValue) && Boolean(modelValue))
+            ? label
+            : t(multiple ? 'placeholder.dropdown-multiple' : 'placeholder.dropdown')
+        }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
     </listbox-button>
@@ -57,15 +70,15 @@ const label = computed(() => props.modelValue.map((e) => t(`ideology.${e}`)).joi
         <listbox-option
           v-for="option in ideologyOptions"
           v-slot="{ selected }"
-          :value="option.value"
+          :value="option"
           as="template">
-          <li :key="option.value" class="dropdown-option truncate">
+          <li :key="option.key" class="dropdown-option truncate">
             <span :class="selected ? 'font-medium' : 'font-normal'">
-              {{ t(option.label) }}
+              {{ t(option.name) }}
             </span>
             <span
               v-if="selected"
-              class="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-600">
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-600 dark:text-zinc-300">
               <check-icon class="h-4 w-4" aria-hidden="true" />
             </span>
           </li>

@@ -1,4 +1,4 @@
-import { isIdeologyToken, parseIdeology } from '@shared/utils/ideology'
+import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology'
 import {
   getPositionSuffix,
   isCivilianPosition,
@@ -94,7 +94,10 @@ export function extractTraits(content: string): Record<Position, string[]> {
   return traits
 }
 
-export function readCharacterFile(content: string): Record<string, any>[] {
+export function readCharacterFile(
+  content: string,
+  config: Automator.Configuration
+): Record<string, any>[] {
   if (content.length <= 0) return []
 
   let lines = content.split('\n')
@@ -189,7 +192,7 @@ export function readCharacterFile(content: string): Record<string, any>[] {
         }
         if (!contents.includes('ideology') && content.includes('traits')) {
           const target = contents[index + 1]
-          if (isIdeologyToken(target)) {
+          if (isIdeologyToken(target, config)) {
             parsed.ideology = target.trim()
           }
         }
@@ -242,7 +245,7 @@ function extractAdvisorRoles(content: string): string[] {
   return roles
 }
 
-export function readLocalisationFile(content: string) {
+export function readLocalisationFile(content: string, config: Automator.Configuration) {
   if (content.length <= 0) return []
 
   function extractPosition(token: string) {
@@ -273,7 +276,7 @@ export function readLocalisationFile(content: string) {
       name,
       tag,
       cost: 150,
-      ideology: parseIdeology(ideology) ?? 'vanguardist',
+      ideology: getIdeologyKeyFromShort(ideology, config) ?? 'vanguardist',
       roles: [],
       leaderTraits: [],
       leaderIdeologies: [],

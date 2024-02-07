@@ -62,14 +62,14 @@ async fn main() {
 }
 
 #[tauri::command]
-async fn create_character(state: tauri::State<'_, AppState>, form: characters::Model) -> Result<FlashData, ()> {
+async fn create_character(state: tauri::State<'_, AppState>, form: characters::Model) -> Result<Broadcast, ()> {
   let _ = &state.conn;
 
   MutationCore::create_character(&state.conn, form)
     .await
     .expect("could not insert character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.created".to_owned()
   };
@@ -81,12 +81,12 @@ async fn update_character(
   state: tauri::State<'_, AppState>,
   id: String,
   form: characters::Model
-)-> Result<FlashData, ()> {
+)-> Result<Broadcast, ()> {
   MutationCore::update_character_by_id(&state.conn, id, form)
     .await
     .expect("could not edit character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.updated".to_owned(),
   };
@@ -98,12 +98,12 @@ async fn update_character(
 async fn delete_character(
   state: tauri::State<'_, AppState>,
   id: String,
-) -> Result<FlashData, ()> {
+) -> Result<Broadcast, ()> {
   MutationCore::delete_character(&state.conn, id)
     .await
     .expect("could not delete character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.removed".to_owned(),
   };
@@ -114,12 +114,12 @@ async fn delete_character(
 #[tauri::command]
 async fn purge_characters(
   state: tauri::State<'_, AppState>,
-) -> Result<FlashData, ()> {
+) -> Result<Broadcast, ()> {
   MutationCore::delete_all_characters(&state.conn)
     .await
     .expect("could not purge all characters");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.purged".to_owned()
   };
@@ -150,7 +150,7 @@ struct AppState {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
-struct FlashData {
+struct Broadcast {
   kind: String,
   message: String,
 }

@@ -1,7 +1,5 @@
 import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
-import type { FileEntry } from '@tauri-apps/api/fs'
-import { forEachChild } from 'typescript'
 
 declare global {
   namespace NodeJS {
@@ -10,10 +8,23 @@ declare global {
     }
   }
 
-  type Theme = 'light' | 'dark' | 'auto'
-  type ThemeResource = {
-    theme: Theme
-    change: (current: Theme) => void
+  namespace Tauri {
+    interface Broadcast {
+      kind: string
+      message: string
+    }
+  }
+  namespace UserInterface {
+    type Theme = 'light' | 'dark' | 'auto'
+    type TabData = {
+      panel: Component
+      label: string
+    }
+  }
+  namespace Automator {
+    type Configuration = {
+      ideologies: Record<string, Omit<Ideology, 'key'>>
+    }
   }
 
   type KeyOfType<T, V> = keyof {
@@ -26,16 +37,6 @@ declare global {
     displayKey: keyof I | ((item: I) => string)
   }
   type DropdownOption<T> = { label: string; value: T }
-
-  type ModStore = {
-    directory: string
-    entries: FileEntry[]
-  }
-  type TraitsStore = {
-    traits: Record<Position, string[]>
-    files: FileEntry[]
-    trait: string | null
-  }
 
   type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
   type CharacterRole = CommandingRole | 'leader' | 'minister'
@@ -67,11 +68,6 @@ declare global {
     exists?: boolean
   }
 
-  type TabData = {
-    panel: Component
-    label: string
-  }
-
   type AnalyzeData = {
     sprite: string
     path: string | null
@@ -85,24 +81,7 @@ declare global {
     res: string
   }
 
-  type SpriteEntry = {
-    name: string;
-    texturefile: string;
-  }
-
-  type SpriteEntryWithTag = SpriteEntry & {
-    tag?: string;
-    tagIndex?: number;
-  }
-
-  type TauriStatus = {
-    kind: string
-    message: string
-  }
-
-  type CustomConfig = {
-    ideologies: Record<string, string>
-  }
+  type Ideology = { key: string; name: string; short: string }
 }
 
 declare module 'vue' {
