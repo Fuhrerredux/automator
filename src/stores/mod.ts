@@ -12,6 +12,9 @@ const useModStore = defineStore({
   getters: {
     getCommonDirectory(store: ModStore) {
       return store.entries.find((e) => e.name === 'common')
+    },
+    getLocalisationDirectory(store: ModStore) {
+      return store.entries.find((e) => e.name === 'localisation')
     }
   },
   actions: {
