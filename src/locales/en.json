@@ -131,6 +131,7 @@
     "characters-exported": "Characters exported",
     "characters-imported": "Characters imported",
     "character-removed": "Character removed",
+    "characters-localised": "Characters Localised",
     "shines-generated": "Shines generated",
     "event-logged": "Event Logging Added",
     "log-removed": "Logging Removed"
@@ -161,6 +162,10 @@
     "character-recruit": {
       "heading": "Append Characters to History Files",
       "summary": "Adds 'recruit_character' effects to the end of the history files"
+    },
+    "character-localisation": {
+      "heading": "Localise Characters",
+      "summary": "Localises Characters by adding their names on selected localisation file. WARNING: Characters must be imported for this to localise them correctly."
     },
     "optimize-gfx": {
       "heading": "Optimize Sprite Definitions",

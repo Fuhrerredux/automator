@@ -5,6 +5,7 @@ import OptimizeGfx from '@components/others/optimize-gfx.vue'
 import ShineGeneration from '@components/others/shine-generation.vue'
 import LogRemover from '@/components/others/log-remover.vue'
 import EventLogger from '@/components/others/event-logger.vue'
+import CharacterLocalisation from '@/components/others/character-localisation.vue'
 import Page from '@components/page.vue'
 
 const { t } = useI18n()
@@ -19,6 +20,7 @@ const { t } = useI18n()
       <ul class="space-y-4">
         <shine-generation />
         <character-recruit />
+        <character-localisation />
         <optimize-gfx />
         <log-remover />
         <event-logger />
