@@ -345,3 +345,49 @@ export async function appendToHistory(characters: CharacterWithId[], destination
     }
   }
 }
+
+export async function appendCharacterLocalisation(characters: CharacterWithId[], path: string, content:string): Promise<void> {
+  if (Array.isArray(characters)) {
+    const group = groupBy(characters, 'tag')
+    let data = ''
+    const commonDir = useModStore().getCommonDirectory
+    for (const [_, value] of Object.entries(group)) {
+      for (const character of value) {
+        console.log(useModStore().getCommonDirectory);
+        console.log(character.tag);
+        const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
+        const token = buildCharacterToken(character)
+        if (!content.includes(`${token}: "${character.name}"`)) {
+          data = data.concat(`  ${token}: "${character.name}"\n`)
+        }
+        const charContent = await readTextFile(characterPath)
+        const lines = charContent.split('\n') 
+        const newcharContent: string[] = []
+        lines.forEach((line, _) => {
+          let nLine = line
+          if (/\bname\b/.test(line)) {
+            nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
+          }
+          newcharContent.push(nLine)
+        })
+        const result = newcharContent.join('\n')
+        try {
+          await writeTextFile(characterPath, result)
+        } catch (error) {
+          console.error(`Error writing file ${characterPath}: ${error}`)
+          throw error
+        }
+      }
+    }
+    if (data !== '') {
+      const comment = '\n\n### Generated Character Names ###\n'
+      content = content.concat(`${comment}\n${data}`)
+      try {
+        await writeTextFile(path, content)
+      } catch (error) {
+        console.error(`Error writing file ${path}: ${error}`)
+        throw error
+      }
+    }
+  }
+}
