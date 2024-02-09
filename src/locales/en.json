@@ -134,7 +134,8 @@
     "characters-localised": "Characters Localised",
     "shines-generated": "Shines generated",
     "event-logged": "Event Logging Added",
-    "log-removed": "Logging Removed"
+    "log-removed": "Logging Removed",
+    "sprites-fixed": "Sprite Entries Fixed"
   },
   "info": {
     "import-ext": "You can use characters file or the localization file which has definitions for the ministers that will be imported. {end}"
@@ -170,6 +171,10 @@
     "optimize-gfx": {
       "heading": "Optimize Sprite Definitions",
       "summary": "Check whether sprite definitions does not have missing file paths."
+    },
+    "fix-sprites": {
+      "heading": "Fix Sprite Definitions",
+      "summary": "Automatically removes duplicate sprite definitions as well as sorts them alphabetically based on the tags on common/country_tags/00_countries.txt."
     }
   },
   "tab": {

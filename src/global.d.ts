@@ -1,6 +1,7 @@
 import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
 import type { FileEntry } from '@tauri-apps/api/fs'
+import { forEachChild } from 'typescript'
 
 declare global {
   namespace NodeJS {
@@ -76,11 +77,22 @@ declare global {
     path: string | null
     status: 'undef' | 'missing' | 'good'
   }
+
   type SpriteType = {
     type: 'idea' | 'focus'
     property: string
     directory: string
     res: string
+  }
+
+  type SpriteEntry = {
+    name: string;
+    texturefile: string;
+  }
+
+  type SpriteEntryWithTag = SpriteEntry & {
+    tag?: string;
+    tagIndex?: number;
   }
 
   type TauriStatus = {
