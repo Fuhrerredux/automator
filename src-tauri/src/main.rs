@@ -55,7 +55,8 @@ async fn main() {
       update_character,
       delete_character,
       purge_characters,
-      list_characters
+      list_characters,
+      get_character
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
@@ -130,7 +131,7 @@ async fn purge_characters(
 #[tauri::command]
 async fn list_characters(
   state: tauri::State<'_, AppState>,
-  params: Params,
+  params: ListParams,
 ) -> Result<Vec<characters::Model>, ()> {
   let page = params.page.unwrap_or(1);
   let characters_per_page = params.characters_per_page.unwrap_or(5);
@@ -142,6 +143,18 @@ async fn list_characters(
   println!("num_pages: {}", num_pages);
 
   Ok(chars)
+}
+
+#[tauri::command]
+async fn get_character(
+  state: tauri::State<'_, AppState>,
+  params: GetParams
+) -> Result<characters::Model, ()> {
+  let id = params.id;
+  let character = QueryCore::find_character_by_id(&state.conn, id).await.expect("Cannot find character");
+  let data = character.unwrap();
+
+  Ok(data)
 }
 
 #[derive(Clone)]
@@ -156,7 +169,12 @@ struct Broadcast {
 }
 
 #[derive(Deserialize)]
-struct Params {
+struct ListParams {
   page: Option<u64>,
   characters_per_page: Option<u64>,
 }
+
+#[derive(Deserialize)]
+struct GetParams {
+  id: String
+} 

@@ -1,5 +1,53 @@
 import { buildToken } from '@shared/core/data'
 
+export function fromFormData(character: CharacterForm): Character {
+  const {
+    name,
+    tag,
+    ideology,
+    leaderTraits,
+    leaderIdeologies,
+    commanderTraits,
+    ministerTraits,
+    officerTraits,
+    addCommanderRole,
+    addLeaderRole,
+    addMinisterRole,
+    addOfficerRole,
+    commanderRole,
+    ministerRoles,
+    officerRoles
+  } = character
+  const roles: CharacterRole[] = []
+  if (addLeaderRole) roles.push('leader')
+  if (addCommanderRole && commanderRole?.value) roles.push(commanderRole.value)
+  if (addMinisterRole) roles.push('minister')
+  if (addOfficerRole) roles.push('officer')
+
+  const ministerRolesKeys = Object.entries(ministerRoles)
+    .filter(([_, value]) => value)
+    .map(([key]) => key)
+  const officerRolesKeys = Object.entries(officerRoles)
+    .filter(([_, value]) => value)
+    .map(([key]) => key)
+
+  const positions: Position[] = ministerRolesKeys.concat(officerRolesKeys) as Position[]
+
+  return {
+    name,
+    tag,
+    leaderIdeologies,
+    leaderTraits,
+    commanderTraits,
+    ministerTraits,
+    officerTraits,
+    positions,
+    cost: 150,
+    roles,
+    ideology: ideology ? ideology.key : null
+  }
+}
+
 export function isCommandingRole(role: CharacterRole): boolean {
   return role === 'marshal' || role === 'general' || role === 'admiral'
 }
@@ -30,7 +78,7 @@ export function isOfficerRole(role: Position): boolean {
     role === 'high_command' ||
     role === 'army_chief' ||
     role === 'navy_chief' ||
-    role === 'air_chief'  ||
+    role === 'air_chief' ||
     role === 'theorist'
   )
 }

@@ -41,11 +41,19 @@ async function findAll(): Promise<CharacterWithId[]> {
   return characters.map((char) => deserializeObject(char, keys)) as CharacterWithId[]
 }
 
+async function findById(id: string): Promise<CharacterWithId> {
+  const character = await invoke<CharacterWithId>('get_character', {
+    params: { id }
+  })
+  return character
+}
+
 const characterRepository = {
   create,
   update,
   remove,
   purge,
-  findAll
+  findAll,
+  findById
 }
 export default characterRepository

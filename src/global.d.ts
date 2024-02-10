@@ -67,6 +67,21 @@ declare global {
     file?: string
     exists?: boolean
   }
+  type CharacterForm = {
+    leaderTraits: string[]
+    ideology: Ideology | null
+    commanderRole: DropdownOption<CommandingRole> | null
+    commanderTraits: string[]
+    ministerTraits: Record<MinisterPosition, string>
+    officerTraits: Record<MilitaryPosition, string>
+
+    addLeaderRole: boolean
+    addCommanderRole: boolean
+    addMinisterRole: boolean
+    addOfficerRole: boolean
+    ministerRoles: Record<MinisterPosition, boolean>
+    officerRoles: Record<MilitaryPosition, boolean>
+  } & Pick<Character, 'name' | 'tag' | 'leaderIdeologies'>
 
   type AnalyzeData = {
     sprite: string

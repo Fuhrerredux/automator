@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import router from '@/router'
 import CharacterTable from '@components/character-table/table.vue'
 import CharacterEditor from '@components/characters/character-editor.vue'
 import ExportCharacters from '@components/characters/export-characters.vue'
@@ -35,8 +36,7 @@ const { directory } = storeToRefs(modStore)
 const { update, create, remove, purge } = characterStore
 
 function handleNew() {
-  character.value = null
-  editor.value = true
+  router.push('/edit')
 }
 function handleUpdate(char: CharacterWithId) {
   character.value = char
