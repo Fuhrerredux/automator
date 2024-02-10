@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Fuhrerredux/automator#readme",
   "dependencies": {
-    "@headlessui/vue": "1.7.18",
+    "@headlessui/vue": "1.7.19",
     "@heroicons/vue": "2.1.1",
     "@tauri-apps/api": "1.5.3",
     "add": "^2.0.6",
