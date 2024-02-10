@@ -34,7 +34,7 @@
         "installMode": "passive",
         "installerArgs": []
       },
-      "endpoints": ["https://github.com/Fuhrerredux/automator/main/latest.json"]
+      "endpoints": ["https://github.com/Fuhrerredux/automator/releases/latest/download/latest.json"]
     },
     "bundle": {
       "active": true,
