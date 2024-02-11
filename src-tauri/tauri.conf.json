@@ -24,6 +24,9 @@
       "fs": {
         "all": true,
         "scope": ["$HOME/*/**", "$LOCALDATA/*/**", "$DOCUMENT/*/**"]
+      },
+      "path": {
+        "all": true
       }
     },
     "updater": {
@@ -55,7 +58,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "automator",
+        "title": "Automator",
         "width": 1280,
         "height": 720,
         "fileDropEnabled": false

@@ -1,4 +1,4 @@
-export const ideologies: DropdownOption<Ideology>[] = [
+export const ideologies = [
   { label: 'ideology.vanguardist', value: 'vanguardist' },
   { label: 'ideology.collectivist', value: 'collectivist' },
   { label: 'ideology.libertarian_socialist', value: 'libertarian_socialist' },

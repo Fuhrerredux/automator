@@ -1,16 +1,17 @@
+const languageNames: { [key: string]: string } = {
+  en: 'English',
+  el: 'Ελληνικά',
+  it: 'Italiano',
+  de: 'Deutsch',
+  fr: 'Français'
+};
+
 export default function getLanguageName(locale: string): string {
-  switch (locale) {
-    case 'en':
-      return 'English'
-    case 'el':
-      return 'Ελληνικά'
-    case 'it':
-      return 'Italiano'
-    case 'de':
-      return 'Deutsch'
-    case 'fr':
-      return 'Français'
-    default:
-      return locale
+  const normalizedLocale = locale.toLowerCase();
+
+  if (normalizedLocale in languageNames) {
+    return languageNames[normalizedLocale];
+  } else {
+    return locale;
   }
 }

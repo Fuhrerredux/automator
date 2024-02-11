@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import ActionItem from '@components/action-item.vue'
-import { UserIcon } from '@heroicons/vue/24/outline'
+import { UserPlusIcon } from '@heroicons/vue/24/outline'
 import { appendToHistory } from '@shared/core/writer'
 import useCharacterStore from '@stores/characters'
 import useModStore from '@stores/mod'
@@ -37,7 +37,7 @@ async function append() {
     :finished="finished"
     @action="append">
     <template #icon>
-      <user-icon class="h-6 w-6" />
+      <user-plus-icon class="h-6 w-6" />
     </template>
   </action-item>
 </template>

@@ -1,6 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use tracing_subscriber::filter::LevelFilter;
+use tracing_subscriber::fmt;
+
 use migration::{Migrator,MigratorTrait};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -13,8 +16,16 @@ use entity::characters;
 
 #[tokio::main]
 async fn main() {
+  // Initialize the tracing subscriber with a maximum logging level of ERROR
+  let subscriber = fmt::Subscriber::builder()
+      .with_max_level(LevelFilter::ERROR)
+      .finish();
+
+  tracing::subscriber::set_global_default(subscriber)
+      .expect("setting default subscriber failed");
+
+  // Set environment variables
   env::set_var("RUST_LOG", "debug");
-  tracing_subscriber::fmt::init();
 
   dotenvy::dotenv().ok();
 

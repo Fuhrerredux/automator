@@ -8,6 +8,8 @@ import {
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
 
+export let countryTags: string[] = []
+
 export async function readSpriteUsage(sprite: SpriteType, base: string) {
   const dir = `${base}/${sprite.directory}`
 
@@ -317,4 +319,19 @@ export function readLocalisationFile(content: string) {
   }
 
   return records
+}
+
+export async function loadCountryTags(filePath: string): Promise<void> {
+  const content = await readTextFile(filePath);
+  const lines = content.split('\n');
+
+  for (const line of lines) {
+      const tag = line.split('=')[0].trim();
+      if (tag && !tag.startsWith('#')) {
+          countryTags.push(tag);
+      }
+  }
+
+  // Sort country tags alphabetically
+  countryTags.sort();
 }

@@ -1,6 +1,6 @@
 import { buildToken } from '@shared/core/data'
 
-const ideologies: Ideology[] = [
+const ideologies: string[] = [
   'vanguardist',
   'collectivist',
   'libertarian_socialist',
@@ -14,11 +14,11 @@ const ideologies: Ideology[] = [
   'valkist'
 ]
 
-export function getIdeologyToken(ideology: Ideology): string {
+export function getIdeologyToken(ideology: string): string {
   return buildToken(ideology)
 }
 
-export function getIdeologySuffix(ideology: Ideology): string {
+export function getIdeologySuffix(ideology: string): string {
   switch (ideology) {
     case 'vanguardist':
       return 'van'
@@ -42,14 +42,15 @@ export function getIdeologySuffix(ideology: Ideology): string {
       return 'npo'
     case 'valkist':
       return 'val'
+    default: return ''
   }
 }
 
 export function isIdeologyToken(ideology: string) {
-  return ideologies.includes(ideology.trim() as Ideology)
+  return ideologies.includes(ideology)
 }
 
-export function parseIdeology(ideology: string | null | undefined): Ideology | null {
+export function parseIdeology(ideology: string | null | undefined): string | null {
   switch (ideology) {
     case 'van':
       return 'vanguardist'

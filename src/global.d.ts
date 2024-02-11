@@ -1,6 +1,7 @@
 import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
 import type { FileEntry } from '@tauri-apps/api/fs'
+import { forEachChild } from 'typescript'
 
 declare global {
   namespace NodeJS {
@@ -36,18 +37,6 @@ declare global {
     trait: string | null
   }
 
-  type Ideology =
-    | 'vanguardist'
-    | 'collectivist'
-    | 'libertarian_socialist'
-    | 'social_democrat'
-    | 'social_liberal'
-    | 'market_liberal'
-    | 'social_conservative'
-    | 'authoritarian_democrat'
-    | 'paternal_autocrat'
-    | 'national_populist'
-    | 'valkist'
   type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
   type CharacterRole = CommandingRole | 'leader' | 'minister'
   type MinisterPosition =
@@ -60,7 +49,7 @@ declare global {
   type Character = {
     name: string
     tag: string
-    ideology: Ideology | null
+    ideology: string | null
     positions: Position[]
     leaderTraits: string[]
     leaderIdeologies: string[]
@@ -88,6 +77,7 @@ declare global {
     path: string | null
     status: 'undef' | 'missing' | 'good'
   }
+
   type SpriteType = {
     type: 'idea' | 'focus'
     property: string
@@ -95,9 +85,23 @@ declare global {
     res: string
   }
 
+  type SpriteEntry = {
+    name: string;
+    texturefile: string;
+  }
+
+  type SpriteEntryWithTag = SpriteEntry & {
+    tag?: string;
+    tagIndex?: number;
+  }
+
   type TauriStatus = {
     kind: string
     message: string
+  }
+
+  type CustomConfig = {
+    ideologies: Record<string, string>
   }
 }
 
