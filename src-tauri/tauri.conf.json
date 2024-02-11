@@ -29,6 +29,16 @@
         "all": true
       }
     },
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ1QzBDMDE1OTNERkQwRkYKUldULzBOK1RGY0RBUlg2NXJ3TDFmdDFPWHBRdThGalhsUXBEREIwK1ZWL2U5UVJjbXFiUUd6aEUK",
+      "windows": {
+        "installMode": "passive",
+        "installerArgs": []
+      },
+      "endpoints": ["https://github.com/Fuhrerredux/automator/releases/latest/download/latest.json"]
+    },
     "bundle": {
       "active": true,
       "targets": "all",
