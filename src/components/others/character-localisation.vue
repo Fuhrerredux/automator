@@ -6,7 +6,6 @@ import ActionItem from '@components/action-item.vue'
 import { Bars3BottomRightIcon } from '@heroicons/vue/24/outline'
 import { appendCharacterLocalisation } from '@shared/core/writer'
 import useCharacterStore from '@stores/characters'
-import useModStore from '@stores/mod'
 import FileSelectModal from '@components/file-select-modal.vue'
 import { readFileObject } from '@shared/utils/reader'
 import { save } from '@tauri-apps/api/dialog'
@@ -16,7 +15,6 @@ const $toast = useToast()
 const loading = ref(false)
 const finished = ref(false)
 const characterStore = useCharacterStore()
-const modStore = useModStore()
 const open = ref(false)
 
 async function generate(files:File[]) {
