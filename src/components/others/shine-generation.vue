@@ -7,10 +7,8 @@ import FileSelectModal from '@components/file-select-modal.vue'
 import { BoltIcon } from '@heroicons/vue/24/outline'
 import { exportShine } from '@shared/core/writer'
 import { readFileObject } from '@shared/utils/reader'
-import useModStore from '@stores/mod'
 import { save } from '@tauri-apps/api/dialog'
 
-const store = useModStore()
 const { t } = useI18n()
 const $toast = useToast()
 const open = ref(false)
@@ -25,11 +23,12 @@ async function generate(files: File[]) {
     loading.value = true
     const selected = files[0]
     const fileName = selected.name
-    const name = fileName.substring(0, fileName.lastIndexOf('.'))
+    // remove extension
+    const fileNameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.gfx'))
 
     const content = await readFileObject(selected)
-    const filePath = await save({
-      defaultPath: `${store.directory}/interface/${name}_shine.gfx`
+    const filePath = await save({ // assume that opened gfx file was on interface folder already
+      defaultPath: `${fileNameWithoutExtension}_shine.gfx`
     })
 
     if (filePath) {
