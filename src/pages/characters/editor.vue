@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
 import { Field, useField, useFieldArray, useForm } from 'vee-validate'
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import IdeologyDropdown from '@/components/ideology-dropdown.vue'
 import { commanding } from '@/shared/const/roles'
-import { fromFormData } from '@/shared/utils/character'
+import { fromFormData, toFormData } from '@/shared/utils/character'
 import useCharacterStore from '@/stores/characters'
+import useConfiguration from '@/stores/config'
 import Dropdown from '@components/dropdown.vue'
 import FieldArray from '@components/field-array.vue'
 import FormGroup from '@components/form-group.vue'
@@ -19,13 +21,17 @@ import { CheckIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
 const $toast = useToast()
+const router = useRouter()
 const { query } = useRoute()
-const { create, update } = useCharacterStore()
+const { config } = useConfiguration()
+const { create, update, findOne } = useCharacterStore()
 const { characterId } = query
-const { defineField, handleSubmit } = useForm<CharacterForm>({
+const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
   initialValues: {
     name: '',
     tag: '',
+    leaderTraits: [],
+    commanderTraits: [],
     advisorRoles: []
   }
 })
@@ -51,10 +57,11 @@ const {
   fields: advisorRolesFields,
   push: advisorRolesPush,
   remove: advisorRolesRemove
-} = useFieldArray<AdvisorForm>('advisorRoles')
+} = useFieldArray<Advisor>('advisorRoles')
 
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
   const id = typeof characterId === 'string' ? characterId : nanoid()
+
   const character: CharacterWithId = {
     id,
     ...fromFormData(data)
@@ -62,9 +69,20 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
   if (typeof characterId === 'string') {
     const status = await update(character)
     $toast.success(t(status.message))
+    router.back()
   } else {
     const status = await create(character)
     $toast.success(t(status.message))
+    router.back()
+  }
+})
+
+onMounted(async () => {
+  if (characterId && typeof characterId === 'string') {
+    const characterRaw = await findOne(characterId)
+    resetForm({
+      values: toFormData(characterRaw, config)
+    })
   }
 })
 </script>

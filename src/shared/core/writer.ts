@@ -4,7 +4,7 @@ import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
-import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
+import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
 
@@ -19,7 +19,7 @@ function buildSmallPortraitPath(name: string, tag: string) {
 
 function definePortraits(character: CharacterWithId): string {
   const { name, tag, roles } = character
-  const hasCivillian = roles.includes('leader') || roles.includes('minister')
+  const hasCivillian = roles.includes('leader') || roles.includes('advisor')
   const hasArmy = roles.includes('marshal') || roles.includes('general')
   const hasArmyWithOfficer = hasArmy || roles.includes('officer')
   const hasNavy = roles.includes('admiral')
@@ -30,7 +30,7 @@ function definePortraits(character: CharacterWithId): string {
 
     if (roles.includes('leader'))
       template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
-    if (roles.includes('minister'))
+    if (roles.includes('advisor'))
       template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
 
     template = template.concat('\n\t\t\t}')
@@ -109,89 +109,40 @@ function defineCommandingRole(character: CharacterWithId): string {
   return ''
 }
 
-function defineMinisterialRole(
-  character: CharacterWithId,
-  config: Automator.Configuration
-): string {
-  const { positions, ministerTraits, cost } = character
-  const token = `${buildCharacterToken(character)}`
+function defineAdvisorRole(character: CharacterWithId, config: Automator.Configuration): string {
+  const { advisorRoles } = character
+  const token = buildCharacterToken(character)
 
-  let advisor = ''
-  const ministerPositions = positions.filter((e) => isCivilianPosition(e))
-  ministerPositions.forEach((position) => {
+  let advisors = ''
+  advisorRoles.forEach((advisor) => {
     const ideology = character.ideology
-    const trait = ministerTraits[position as MinisterPosition]
     const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-    const idea = `${token}_${getPositionSuffix(position)}_${suffix}`
+    const ideaToken = `${token}_${getPositionSuffix(advisor.slot as Position)}_${suffix}`
 
-    const template = `\n\t\tadvisor = {
-      cost = ${cost}
-      slot = ${position}
-      available = { 
-        hidden_trigger = { has_country_flag = ${idea}_hired }
+    let template = `\n\t\tadvisor = {
+      cost = ${advisor.cost}
+      slot = ${advisor.slot}
+      idea_token = ${ideaToken}`
+    if (advisor.hirable) {
+      template = template.concat(`\n\t\t\tavailable = {
+        ROOT = { has_country_flag = ${ideaToken}_hired } 
       }
-      idea_token = ${idea}
-      can_be_fired = no
       on_add = {
-        ROOT = { set_country_flag = ${idea}_hired }
+        ROOT = { set_country_flag = ${ideaToken}_hired }
       }
       on_remove = {
-        ROOT = { clr_country_flag = ${idea}_hired }
-      }
-      traits = {
-        ${ideology}
-        ${trait}
-      }
-    }`
-    advisor = advisor.concat(template)
+        ROOT = { clr_country_flag = ${ideaToken}_hired }
+      }`)
+    }
+    if (advisor.removeable) template = template.concat(`\n\t\t\tcan_be_fired = no`)
+    template = template.concat(`\n\t\t\ttraits = {
+        ${character.ideology}
+        ${advisor.trait}
+      }`)
+    advisors = advisors.concat(template)
   })
 
-  return advisor
-}
-
-function defineOfficerRole(character: CharacterWithId): string {
-  const { positions, officerTraits, cost } = character
-  const token = `${buildCharacterToken(character)}`
-  const positionPrevention = useSettingsStore().$state.positionPrevention
-
-  let advisor = ''
-  const officerPositions = positions.filter((e) => isMilitaryPosition(e))
-
-  officerPositions.forEach((position, index) => {
-    const trait = officerTraits[position as MilitaryPosition]
-    const idea = `${token}_${getPositionSuffix(position)}`
-    const hasMoreThanOneRoles = officerPositions.length > 1 && !positionPrevention
-
-    // Add the position to the new array
-    const allOtherPositions = officerPositions.filter((_, i) => i !== index)
-
-    const availableBlock = hasMoreThanOneRoles
-      ? `available = {\n${allOtherPositions.map((otherPosition) => `        is_${otherPosition} = no`).join('\n')}\n      }`
-      : ''
-
-    // Add available block inline before traits conditionally
-    const templateWithAvailable = `\n\t\tadvisor = {
-      cost = ${cost}
-      slot = ${position}
-      idea_token = ${idea}
-      ${availableBlock}
-      traits = {
-        ${trait}
-      }
-    }`
-
-    advisor = advisor.concat(templateWithAvailable)
-  })
-  const lines = advisor.split('\n')
-  advisor =
-    lines[0] +
-    '\n' +
-    lines
-      .slice(1)
-      .filter((line) => line.trim() !== '')
-      .join('\n')
-
-  return advisor
+  return advisors
 }
 
 export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
@@ -208,15 +159,13 @@ ${portraits}
 
     const leaders = defineCountryLeader(character)
     const commanding = defineCommandingRole(character)
-    const minister = defineMinisterialRole(character, config)
-    const officer = defineOfficerRole(character)
+    const minister = defineAdvisorRole(character, config)
 
     if (hasLeaderRole && leaders.trim().length > 0) data = data.concat(leaders)
     if (commanding.trim().length > 0) data = data.concat(commanding)
     if (minister.trim().length > 0) data = data.concat(minister)
-    if (officer.trim().length > 0) data = data.concat(officer)
 
-    data = data.concat('\n\t}\n')
+    data = data.concat('\n\t\t}\n\t}')
     content = content.concat(data)
   }
 

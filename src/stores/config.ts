@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import defaultIdeologies from '@/shared/const/ideology'
+import defaultPositions from '@/shared/const/positions'
 import { BaseDirectory, readTextFile } from '@tauri-apps/api/fs'
 
 type ConfigurationStore = {
@@ -12,6 +13,7 @@ const useConfiguration = defineStore({
     return {
       config: {
         ideologies: defaultIdeologies,
+        positions: defaultPositions,
         character: {
           defaultCost: 150
         }
@@ -21,7 +23,7 @@ const useConfiguration = defineStore({
   actions: {
     async import() {
       const json = await readTextFile('.automator/data/config.json', { dir: BaseDirectory.Home })
-      this.$state = JSON.parse(json)
+      this.$state = { ...this.$state, ...JSON.parse(json) }
     }
   }
 })

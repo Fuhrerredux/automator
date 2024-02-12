@@ -1,4 +1,4 @@
-const defaultIdeologies: Record<string, Omit<Ideology, 'key'>> = {
+const defaultIdeologies: Record<string, Omit<Automator.Ideology, 'key'>> = {
   vanguardist: { name: 'Vanguardist', short: 'van' },
   collectivist: { name: 'Collectivist', short: 'col' },
   libertarian_socialist: { name: 'Libertarian Socialist', short: 'lib' },

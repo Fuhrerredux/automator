@@ -1,5 +1,34 @@
 import { buildToken } from '@shared/core/data'
+import { commanding } from '../const/roles'
 
+export function toFormData(
+  { ideology, roles, ...rest }: Character,
+  config: Automator.Configuration
+): CharacterForm {
+  const ideologies = Object.entries(config.ideologies).map(([key, value]) => ({
+    key,
+    name: value.name,
+    short: value.short
+  }))
+
+  return {
+    ...rest,
+    ideology: ideologies.find((e) => e.key === ideology) ?? null,
+    commanderRole: commanding.find((e) => roles.includes(e.value)) ?? null,
+    addLeaderRole: roles.includes('leader'),
+    addCommanderRole:
+      roles.includes('marshal') || roles.includes('admiral') || roles.includes('general'),
+    addAdvisorRole: roles.includes('advisor')
+  }
+}
+
+/**
+ * Function to convert form data to a character object
+ * that can be flushed to the database.
+ *
+ * @param character character form data
+ * @returns converted character object
+ */
 export function fromFormData(character: CharacterForm): Character {
   const {
     name,
@@ -8,30 +37,16 @@ export function fromFormData(character: CharacterForm): Character {
     leaderTraits,
     leaderIdeologies,
     commanderTraits,
-    ministerTraits,
-    officerTraits,
     addCommanderRole,
     addLeaderRole,
-    addMinisterRole,
-    addOfficerRole,
-    commanderRole,
-    ministerRoles,
-    officerRoles
+    addAdvisorRole,
+    advisorRoles,
+    commanderRole
   } = character
   const roles: CharacterRole[] = []
   if (addLeaderRole) roles.push('leader')
   if (addCommanderRole && commanderRole?.value) roles.push(commanderRole.value)
-  if (addMinisterRole) roles.push('minister')
-  if (addOfficerRole) roles.push('officer')
-
-  const ministerRolesKeys = Object.entries(ministerRoles)
-    .filter(([_, value]) => value)
-    .map(([key]) => key)
-  const officerRolesKeys = Object.entries(officerRoles)
-    .filter(([_, value]) => value)
-    .map(([key]) => key)
-
-  const positions: Position[] = ministerRolesKeys.concat(officerRolesKeys) as Position[]
+  if (addAdvisorRole) roles.push('advisor')
 
   return {
     name,
@@ -39,11 +54,9 @@ export function fromFormData(character: CharacterForm): Character {
     leaderIdeologies,
     leaderTraits,
     commanderTraits,
-    ministerTraits,
-    officerTraits,
-    positions,
-    cost: 150,
     roles,
+    advisorRoles,
+    positions: advisorRoles.map(({ slot }) => slot) as Position[],
     ideology: ideology ? ideology.key : null
   }
 }

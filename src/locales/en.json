@@ -24,8 +24,7 @@
     "ideology": "Ideology",
     "leader-role": "Add Leader Role",
     "commanding-role": "Add Commanding Role",
-    "minister-role": "Add Minister Role",
-    "officer-role": "Add Officer Role",
+    "advisor-role": "Add Advisor Role",
     "role": "Role",
     "roles": "Roles",
     "traits": "Traits",
@@ -71,16 +70,7 @@
   "roles": {
     "marshal": "Field Marshal",
     "general": "Corps Commander",
-    "admiral": "Admiral",
-    "head_of_government": "Head of Government",
-    "foreign_minister": "Foreign Minister",
-    "economy_minister": "Economy Minister",
-    "security_minister": "Security Minister",
-    "high_command": "Chief of Staff",
-    "army_chief": "Chief of Army",
-    "air_chief": "Chief of Air Force",
-    "navy_chief": "Chief of Navy",
-    "theorist": "Theorist"
+    "admiral": "Admiral"
   },
   "modal": {
     "character-editor": {

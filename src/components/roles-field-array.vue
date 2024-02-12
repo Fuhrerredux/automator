@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import { Field, type FieldEntry, useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
+import { type ComputedRef, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { advisors } from '@/shared/const/roles'
+import useConfiguration from '@/stores/config'
 import Dropdown from '@components/dropdown.vue'
 import Switch from '@components/switch.vue'
 import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import useTraits from '@stores/traits'
 import { toTypedSchema } from '@vee-validate/yup'
 
-const { t } = useI18n()
-const { traits } = useTraits()
-
 defineProps<{
-  fields: FieldEntry<AdvisorForm>[]
+  fields: FieldEntry<Advisor>[]
 }>()
-
 const emit = defineEmits<{
-  (e: 'push', v: AdvisorForm): void
+  (e: 'push', v: Advisor): void
   (e: 'remove', v: number): void
 }>()
 
@@ -30,19 +27,31 @@ const schema = toTypedSchema(
   })
 )
 
-const { resetForm, handleSubmit } = useForm<AdvisorForm>({
+const advisors: ComputedRef<Automator.Position[]> = computed(() => {
+  return Object.entries(config.positions).map(([key, value]) => ({
+    key,
+    name: value.name,
+    short: value.short
+  }))
+})
+
+const { t } = useI18n()
+const { traits } = useTraits()
+const { config } = useConfiguration()
+const { resetForm, handleSubmit } = useForm<Advisor>({
   initialValues: {
-    slot: advisors[0],
+    slot: advisors.value.length > 0 ? advisors.value[0].key : '',
     removeable: false,
     trait: '',
-    cost: 0
+    cost: config.character.defaultCost
   },
   validationSchema: schema
 })
 const { value: characterSlot } = useField<string>('slot')
 
-const onSubmit = handleSubmit((formData: AdvisorForm) => {
-  emit('push', formData)
+const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
+  const advisor = { ...rest, slot: String(slot) }
+  emit('push', advisor)
   resetForm()
 })
 </script>
@@ -99,8 +108,8 @@ const onSubmit = handleSubmit((formData: AdvisorForm) => {
           <legend class="form-label">Character Slot</legend>
           <dropdown
             localise
-            display-key="label"
-            value-key="value"
+            display-key="name"
+            value-key="key"
             :options="advisors"
             :model-value="value"
             @update:model-value="handleChange" />

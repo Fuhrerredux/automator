@@ -9,38 +9,36 @@ impl MigrationTrait for Migration {
     manager
       .create_table(
         Table::create()
-          .table(Characters::Table)
+          .table(Character::Table)
           .if_not_exists()
           .col(
-            ColumnDef::new(Characters::Id)
+            ColumnDef::new(Character::Id)
               .string()
               .not_null()
               .primary_key()
           )
-          .col(ColumnDef::new(Characters::Name).string().not_null())
-          .col(ColumnDef::new(Characters::Tag).string().not_null())
-          .col(ColumnDef::new(Characters::Ideology).string())
-          .col(ColumnDef::new(Characters::Positions).string())
-          .col(ColumnDef::new(Characters::LeaderTraits).string())
-          .col(ColumnDef::new(Characters::LeaderIdeologies).string())
-          .col(ColumnDef::new(Characters::CommanderTraits).string())
-          .col(ColumnDef::new(Characters::MinisterTraits).string())
-          .col(ColumnDef::new(Characters::OfficerTraits).string())
-          .col(ColumnDef::new(Characters::Roles).string())
-          .col(ColumnDef::new(Characters::Cost).integer())
+          .col(ColumnDef::new(Character::Name).string().not_null())
+          .col(ColumnDef::new(Character::Tag).string().not_null())
+          .col(ColumnDef::new(Character::Ideology).string())
+          .col(ColumnDef::new(Character::Positions).string())
+          .col(ColumnDef::new(Character::LeaderTraits).string())
+          .col(ColumnDef::new(Character::LeaderIdeologies).string())
+          .col(ColumnDef::new(Character::CommanderTraits).string())
+          .col(ColumnDef::new(Character::AdvisorTraits).string())
+          .col(ColumnDef::new(Character::Roles).string())
           .to_owned()
       ).await
   }
 
   async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
     manager
-      .drop_table(Table::drop().table(Characters::Table).to_owned())
+      .drop_table(Table::drop().table(Character::Table).to_owned())
       .await
   }
 }
 
 #[derive(DeriveIden)]
-enum Characters {
+enum Character {
   Table,
   Id,
   Name,
@@ -50,8 +48,6 @@ enum Characters {
   LeaderTraits,
   LeaderIdeologies,
   CommanderTraits,
-  MinisterTraits,
-  OfficerTraits,
+  AdvisorTraits,
   Roles,
-  Cost,
 }

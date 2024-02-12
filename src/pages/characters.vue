@@ -4,7 +4,6 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
 import CharacterTable from '@components/character-table/table.vue'
-import CharacterEditor from '@components/characters/character-editor.vue'
 import ExportCharacters from '@components/characters/export-characters.vue'
 import ImportCharacters from '@components/characters/import-characters.vue'
 import PurgeCharacters from '@components/characters/purge-characters.vue'
@@ -23,27 +22,22 @@ import useCharacterStore from '@stores/characters'
 import useModStore from '@stores/mod'
 
 const { t } = useI18n()
-const editor = ref(false)
 const confirm = ref(false)
 const purgeConfirm = ref(false)
 const exportCharacters = ref(false)
 const importCharacters = ref(false)
-const character = ref<CharacterWithId | null>(null)
+const characterRef = ref<CharacterWithId | null>(null)
 const characterStore = useCharacterStore()
 const modStore = useModStore()
 const { characters } = storeToRefs(characterStore)
 const { directory } = storeToRefs(modStore)
-const { update, create, remove, purge } = characterStore
+const { remove, purge } = characterStore
 
-function handleNew() {
-  router.push('/edit')
-}
-function handleUpdate(char: CharacterWithId) {
-  character.value = char
-  editor.value = true
-}
-function handleRemove(char: CharacterWithId) {
-  character.value = char
+const onCreateCharacter = () => router.push('/edit')
+const onUpdateCharacter = (character: CharacterWithId) =>
+  router.push(`/edit?characterId=${character.id}`)
+const onRemoveCharacter = (character: CharacterWithId) => {
+  characterRef.value = character
   confirm.value = true
 }
 </script>
@@ -57,7 +51,7 @@ function handleRemove(char: CharacterWithId) {
           type="button"
           class="button-primary flex items-center"
           :disabled="directory.trim().length <= 0"
-          @click="handleNew">
+          @click="onCreateCharacter">
           <plus-icon class="mr-2 h-5 w-5" />
           <span>{{ t('action.create') }}</span>
         </button>
@@ -93,20 +87,16 @@ function handleRemove(char: CharacterWithId) {
       </div>
     </div>
     <div class="mt-4">
-      <character-table :characters="characters" @update="handleUpdate" @remove="handleRemove" />
+      <character-table
+        :characters="characters"
+        @update="onUpdateCharacter"
+        @remove="onRemoveCharacter" />
     </div>
   </page>
-  <character-editor
-    v-if="editor"
-    :open="editor"
-    :character="character"
-    :update-fn="update"
-    :create-fn="create"
-    @hide="editor = false" />
   <remove-character
     v-if="confirm"
     :open="confirm"
-    :character="character!"
+    :character="characterRef!"
     :remove-fn="remove"
     @hide="confirm = false" />
   <purge-characters :open="purgeConfirm" :purge-fn="purge" @hide="purgeConfirm = false" />

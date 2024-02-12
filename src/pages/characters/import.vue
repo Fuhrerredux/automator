@@ -5,7 +5,6 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import router from '@/router'
 import CharacterTable from '@components/character-table/table.vue'
-import CharacterEditor from '@components/characters/character-editor.vue'
 import RemoveCharacter from '@components/characters/remove-character.vue'
 import AppHeader from '@components/header.vue'
 import SpinnerButton from '@components/spinner-button.vue'
@@ -19,7 +18,7 @@ const characterStore = useCharacterStore()
 const importStore = useImportStore()
 const { characters } = storeToRefs(importStore)
 const { importAll } = characterStore
-const { upsert, remove } = importStore
+const { remove } = importStore
 
 const importing = ref(false)
 const editor = ref(false)
@@ -68,13 +67,6 @@ function handleRemove(char: CharacterWithId) {
   <main class="content px-8 page">
     <character-table :characters="characters" @update="handleUpdate" @remove="handleRemove" />
   </main>
-  <character-editor
-    v-if="editor"
-    :open="editor"
-    :character="character"
-    :create-fn="upsert"
-    :update-fn="upsert"
-    @hide="editor = false" />
   <remove-character
     v-if="confirm"
     :open="confirm"

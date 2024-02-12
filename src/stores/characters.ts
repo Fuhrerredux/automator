@@ -9,6 +9,9 @@ const useCharacterStore = defineStore({
     }
   },
   actions: {
+    async findOne(id: string): Promise<Character> {
+      return CharacterRepository.findById(id)
+    },
     async importAll(characters: CharacterWithId[]) {
       const promises = characters.map((e) => CharacterRepository.create(e))
       return await Promise.all(promises)

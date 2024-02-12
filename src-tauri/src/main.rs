@@ -12,7 +12,7 @@ use service::{
   sea_orm::{Database,DatabaseConnection},
   Mutation as MutationCore, Query as QueryCore
 };
-use entity::characters;
+use entity::character;
 
 #[tokio::main]
 async fn main() {
@@ -63,7 +63,7 @@ async fn main() {
 }
 
 #[tauri::command]
-async fn create_character(state: tauri::State<'_, AppState>, form: characters::Model) -> Result<Broadcast, ()> {
+async fn create_character(state: tauri::State<'_, AppState>, form: character::Model) -> Result<Broadcast, ()> {
   let _ = &state.conn;
 
   MutationCore::create_character(&state.conn, form)
@@ -81,7 +81,7 @@ async fn create_character(state: tauri::State<'_, AppState>, form: characters::M
 async fn update_character(
   state: tauri::State<'_, AppState>,
   id: String,
-  form: characters::Model
+  form: character::Model
 )-> Result<Broadcast, ()> {
   MutationCore::update_character_by_id(&state.conn, id, form)
     .await
@@ -132,7 +132,7 @@ async fn purge_characters(
 async fn list_characters(
   state: tauri::State<'_, AppState>,
   params: ListParams,
-) -> Result<Vec<characters::Model>, ()> {
+) -> Result<Vec<character::Model>, ()> {
   let page = params.page.unwrap_or(1);
   let characters_per_page = params.characters_per_page.unwrap_or(5);
 
@@ -149,7 +149,7 @@ async fn list_characters(
 async fn get_character(
   state: tauri::State<'_, AppState>,
   params: GetParams
-) -> Result<characters::Model, ()> {
+) -> Result<character::Model, ()> {
   let id = params.id;
   let character = QueryCore::find_character_by_id(&state.conn, id).await.expect("Cannot find character");
   let data = character.unwrap();

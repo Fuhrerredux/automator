@@ -22,8 +22,12 @@ declare global {
     }
   }
   namespace Automator {
+    type Definition = { key: string; name: string; short: string }
+    type Ideology = Definition
+    type Position = Definition
     type Configuration = {
       ideologies: Record<string, Omit<Ideology, 'key'>>
+      positions: Record<string, Omit<Position, 'key'>>
       character: {
         defaultCost: number
       }
@@ -42,7 +46,7 @@ declare global {
   type DropdownOption<T> = { label: string; value: T }
 
   type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
-  type CharacterRole = CommandingRole | 'leader' | 'minister'
+  type CharacterRole = CommandingRole | 'leader' | 'advisor'
   type MinisterPosition =
     | 'head_of_government'
     | 'foreign_minister'
@@ -58,10 +62,8 @@ declare global {
     leaderTraits: string[]
     leaderIdeologies: string[]
     commanderTraits: string[]
-    ministerTraits: Record<MinisterPosition, string>
-    officerTraits: Record<MilitaryPosition, string>
+    advisorRoles: Advisor[]
     roles: CharacterRole[]
-    cost: number
   }
   type CharacterWithId = Character & { id: string }
   type CharacterForm = {
@@ -69,7 +71,7 @@ declare global {
     ideology: Ideology | null
     commanderRole: DropdownOption<CommandingRole> | null
     commanderTraits: string[]
-    advisorRoles: AdvisorForm[]
+    advisorRoles: Advisor[]
 
     addLeaderRole: boolean
     addCommanderRole: boolean
@@ -81,9 +83,6 @@ declare global {
     removeable: boolean
     trait: string
     cost: number
-  }
-  type AdvisorForm = Omit<Advisor, 'slot'> & {
-    slot: DropdownOption<Position> | null
   }
   type Sprite = {
     name: string
@@ -104,8 +103,6 @@ declare global {
     directory: string
     res: string
   }
-
-  type Ideology = { key: string; name: string; short: string }
 }
 
 declare module 'vue' {

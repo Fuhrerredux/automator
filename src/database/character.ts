@@ -6,8 +6,7 @@ const keys: (keyof Character)[] = [
   'leaderTraits',
   'leaderIdeologies',
   'commanderTraits',
-  'ministerTraits',
-  'officerTraits',
+  'advisorRoles',
   'roles'
 ]
 

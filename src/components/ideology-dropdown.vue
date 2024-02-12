@@ -1,33 +1,33 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useCustomConfig from '@/stores/config'
+import useConfiguration from '@/stores/config'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 type IdeologyDropdownProps = {
-  current?: Ideology | null
+  current?: Automator.Ideology | null
   disabled?: boolean
 } & (
   | {
-      modelValue: Ideology | null
+      modelValue: Automator.Ideology | null
       multiple?: false
     }
   | {
-      modelValue: Ideology[]
+      modelValue: Automator.Ideology[]
       multiple?: true
     }
 )
 type IdeologyDropdownType = IdeologyDropdownProps['multiple']
 type IdeologyDropdownEmits<T extends boolean | undefined> = {
-  (e: 'update:modelValue', value: T extends true ? Ideology[] : Ideology): void
+  (e: 'update:modelValue', value: T extends true ? Automator.Ideology[] : Automator.Ideology): void
 }
 
 const props = defineProps<IdeologyDropdownProps>()
 defineEmits<IdeologyDropdownEmits<IdeologyDropdownType>>()
 
 const { t } = useI18n()
-const configStore = useCustomConfig()
+const configStore = useConfiguration()
 
 const ideologyOptions = computed(() => {
   return Object.entries(configStore.config.ideologies)
