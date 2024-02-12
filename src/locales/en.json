@@ -34,7 +34,8 @@
     "traits-def": "Traits Definitions",
     "leader-roles": "Leader Roles",
     "dropzone": "Drag and drop file here, or click to browse a file",
-    "dropzone-active": "Drop the file here"
+    "dropzone-active": "Drop the file here",
+    "cost": "Cost"
   },
   "placeholder": {
     "tag": "USA",

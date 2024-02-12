@@ -5,20 +5,19 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import IdeologyDropdown from '@/components/ideology-dropdown.vue'
-import { commanding, ministers, officers } from '@/shared/const/roles'
+import { commanding } from '@/shared/const/roles'
 import { fromFormData } from '@/shared/utils/character'
 import useCharacterStore from '@/stores/characters'
 import Dropdown from '@components/dropdown.vue'
 import FieldArray from '@components/field-array.vue'
 import FormGroup from '@components/form-group.vue'
 import AppHeader from '@components/header.vue'
+import RolesFieldArray from '@components/roles-field-array.vue'
 import SpinnerButton from '@components/spinner-button.vue'
-import SwitchForm from '@components/switch-form.vue'
+import Switch from '@components/switch.vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
-import useTraits from '@stores/traits'
 
 const { t } = useI18n()
-const { traits } = useTraits()
 const $toast = useToast()
 const { query } = useRoute()
 const { create, update } = useCharacterStore()
@@ -26,41 +25,17 @@ const { characterId } = query
 const { defineField, handleSubmit } = useForm<CharacterForm>({
   initialValues: {
     name: '',
-    tag: ''
+    tag: '',
+    advisorRoles: []
   }
 })
+
 const [name, nameAttrs] = defineField('name')
 const [tag, tagAttrs] = defineField('tag')
 
 const { value: enableLeaderRole } = useField<boolean>('addLeaderRole')
 const { value: enableCommanderRole } = useField<boolean>('addCommanderRole')
-const { value: enableMinisterRole } = useField<boolean>('addMinisterRole')
-const { value: enableOfficerRole } = useField<boolean>('addOfficerRole')
-const { value: ministerRoles } = useField<Record<MinisterPosition, boolean>>(
-  'ministerRoles',
-  undefined,
-  {
-    initialValue: {
-      head_of_government: false,
-      foreign_minister: false,
-      economy_minister: false,
-      security_minister: false
-    }
-  }
-)
-const { value: officerRoles } = useField<Record<MilitaryPosition, boolean>>(
-  'officerRoles',
-  undefined,
-  {
-    initialValue: {
-      high_command: false,
-      army_chief: false,
-      navy_chief: false,
-      air_chief: false,
-      theorist: false
-    }
-  }
-)
+const { value: enableAdvisorRole } = useField<boolean>('addAdvisorRole')
 
 const {
   fields: leaderTraitsFields,
@@ -72,6 +47,11 @@ const {
   push: commanderTraitsPush,
   remove: commanderTraitsRemove
 } = useFieldArray<string>('command')
+const {
+  fields: advisorRolesFields,
+  push: advisorRolesPush,
+  remove: advisorRolesRemove
+} = useFieldArray<AdvisorForm>('advisorRoles')
 
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
   const id = typeof characterId === 'string' ? characterId : nanoid()
@@ -141,7 +121,17 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
         </div>
       </div>
       <div class="space-y-2">
-        <switch-form name="addLeaderRole" value="leaderRole" :label="t('field.leader-role')" />
+        <Field
+          type="checkbox"
+          name="addLeaderRole"
+          v-slot="{ value, handleChange }"
+          :value="true"
+          :unchecked-value="false">
+          <Switch
+            :label="t('field.leader-role')"
+            :checked="value"
+            @update:modelValue="handleChange" />
+        </Field>
         <div class="grid grid-cols-2 items-start gap-4" v-if="enableLeaderRole">
           <div>
             <legend class="form-label">{{ t('field.ideology') }}</legend>
@@ -159,10 +149,17 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
         </div>
       </div>
       <div class="space-y-2">
-        <switch-form
+        <Field
+          type="checkbox"
           name="addCommanderRole"
-          value="commanderRole"
-          :label="t('field.commanding-role')" />
+          v-slot="{ value, handleChange }"
+          :value="true"
+          :unchecked-value="false">
+          <Switch
+            :label="t('field.commanding-role')"
+            :checked="value"
+            @update:modelValue="handleChange" />
+        </Field>
         <div class="grid grid-cols-2 items-start gap-4" v-if="enableCommanderRole">
           <div>
             <legend class="form-label">{{ t('field.role') }}</legend>
@@ -188,93 +185,22 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
         </div>
       </div>
       <div class="space-y-2">
-        <switch-form
-          name="addMinisterRole"
-          value="ministerRole"
-          :label="t('field.minister-role')" />
-        <div class="grid grid-cols-2 items-start gap-4" v-if="enableMinisterRole">
-          <div v-for="position of ministers">
-            <div class="flex items-center">
-              <Field
-                type="checkbox"
-                v-slot="{ value, handleChange, handleInput, handleBlur }"
-                :name="`ministerRoles.${position.value}`"
-                :value="true"
-                :unchecked-value="false">
-                <input
-                  type="checkbox"
-                  class="form-checkbox"
-                  :id="position.value"
-                  :value="value"
-                  @change="handleChange"
-                  @input="handleInput"
-                  @blur="handleBlur" />
-                <legend class="ml-2 text-sm font-medium">{{ t(position.label) }}</legend>
-              </Field>
-            </div>
-            <div v-if="ministerRoles[position.value]" class="mt-2">
-              <Field v-slot="{ value, handleChange }" :name="`ministerTraits.${position.value}`">
-                <dropdown
-                  v-if="traits[position.value].length > 0"
-                  :options="traits[position.value]"
-                  :display-key="(e) => String(e)"
-                  :value-key="(e: string) => e"
-                  :model-value="value"
-                  @update:model-value="handleChange" />
-                <form-group
-                  v-if="traits[position.value].length <= 0"
-                  type="text"
-                  :model-value="value"
-                  :id="`${position}-trait`"
-                  :label="t('field.traits')"
-                  @update:model-value="handleChange" />
-              </Field>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="space-y-2">
-        <switch-form name="addOfficerRole" value="officerRole" :label="t('field.officer-role')" />
-        <div class="grid grid-cols-2 items-start gap-4" v-if="enableOfficerRole">
-          <div v-for="position of officers">
-            <div class="flex items-center">
-              <Field
-                type="checkbox"
-                v-slot="{ value, handleChange, handleInput, handleBlur }"
-                :name="`officerRoles.${position.value}`"
-                :value="true"
-                :unchecked-value="false">
-                <input
-                  type="checkbox"
-                  class="form-checkbox"
-                  :id="position.value"
-                  :value="value"
-                  @change="handleChange"
-                  @input="handleInput"
-                  @blur="handleBlur" />
-                <legend class="ml-2 text-sm font-medium">{{ t(position.label) }}</legend>
-              </Field>
-            </div>
-            <div v-if="officerRoles[position.value]" class="mt-2">
-              <Field v-slot="{ value, handleChange }" :name="`officerTraits.${position.value}`">
-                <dropdown
-                  v-if="traits[position.value].length > 0"
-                  :options="traits[position.value]"
-                  :display-key="(e) => String(e)"
-                  :value-key="(e: string) => e"
-                  :model-value="value"
-                  @update:model-value="handleChange" />
-                <form-group
-                  v-if="traits[position.value].length <= 0"
-                  type="text"
-                  :model-value="value"
-                  :id="`${position}-trait`"
-                  :label="t('field.traits')"
-                  @update:model-value="handleChange" />
-              </Field>
-            </div>
-          </div>
-        </div>
+        <Field
+          type="checkbox"
+          name="addAdvisorRole"
+          v-slot="{ value, handleChange }"
+          :value="true"
+          :unchecked-value="false">
+          <Switch
+            :label="t('field.advisor-role')"
+            :checked="value"
+            @update:modelValue="handleChange" />
+        </Field>
+        <roles-field-array
+          v-if="enableAdvisorRole"
+          :fields="advisorRolesFields"
+          @push="advisorRolesPush"
+          @remove="advisorRolesRemove" />
       </div>
     </main>
   </form>

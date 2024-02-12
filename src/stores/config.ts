@@ -11,7 +11,10 @@ const useConfiguration = defineStore({
   state: (): ConfigurationStore => {
     return {
       config: {
-        ideologies: defaultIdeologies
+        ideologies: defaultIdeologies,
+        character: {
+          defaultCost: 150
+        }
       }
     }
   },

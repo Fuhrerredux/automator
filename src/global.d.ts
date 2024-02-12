@@ -24,6 +24,9 @@ declare global {
   namespace Automator {
     type Configuration = {
       ideologies: Record<string, Omit<Ideology, 'key'>>
+      character: {
+        defaultCost: number
+      }
     }
   }
 
@@ -61,27 +64,33 @@ declare global {
     cost: number
   }
   type CharacterWithId = Character & { id: string }
+  type CharacterForm = {
+    leaderTraits: string[]
+    ideology: Ideology | null
+    commanderRole: DropdownOption<CommandingRole> | null
+    commanderTraits: string[]
+    advisorRoles: AdvisorForm[]
+
+    addLeaderRole: boolean
+    addCommanderRole: boolean
+    addAdvisorRole: boolean
+  } & Pick<Character, 'name' | 'tag' | 'leaderIdeologies'>
+  type Advisor = {
+    slot: string
+    hirable: boolean
+    removeable: boolean
+    trait: string
+    cost: number
+  }
+  type AdvisorForm = Omit<Advisor, 'slot'> & {
+    slot: DropdownOption<Position> | null
+  }
   type Sprite = {
     name: string
     path: string
     file?: string
     exists?: boolean
   }
-  type CharacterForm = {
-    leaderTraits: string[]
-    ideology: Ideology | null
-    commanderRole: DropdownOption<CommandingRole> | null
-    commanderTraits: string[]
-    ministerTraits: Record<MinisterPosition, string>
-    officerTraits: Record<MilitaryPosition, string>
-
-    addLeaderRole: boolean
-    addCommanderRole: boolean
-    addMinisterRole: boolean
-    addOfficerRole: boolean
-    ministerRoles: Record<MinisterPosition, boolean>
-    officerRoles: Record<MilitaryPosition, boolean>
-  } & Pick<Character, 'name' | 'tag' | 'leaderIdeologies'>
 
   type AnalyzeData = {
     sprite: string
