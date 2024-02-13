@@ -265,8 +265,9 @@ export function readLocalisationFile(content: string) {
     const position = parsePosition(extractPosition(token))
     const ideology = extractIdeology(token)
 
-    const start = trimmed.indexOf('"')
-    const name = trimmed.substring(start, trimmed.length)
+    const parts = trimmed.split('"');
+    if (parts.length < 3) continue; // If there are not enough quotes, skip this line
+    const name = parts[1];
 
     const record: Character = {
       name,
