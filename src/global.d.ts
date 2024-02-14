@@ -109,6 +109,21 @@ declare global {
     directory: string
     res: string
   }
+
+  type SpriteEntry = {
+    name: string;
+    texturefile: string;
+  }
+
+  type SpriteEntryWithTag = SpriteEntry & {
+    tag?: string;
+    tagIndex?: number;
+  }
+
+  type TauriStatus = {
+    kind: string
+    message: string
+  }
 }
 
 declare module 'vue' {

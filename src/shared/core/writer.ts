@@ -6,7 +6,7 @@ import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
-import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
+import { loadCountryTags, readSpriteDefinitions, countryTags } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -344,4 +344,128 @@ export async function appendToHistory(characters: CharacterWithId[], destination
       await writeTextFile(path, content)
     }
   }
+}
+
+export async function appendCharacterLocalisation(
+  characters: CharacterWithId[],
+  path: string,
+  content: string
+): Promise<void> {
+  if (Array.isArray(characters)) {
+    const group = groupBy(characters, 'tag')
+    let data: string = ''
+    const commonDir = useModStore().getCommonDirectory
+    for (const [_, value] of Object.entries(group)) {
+      for (const character of value) {
+        console.log(useModStore().getCommonDirectory)
+        console.log(character.tag)
+        const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
+        const token = buildCharacterToken(character)
+        if (!content.includes(`${token}: "${character.name}"`)) {
+          data = data.concat(`  ${token}: "${character.name}"\n`)
+        }
+        const charContent = await readTextFile(characterPath)
+        const lines = charContent.split('\n')
+        const newcharContent: string[] = []
+        lines.forEach((line, _) => {
+          let nLine = line
+          if (/\bname\b/.test(line)) {
+            nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
+          }
+          newcharContent.push(nLine)
+        })
+        const result = newcharContent.join('\n')
+        try {
+          await writeTextFile(characterPath, result)
+        } catch (error) {
+          console.error(`Error writing file ${characterPath}: ${error}`)
+          throw error
+        }
+      }
+    }
+    if (data !== '') {
+      const comment = '\n\n### Generated Character Names ###\n'
+      content = content.concat(`${comment}\n${data}`)
+      try {
+        await writeTextFile(path, content)
+      } catch (error) {
+        console.error(`Error writing file ${path}: ${error}`)
+        throw error
+      }
+    }
+  }
+}
+
+export async function fixSprites(path: string, content: string): Promise<void> {
+  await loadCountryTags(`${useModStore().getCommonDirectory?.path}/country_tags/00_countries.txt`)
+  const spriteTypes: SpriteEntryWithTag[] = extractSpriteTypes(content)
+
+  assignTagIndexes(spriteTypes)
+
+  sortSpriteTypes(spriteTypes)
+
+  const spriteTypesBlock = generateSpriteTypesBlock(spriteTypes)
+
+  try {
+    await writeTextFile(path, spriteTypesBlock)
+    console.log('Sprites have been fixed and written to file successfully.')
+  } catch (error) {
+    console.error('Error occurred while writing sprites to file:', error)
+  }
+}
+
+function assignTagIndexes(spriteTypes: SpriteEntryWithTag[]): void {
+  spriteTypes.forEach((sprite) => {
+    const tagIndex = sprite.tag ? countryTags.indexOf(sprite.tag) : -1
+    sprite.tagIndex = tagIndex !== -1 ? tagIndex : countryTags.length
+  })
+}
+
+function sortSpriteTypes(spriteTypes: SpriteEntryWithTag[]): void {
+  spriteTypes.sort((a, b) => {
+    if (a.tagIndex !== b.tagIndex) {
+      return a.tagIndex! - b.tagIndex!
+    } else {
+      return a.name.localeCompare(b.name)
+    }
+  })
+}
+
+function extractSpriteTypes(content: string): SpriteEntryWithTag[] {
+  const regex: RegExp = /spriteType\s*=\s*{\s*name\s*=\s*"(.*?)".+?texturefile\s*=\s*"(.*?)"/gis
+  const spriteTypes: SpriteEntryWithTag[] = []
+  const existingSpriteTypes: Set<string> = new Set()
+
+  let match: RegExpExecArray | null
+  while ((match = regex.exec(content)) !== null) {
+    const name = match[1]
+    const texturefile = match[2]
+    const spriteKey = name + texturefile
+
+    if (!existingSpriteTypes.has(spriteKey)) {
+      const tag = extractTagFromName(name)
+      spriteTypes.push({ name, texturefile, tag })
+      existingSpriteTypes.add(spriteKey)
+    }
+  }
+
+  return spriteTypes
+}
+
+function extractTagFromName(name: string): string | undefined {
+  const match = name.match(/(?:ideas_|goals_|focus_)([A-Z]{3})/)
+  return match ? match[1] : undefined
+}
+
+function generateSpriteTypesBlock(spriteTypes: SpriteEntry[]): string {
+  const sprites: string[] = spriteTypes.map(({ name, texturefile }) => {
+    return `\tspriteType = {
+        name = "${name}"
+        texturefile = "${texturefile}"
+    }`
+  })
+
+  return `spriteTypes = {
+${sprites.join('\n')}
+}`
 }
