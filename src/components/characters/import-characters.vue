@@ -30,7 +30,9 @@ async function onFileSelected(dropped: File) {
   files.value = [dropped]
   const content = await readFileObject(dropped)
 
-  if (dropped.type === 'application/x-yaml') {
+  const fileExtension = dropped.name.split('.').pop()?.toLowerCase()
+
+  if (fileExtension === 'yml' || fileExtension === 'yaml') {
     characters.value = readLocalisationFile(content, config)
   } else if (dropped.type === 'text/plain') {
     characters.value = readCharacterFile(content, config)

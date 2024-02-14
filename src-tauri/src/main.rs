@@ -18,7 +18,7 @@ use entity::character;
 async fn main() {
   // Initialize the tracing subscriber with a maximum logging level of ERROR
   let subscriber = fmt::Subscriber::builder()
-      .with_max_level(LevelFilter::ERROR)
+      .with_max_level(LevelFilter::INFO) // Comment if you want to show DEBUG messages
       .finish();
 
   tracing::subscriber::set_global_default(subscriber)
