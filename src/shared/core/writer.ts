@@ -353,7 +353,7 @@ export async function appendCharacterLocalisation(
 ): Promise<void> {
   if (Array.isArray(characters)) {
     const group = groupBy(characters, 'tag')
-    let data = ''
+    let data: string = ''
     const commonDir = useModStore().getCommonDirectory
     for (const [_, value] of Object.entries(group)) {
       for (const character of value) {
