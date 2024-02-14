@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Field, type FieldEntry, useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { type ComputedRef, computed } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useConfiguration from '@/stores/config'
 import Dropdown from '@components/dropdown.vue'
@@ -10,7 +10,7 @@ import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import useTraits from '@stores/traits'
 import { toTypedSchema } from '@vee-validate/yup'
 
-defineProps<{
+const props = defineProps<{
   fields: FieldEntry<Advisor>[]
 }>()
 const emit = defineEmits<{
@@ -27,20 +27,12 @@ const schema = toTypedSchema(
   })
 )
 
-const advisors: ComputedRef<Automator.Position[]> = computed(() => {
-  return Object.entries(config.positions).map(([key, value]) => ({
-    key,
-    name: value.name,
-    short: value.short
-  }))
-})
-
 const { t } = useI18n()
 const { traits } = useTraits()
-const { config } = useConfiguration()
+const { config, positionsArray } = useConfiguration()
 const { resetForm, handleSubmit } = useForm<Advisor>({
   initialValues: {
-    slot: advisors.value.length > 0 ? advisors.value[0].key : '',
+    slot: positionsArray.length > 0 ? positionsArray[0].key : '',
     removeable: false,
     trait: '',
     cost: config.character.defaultCost
@@ -48,6 +40,11 @@ const { resetForm, handleSubmit } = useForm<Advisor>({
   validationSchema: schema
 })
 const { value: characterSlot } = useField<string>('slot')
+
+const options = computed(() => {
+  const slots = props.fields.map((e) => e.value.slot)
+  return positionsArray.filter((e) => !slots.includes(e.key))
+})
 
 const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
   const advisor = { ...rest, slot: String(slot) }
@@ -110,7 +107,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
             localise
             display-key="name"
             value-key="key"
-            :options="advisors"
+            :options="options"
             :model-value="value"
             @update:model-value="handleChange" />
         </Field>

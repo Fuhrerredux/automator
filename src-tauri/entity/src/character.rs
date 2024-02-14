@@ -11,14 +11,8 @@ pub struct Model {
     pub name: String,
     pub tag: String,
     pub ideology: Option<String>,
-    pub positions: Option<String>,
-    #[sea_orm(column_name = "leaderTraits")]
-    pub leader_traits: Option<String>,
-    #[sea_orm(column_name = "leaderIdeologies")]
-    pub leader_ideologies: Option<String>,
-    #[sea_orm(column_name = "commanderTraits")]
+    pub leader_roles: Option<String>,
     pub commander_traits: Option<String>,
-    #[sea_orm(column_name = "advisorRoles")]
     pub advisor_roles: Option<String>,
     pub roles: Option<String>,
 }

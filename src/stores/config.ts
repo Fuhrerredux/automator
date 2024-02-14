@@ -20,6 +20,20 @@ const useConfiguration = defineStore({
       }
     }
   },
+  getters: {
+    ideologiesArray: ({ config: { ideologies } }) =>
+      Object.entries(ideologies).map(([key, value]) => ({
+        key,
+        name: value.name,
+        short: value.short
+      })),
+    positionsArray: ({ config: { positions } }) =>
+      Object.entries(positions).map(([key, value]) => ({
+        key,
+        name: value.name,
+        short: value.name
+      }))
+  },
   actions: {
     async import() {
       const json = await readTextFile('.automator/data/config.json', { dir: BaseDirectory.Home })

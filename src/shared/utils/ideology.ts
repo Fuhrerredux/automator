@@ -6,7 +6,10 @@
  * @param config the configuration object from the useConfigurationStore
  * @returns the ideology
  */
-export function getIdeology(key: string | null, config: Automator.Configuration): Ideology | null {
+export function getIdeology(
+  key: string | null,
+  config: Automator.Configuration
+): Automator.Ideology | null {
   if (key) {
     const ideology = config.ideologies[key]
     if (ideology) return { ...ideology, key }

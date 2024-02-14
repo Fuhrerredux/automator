@@ -58,17 +58,14 @@ declare global {
     name: string
     tag: string
     ideology: string | null
-    positions: Position[]
-    leaderTraits: string[]
-    leaderIdeologies: string[]
-    commanderTraits: string[]
+    leaderRoles: CountryLeader[]
     advisorRoles: Advisor[]
+    commanderTraits: string[]
     roles: CharacterRole[]
   }
   type CharacterWithId = Character & { id: string }
   type CharacterForm = {
-    leaderTraits: string[]
-    ideology: Ideology | null
+    ideology: Automator.Ideology | string | null
     commanderRole: DropdownOption<CommandingRole> | null
     commanderTraits: string[]
     advisorRoles: Advisor[]
@@ -76,7 +73,16 @@ declare global {
     addLeaderRole: boolean
     addCommanderRole: boolean
     addAdvisorRole: boolean
-  } & Pick<Character, 'name' | 'tag' | 'leaderIdeologies'>
+  } & Pick<Character, 'name' | 'tag' | 'leaderRoles'>
+  type CountryLeader = {
+    subideology: string
+    trait: string
+  }
+  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: Automator.Ideology }
+  type Commander = {
+    type: CommandingRole
+    traits: string
+  }
   type Advisor = {
     slot: string
     hirable: boolean

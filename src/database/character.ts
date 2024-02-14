@@ -1,14 +1,7 @@
 import { deserializeObject, serializeObject } from '@/shared/core/data'
 import { invoke } from '@tauri-apps/api/tauri'
 
-const keys: (keyof Character)[] = [
-  'positions',
-  'leaderTraits',
-  'leaderIdeologies',
-  'commanderTraits',
-  'advisorRoles',
-  'roles'
-]
+const keys: (keyof Character)[] = ['leaderRoles', 'commanderTraits', 'advisorRoles', 'roles']
 
 async function create(character: CharacterWithId) {
   return invoke<Tauri.Broadcast>('create_character', {
@@ -44,7 +37,7 @@ async function findById(id: string): Promise<CharacterWithId> {
   const character = await invoke<CharacterWithId>('get_character', {
     params: { id }
   })
-  return character
+  return deserializeObject(character, keys)
 }
 
 const characterRepository = {

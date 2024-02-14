@@ -20,11 +20,9 @@ impl MigrationTrait for Migration {
           .col(ColumnDef::new(Character::Name).string().not_null())
           .col(ColumnDef::new(Character::Tag).string().not_null())
           .col(ColumnDef::new(Character::Ideology).string())
-          .col(ColumnDef::new(Character::Positions).string())
-          .col(ColumnDef::new(Character::LeaderTraits).string())
-          .col(ColumnDef::new(Character::LeaderIdeologies).string())
+          .col(ColumnDef::new(Character::LeaderRoles).string())
+          .col(ColumnDef::new(Character::AdvisorRoles).string())
           .col(ColumnDef::new(Character::CommanderTraits).string())
-          .col(ColumnDef::new(Character::AdvisorTraits).string())
           .col(ColumnDef::new(Character::Roles).string())
           .to_owned()
       ).await
@@ -44,10 +42,8 @@ enum Character {
   Name,
   Tag,
   Ideology,
-  Positions,
-  LeaderTraits,
-  LeaderIdeologies,
+  LeaderRoles,
+  AdvisorRoles,
   CommanderTraits,
-  AdvisorTraits,
   Roles,
 }

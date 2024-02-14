@@ -5,32 +5,32 @@ import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import IdeologyDropdown from '@/components/ideology-dropdown.vue'
-import { commanding } from '@/shared/const/roles'
-import { fromFormData, toFormData } from '@/shared/utils/character'
-import useCharacterStore from '@/stores/characters'
-import useConfiguration from '@/stores/config'
+import IdeologyFieldArray from '@components/character-editor/ideologies-field.array.vue'
+import RolesFieldArray from '@components/character-editor/roles-field-array.vue'
+import TraitsFieldArray from '@components/character-editor/traits-field-array.vue'
 import Dropdown from '@components/dropdown.vue'
-import FieldArray from '@components/field-array.vue'
 import FormGroup from '@components/form-group.vue'
 import AppHeader from '@components/header.vue'
-import RolesFieldArray from '@components/roles-field-array.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import Switch from '@components/switch.vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
+import { commanding } from '@shared/const/roles'
+import { fromFormData, toFormData } from '@shared/utils/character'
+import useCharacterStore from '@stores/characters'
+import useConfiguration from '@stores/config'
 
 const { t } = useI18n()
 const $toast = useToast()
 const router = useRouter()
 const { query } = useRoute()
-const { config } = useConfiguration()
+const { config, ideologiesArray } = useConfiguration()
 const { create, update, findOne } = useCharacterStore()
 const { characterId } = query
 const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
   initialValues: {
     name: '',
     tag: '',
-    leaderTraits: [],
+    leaderRoles: [],
     commanderTraits: [],
     advisorRoles: []
   }
@@ -44,10 +44,10 @@ const { value: enableCommanderRole } = useField<boolean>('addCommanderRole')
 const { value: enableAdvisorRole } = useField<boolean>('addAdvisorRole')
 
 const {
-  fields: leaderTraitsFields,
-  push: leaderTraitsPush,
-  remove: leaderTraitsRemove
-} = useFieldArray<string>('leaderTraits')
+  fields: leaderRolesFields,
+  push: leaderRolesPush,
+  remove: leaderRolesRemove
+} = useFieldArray<CountryLeaderForm>('leaderRoles')
 const {
   fields: commanderTraitsFields,
   push: commanderTraitsPush,
@@ -66,6 +66,7 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     id,
     ...fromFormData(data)
   }
+
   if (typeof characterId === 'string') {
     const status = await update(character)
     $toast.success(t(status.message))
@@ -80,8 +81,15 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
 onMounted(async () => {
   if (characterId && typeof characterId === 'string') {
     const characterRaw = await findOne(characterId)
+    const formData = toFormData(characterRaw, config)
     resetForm({
-      values: toFormData(characterRaw, config)
+      values: {
+        ...formData,
+        ideology:
+          formData.ideology && typeof formData.ideology === 'object'
+            ? formData.ideology.key
+            : formData.ideology
+      }
     })
   }
 })
@@ -131,9 +139,11 @@ onMounted(async () => {
         <div>
           <legend class="form-label">{{ t('field.ideology') }}</legend>
           <Field name="ideology" v-slot="{ value, handleChange }">
-            <ideology-dropdown
-              :multiple="false"
+            <dropdown
+              value-key="key"
+              display-key="name"
               :model-value="value"
+              :options="ideologiesArray"
               @update:model-value="handleChange" />
           </Field>
         </div>
@@ -150,20 +160,11 @@ onMounted(async () => {
             :checked="value"
             @update:modelValue="handleChange" />
         </Field>
-        <div class="grid grid-cols-2 items-start gap-4" v-if="enableLeaderRole">
-          <div>
-            <legend class="form-label">{{ t('field.ideology') }}</legend>
-            <Field name="ideology" v-slot="{ value, handleChange }">
-              <ideology-dropdown multiple :model-value="value" @update:model-value="handleChange" />
-            </Field>
-          </div>
-          <div>
-            <legend class="form-label">{{ t('field.traits') }}</legend>
-            <field-array
-              :fields="leaderTraitsFields"
-              @push="leaderTraitsPush"
-              @remove="leaderTraitsRemove" />
-          </div>
+        <div v-if="enableLeaderRole">
+          <ideology-field-array
+            :fields="leaderRolesFields"
+            @push="leaderRolesPush"
+            @remove="leaderRolesRemove" />
         </div>
       </div>
       <div class="space-y-2">
@@ -194,7 +195,7 @@ onMounted(async () => {
           <div>
             <label for="traits">
               <span class="form-label">{{ t('field.traits') }}</span>
-              <field-array
+              <traits-field-array
                 :fields="commanderTraitsFields"
                 @push="commanderTraitsPush"
                 @remove="commanderTraitsRemove" />

@@ -60,7 +60,10 @@ const positions: Position[] = [
   'theorist'
 ]
 
-export function extractTraits(content: string): Record<Position, string[]> {
+export function extractTraits(
+  content: string,
+  config: Automator.Configuration
+): Record<Position, string[]> {
   const traits: Record<Position, string[]> = {
     head_of_government: [],
     foreign_minister: [],
@@ -81,7 +84,7 @@ export function extractTraits(content: string): Record<Position, string[]> {
 
   content.split('\n').forEach((e) => {
     for (const key of Object.keys(traits)) {
-      const prefix = getPositionSuffix(key as Position)
+      const prefix = getPositionSuffix(key as unknown as Automator.Position, config)
       const data = e.trim()
       if (data.startsWith(prefix)) {
         const arr = traits[key as Position]
@@ -152,7 +155,7 @@ export function readCharacterFile(
         content.split('\n').forEach((e) => {
           const trimmed = e.trim()
           positions.forEach((position) => {
-            const prefix = getPositionSuffix(position)
+            const prefix = getPositionSuffix(position as unknown as Automator.Position, config)
             if (trimmed.startsWith(`${prefix}_`)) {
               if (isCivilianPosition(position)) {
                 parsed.ministerTraits[`${position}`] = trimmed
@@ -265,7 +268,7 @@ export function readLocalisationFile(content: string, config: Automator.Configur
 
     const token = trimmed.substring(0, trimmed.indexOf(':'))
     const tag = token.substring(0, 3)
-    const position = parsePosition(extractPosition(token))
+    const position = parsePosition(extractPosition(token), config)
     const ideology = extractIdeology(token)
 
     const parts = trimmed.split('"');
@@ -275,34 +278,18 @@ export function readLocalisationFile(content: string, config: Automator.Configur
     const record: Character = {
       name,
       tag,
-      cost: 150,
       ideology: getIdeologyKeyFromShort(ideology, config) ?? 'vanguardist',
       roles: [],
-      leaderTraits: [],
-      leaderIdeologies: [],
+      leaderRoles: [],
       commanderTraits: [],
-      positions: [],
-      ministerTraits: {
-        head_of_government: '',
-        foreign_minister: '',
-        economy_minister: '',
-        security_minister: ''
-      },
-      officerTraits: {
-        high_command: '',
-        army_chief: '',
-        air_chief: '',
-        navy_chief: '',
-        theorist: ''
-      }
+      advisorRoles: []
     }
 
     const index = records.findIndex((e) => e.name === name)
     if (index >= 0) {
       const curr = records[index]
       if (position) {
-        curr.positions = [...curr.positions, position]
-        if (isCivilianPosition(position) && !curr.roles.includes('minister')) {
+        if (isCivilianPosition(position) && !curr.roles.includes('advisor')) {
           curr.roles = [...curr.roles, 'minister']
         } else if (isMilitaryPosition(position) && !curr.roles.includes('officer')) {
           curr.roles = [...curr.roles, 'officer']
@@ -311,7 +298,6 @@ export function readLocalisationFile(content: string, config: Automator.Configur
       records[index] = curr
     } else {
       if (position) {
-        record.positions = [...record.positions, position]
         if (isCivilianPosition(position) && !record.roles.includes('minister')) {
           record.roles = [...record.roles, 'minister']
         } else if (isMilitaryPosition(position) && !record.roles.includes('officer')) {

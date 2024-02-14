@@ -61,12 +61,12 @@ function definePortraits(character: CharacterWithId): string {
 
 function defineCountryLeader(character: CharacterWithId): string {
   const roles: string[] = []
-  const ideologies = Array.from(new Set(character.leaderIdeologies))
-  ideologies.forEach((ideology) => {
+
+  Array.from(new Set(character.leaderRoles)).forEach((e) => {
     roles.push(`\n\t\tcountry_leader = {
-      ideology = ${ideology}_subtype
+      ideology = ${e.subideology}_subtype
       traits = {
-        ${character.leaderTraits.join('\n')}
+        ${e.trait}
       }
     }`)
   })
@@ -117,7 +117,8 @@ function defineAdvisorRole(character: CharacterWithId, config: Automator.Configu
   advisorRoles.forEach((advisor) => {
     const ideology = character.ideology
     const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-    const ideaToken = `${token}_${getPositionSuffix(advisor.slot as Position)}_${suffix}`
+    const position = advisor.slot as unknown as Automator.Position
+    const ideaToken = `${token}_${getPositionSuffix(position, config)}_${suffix}`
 
     let template = `\n\t\tadvisor = {
       cost = ${advisor.cost}

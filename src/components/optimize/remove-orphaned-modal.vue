@@ -36,7 +36,7 @@ async function removeAll() {
 </script>
 
 <template>
-  <modal :open="open" @hide="$emit('hide')">
+  <modal size="max-w-md" :open="open" :hideable="true" @hide="$emit('hide')">
     <template #title>
       {{ t('modal.purge-files.heading') }}
     </template>

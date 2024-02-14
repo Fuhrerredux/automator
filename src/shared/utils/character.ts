@@ -1,15 +1,17 @@
-import { buildToken } from '@shared/core/data'
 import { commanding } from '../const/roles'
+import { buildToken } from '../core/data'
 
 export function toFormData(
   { ideology, roles, ...rest }: Character,
   config: Automator.Configuration
 ): CharacterForm {
-  const ideologies = Object.entries(config.ideologies).map(([key, value]) => ({
-    key,
-    name: value.name,
-    short: value.short
-  }))
+  const ideologies: Automator.Ideology[] = Object.entries(config.ideologies).map(
+    ([key, value]) => ({
+      key,
+      name: value.name,
+      short: value.short
+    })
+  )
 
   return {
     ...rest,
@@ -34,8 +36,7 @@ export function fromFormData(character: CharacterForm): Character {
     name,
     tag,
     ideology,
-    leaderTraits,
-    leaderIdeologies,
+    leaderRoles,
     commanderTraits,
     addCommanderRole,
     addLeaderRole,
@@ -51,13 +52,11 @@ export function fromFormData(character: CharacterForm): Character {
   return {
     name,
     tag,
-    leaderIdeologies,
-    leaderTraits,
+    leaderRoles,
     commanderTraits,
     roles,
     advisorRoles,
-    positions: advisorRoles.map(({ slot }) => slot) as Position[],
-    ideology: ideology ? ideology.key : null
+    ideology: typeof ideology === 'object' && ideology ? ideology.key : ideology
   }
 }
 
@@ -71,33 +70,6 @@ export function hasCommandingRole(character: CharacterWithId): boolean {
 
 export function getCommandingRole(character: CharacterWithId): CommandingRole | null {
   return (character.roles.find((e) => isCommandingRole(e)) as CommandingRole) || null
-}
-
-export function isMinisterialRole(role: Position): boolean {
-  return (
-    role === 'head_of_government' ||
-    role === 'foreign_minister' ||
-    role === 'economy_minister' ||
-    role === 'security_minister'
-  )
-}
-
-export function getMinisterialRoles(character: CharacterWithId): MinisterPosition[] {
-  return character.positions.filter((e) => isMinisterialRole(e)) as MinisterPosition[]
-}
-
-export function isOfficerRole(role: Position): boolean {
-  return (
-    role === 'high_command' ||
-    role === 'army_chief' ||
-    role === 'navy_chief' ||
-    role === 'air_chief' ||
-    role === 'theorist'
-  )
-}
-
-export function getOfficerRole(character: CharacterWithId): MilitaryPosition[] {
-  return character.positions.filter((e) => isOfficerRole(e)) as MilitaryPosition[]
 }
 
 export function buildCharacterToken(character: CharacterWithId): string {
