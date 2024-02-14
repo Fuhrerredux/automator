@@ -24,7 +24,6 @@ onMounted(async () => {
 
   themeStore.fetch()
   settingsStore.fetch()
-  configStore.import()
 
   const directory = localStorage.getItem('directory')
   if (directory) {
@@ -40,6 +39,8 @@ onMounted(async () => {
       $toast.error(t('error.generic-dir-read'))
     }
   }
+
+  configStore.import() // last so it doesnt fire unneeded errors
 })
 </script>
 

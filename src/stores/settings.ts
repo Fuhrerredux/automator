@@ -5,6 +5,7 @@ type AppSettings = {
   positionPrevention: boolean
   optionLogging: boolean
   language: string
+  ideologiesType: number // instead of making 3 options, make one on which value is returned based on the number
 }
 
 const useSettingsStore = defineStore({
@@ -15,6 +16,7 @@ const useSettingsStore = defineStore({
       positionPrevention: false,
       optionLogging: true,
       language: 'en',
+      ideologiesType: 0,
     };
   },
   actions: {
@@ -76,8 +78,15 @@ const useSettingsStore = defineStore({
       (this.$state[setting] as boolean) = (value as boolean);
       this.save();
     },
+    updateNumericalSetting(setting: keyof AppSettings, value: number) {
+      (this.$state[setting] as number) = (value as number);
+      this.save();
+    },
     getSetting(setting: keyof AppSettings): boolean {
       return this.$state[setting] as boolean;
+    },
+    getNumericalSetting(setting: keyof AppSettings): number {
+      return this.$state[setting] as number;
     },
   },
 });

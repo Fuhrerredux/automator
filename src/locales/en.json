@@ -16,7 +16,13 @@
     "header": "Settings",
     "position-prevention": "Prevent an officer from having more than 1 role at a time.",
     "custom-config": "Use custom configuration",
-    "option-logging": "Add log statements on options as well as events."
+    "option-logging": "Add log statements on options as well as events.",
+    "predefined-ideology-label": "Presets",
+    "ideologies": {
+      "fx-ideologies": "FX Preset",
+      "kr-ideologies": "KR Preset",
+      "vanilla-ideologies": "Vanilla Preset"
+    }
   },
   "field": {
     "tag": "Country Tag",
