@@ -124,10 +124,6 @@ declare global {
     kind: string
     message: string
   }
-
-  type CustomConfig = {
-    ideologies: Record<string, string>
-  }
 }
 
 declare module 'vue' {
