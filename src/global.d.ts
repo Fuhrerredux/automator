@@ -1,7 +1,5 @@
 import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
-import type { FileEntry } from '@tauri-apps/api/fs'
-import { forEachChild } from 'typescript'
 
 declare global {
   namespace NodeJS {
@@ -111,7 +109,7 @@ declare global {
     directory: string
     res: string
   }
-  
+
   type SpriteEntry = {
     name: string;
     texturefile: string;
