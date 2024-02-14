@@ -1,13 +1,14 @@
-export const ideologies = [
-  { label: 'ideology.vanguardist', value: 'vanguardist' },
-  { label: 'ideology.collectivist', value: 'collectivist' },
-  { label: 'ideology.libertarian_socialist', value: 'libertarian_socialist' },
-  { label: 'ideology.social_democrat', value: 'social_democrat' },
-  { label: 'ideology.social_liberal', value: 'social_liberal' },
-  { label: 'ideology.market_liberal', value: 'market_liberal' },
-  { label: 'ideology.social_conservative', value: 'social_conservative' },
-  { label: 'ideology.authoritarian_democrat', value: 'authoritarian_democrat' },
-  { label: 'ideology.paternal_autocrat', value: 'paternal_autocrat' },
-  { label: 'ideology.national_populist', value: 'national_populist' },
-  { label: 'ideology.valkist', value: 'valkist' }
-]
+const defaultIdeologies: Record<string, Omit<Automator.Ideology, 'key'>> = {
+  vanguardist: { name: 'Vanguardist', short: 'van' },
+  collectivist: { name: 'Collectivist', short: 'col' },
+  libertarian_socialist: { name: 'Libertarian Socialist', short: 'lib' },
+  social_democrat: { name: 'Social Democrat', short: 'sde' },
+  social_liberal: { name: 'Social Liberal', short: 'sli' },
+  market_liberal: { name: 'Market Liberal', short: 'mli' },
+  social_conservative: { name: 'Social Conservative', short: 'sco' },
+  authoritarian_democrat: { name: 'Authoritarian Democrat', short: 'ade' },
+  paternal_autocrat: { name: 'Paternal Autocrat', short: 'pau' },
+  national_populist: { name: 'National Populist', short: 'npo' },
+  valkist: { name: 'Valkist', short: 'val' }
+}
+export default defaultIdeologies

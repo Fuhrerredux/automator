@@ -11,7 +11,7 @@ const loading = ref(false)
 
 const { purgeFn } = defineProps<{
   open: boolean
-  purgeFn: () => Promise<TauriStatus>
+  purgeFn: () => Promise<Tauri.Broadcast>
 }>()
 const emits = defineEmits(['hide'])
 

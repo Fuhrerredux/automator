@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
+import useConfiguration from '@/stores/config'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
@@ -14,6 +15,7 @@ const { t } = useI18n()
 const $toast = useToast()
 const loading = ref(false)
 const modStore = useModStore()
+const { config } = useConfiguration()
 const characterStore = useCharacterStore()
 const { characters } = storeToRefs(characterStore)
 
@@ -33,7 +35,7 @@ async function triggerExports() {
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
-    await exportCharacters(data, common.path)
+    await exportCharacters(data, common.path, config)
 
     loading.value = false
     $toast.success(t('status.characters-exported'))

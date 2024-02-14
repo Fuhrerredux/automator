@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import router from '@/router'
+import useConfiguration from '@/stores/config'
 import DropZone from '@components/drop-zone.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
@@ -18,6 +19,7 @@ const files = ref<File[]>([])
 const loading = ref(false)
 const characters = ref<Record<string, any>[]>([])
 const { importData } = useImportStore()
+const { config } = useConfiguration()
 
 defineProps<{
   open: boolean
@@ -28,18 +30,10 @@ async function onFileSelected(dropped: File) {
   files.value = [dropped]
   const content = await readFileObject(dropped)
 
-  console.log('Dropped File:', dropped);
-  console.log('File name:', dropped.name);
-  console.log('File size:', dropped.size);
-  console.log('File type:', dropped.type);
-
-  const fileExtension = dropped.name.split('.').pop()?.toLowerCase();
-  if (fileExtension === 'yml' || fileExtension === 'yaml') {
-    console.log('HI')
-    characters.value = readLocalisationFile(content)
+  if (dropped.type === 'application/x-yaml') {
+    characters.value = readLocalisationFile(content, config)
   } else if (dropped.type === 'text/plain') {
-    console.log(characters)
-    characters.value = readCharacterFile(content)
+    characters.value = readCharacterFile(content, config)
   }
 }
 

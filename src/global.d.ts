@@ -1,7 +1,5 @@
 import type { Component } from 'vue'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
-import type { FileEntry } from '@tauri-apps/api/fs'
-import { forEachChild } from 'typescript'
 
 declare global {
   namespace NodeJS {
@@ -10,10 +8,30 @@ declare global {
     }
   }
 
-  type Theme = 'light' | 'dark' | 'auto'
-  type ThemeResource = {
-    theme: Theme
-    change: (current: Theme) => void
+  namespace Tauri {
+    interface Broadcast {
+      kind: string
+      message: string
+    }
+  }
+  namespace UserInterface {
+    type Theme = 'light' | 'dark' | 'auto'
+    type TabData = {
+      panel: Component
+      label: string
+    }
+  }
+  namespace Automator {
+    type Definition = { key: string; name: string; short: string }
+    type Ideology = Definition
+    type Position = Definition
+    type Configuration = {
+      ideologies: Record<string, Omit<Ideology, 'key'>>
+      positions: Record<string, Omit<Position, 'key'>>
+      character: {
+        defaultCost: number
+      }
+    }
   }
 
   type KeyOfType<T, V> = keyof {
@@ -27,18 +45,8 @@ declare global {
   }
   type DropdownOption<T> = { label: string; value: T }
 
-  type ModStore = {
-    directory: string
-    entries: FileEntry[]
-  }
-  type TraitsStore = {
-    traits: Record<Position, string[]>
-    files: FileEntry[]
-    trait: string | null
-  }
-
   type CommandingRole = 'marshal' | 'general' | 'admiral' | 'officer'
-  type CharacterRole = CommandingRole | 'leader' | 'minister'
+  type CharacterRole = CommandingRole | 'leader' | 'advisor'
   type MinisterPosition =
     | 'head_of_government'
     | 'foreign_minister'
@@ -50,26 +58,43 @@ declare global {
     name: string
     tag: string
     ideology: string | null
-    positions: Position[]
-    leaderTraits: string[]
-    leaderIdeologies: string[]
+    leaderRoles: CountryLeader[]
+    advisorRoles: Advisor[]
     commanderTraits: string[]
-    ministerTraits: Record<MinisterPosition, string>
-    officerTraits: Record<MilitaryPosition, string>
     roles: CharacterRole[]
-    cost: number
   }
   type CharacterWithId = Character & { id: string }
+  type CharacterForm = {
+    ideology: Automator.Ideology | string | null
+    commanderRole: DropdownOption<CommandingRole> | null
+    commanderTraits: string[]
+    advisorRoles: Advisor[]
+
+    addLeaderRole: boolean
+    addCommanderRole: boolean
+    addAdvisorRole: boolean
+  } & Pick<Character, 'name' | 'tag' | 'leaderRoles'>
+  type CountryLeader = {
+    subideology: string
+    trait: string
+  }
+  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: Automator.Ideology }
+  type Commander = {
+    type: CommandingRole
+    traits: string
+  }
+  type Advisor = {
+    slot: string
+    hirable: boolean
+    removeable: boolean
+    trait: string
+    cost: number
+  }
   type Sprite = {
     name: string
     path: string
     file?: string
     exists?: boolean
-  }
-
-  type TabData = {
-    panel: Component
-    label: string
   }
 
   type AnalyzeData = {
@@ -83,25 +108,6 @@ declare global {
     property: string
     directory: string
     res: string
-  }
-
-  type SpriteEntry = {
-    name: string;
-    texturefile: string;
-  }
-
-  type SpriteEntryWithTag = SpriteEntry & {
-    tag?: string;
-    tagIndex?: number;
-  }
-
-  type TauriStatus = {
-    kind: string
-    message: string
-  }
-
-  type CustomConfig = {
-    ideologies: Record<string, string>
   }
 }
 

@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
 import { readDir } from '@tauri-apps/api/fs'
+import type { FileEntry } from '@tauri-apps/api/fs'
+
+type ModStore = {
+  directory: string
+  entries: FileEntry[]
+}
 
 const useModStore = defineStore({
   id: 'mod',

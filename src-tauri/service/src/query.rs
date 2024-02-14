@@ -1,10 +1,10 @@
-use ::entity::{characters, characters::Entity as Character};
+use ::entity::{character, character::Entity as Character};
 use sea_orm::*;
 
 pub struct Query;
 
 impl Query {
-  pub async fn find_character_by_id(db: &DbConn, id: String) -> Result<Option<characters::Model>, DbErr> {
+  pub async fn find_character_by_id(db: &DbConn, id: String) -> Result<Option<character::Model>, DbErr> {
     Character::find_by_id(id).one(db).await
   }
 
@@ -13,10 +13,10 @@ impl Query {
     db: &DbConn,
     page: u64,
     chars_per_page: u64,
-) -> Result<(Vec<characters::Model>, u64), DbErr> {
+) -> Result<(Vec<character::Model>, u64), DbErr> {
     // Setup paginator
     let paginator = Character::find()
-      .order_by_asc(characters::Column::Id)
+      .order_by_asc(character::Column::Id)
       .paginate(db, chars_per_page);
     let num_pages = paginator.num_pages().await?;
 

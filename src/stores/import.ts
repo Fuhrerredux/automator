@@ -25,20 +25,17 @@ const useImportStore = defineStore({
           toUpdate.push(character)
         }
         this.characters = toUpdate
-        return { kind: 'success', message: 'Upsert successful' };
+        return { kind: 'success', message: 'Upsert successful' }
       } catch (error) {
-        console.error("Error in upsert:", error);
-        return { kind: 'error', message: 'Upsert failed' };
+        console.error('Error in upsert:', error)
+        return { kind: 'error', message: 'Upsert failed' }
       }
+      this.characters = toUpdate
+      return { kind: 'success', message: 'character.imported' }
     },
-    async remove(character: CharacterWithId): Promise<TauriStatus> {
-      try {
-        this.characters = this.characters.filter((e) => e.id !== character.id)
-        return { kind: 'success', message: 'Removal successful' };
-      } catch (error) {
-        console.error("Error in remove:", error);
-        return { kind: 'error', message: 'Removal failed' };
-      }
+    async remove(character: CharacterWithId) {
+      this.characters = this.characters.filter((e) => e.id !== character.id)
+      return { kind: 'success', message: 'character.removed' }
     },
     importData(imports: Record<string, any>[]) {
       this.characters = imports.map((e) => ({ ...e, id: nanoid() }) as CharacterWithId)

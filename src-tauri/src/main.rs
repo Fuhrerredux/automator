@@ -12,7 +12,7 @@ use service::{
   sea_orm::{Database,DatabaseConnection},
   Mutation as MutationCore, Query as QueryCore
 };
-use entity::characters;
+use entity::character;
 
 #[tokio::main]
 async fn main() {
@@ -55,21 +55,22 @@ async fn main() {
       update_character,
       delete_character,
       purge_characters,
-      list_characters
+      list_characters,
+      get_character
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
 
 #[tauri::command]
-async fn create_character(state: tauri::State<'_, AppState>, form: characters::Model) -> Result<FlashData, ()> {
+async fn create_character(state: tauri::State<'_, AppState>, form: character::Model) -> Result<Broadcast, ()> {
   let _ = &state.conn;
 
   MutationCore::create_character(&state.conn, form)
     .await
     .expect("could not insert character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.created".to_owned()
   };
@@ -80,13 +81,13 @@ async fn create_character(state: tauri::State<'_, AppState>, form: characters::M
 async fn update_character(
   state: tauri::State<'_, AppState>,
   id: String,
-  form: characters::Model
-)-> Result<FlashData, ()> {
+  form: character::Model
+)-> Result<Broadcast, ()> {
   MutationCore::update_character_by_id(&state.conn, id, form)
     .await
     .expect("could not edit character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.updated".to_owned(),
   };
@@ -98,12 +99,12 @@ async fn update_character(
 async fn delete_character(
   state: tauri::State<'_, AppState>,
   id: String,
-) -> Result<FlashData, ()> {
+) -> Result<Broadcast, ()> {
   MutationCore::delete_character(&state.conn, id)
     .await
     .expect("could not delete character");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.removed".to_owned(),
   };
@@ -114,12 +115,12 @@ async fn delete_character(
 #[tauri::command]
 async fn purge_characters(
   state: tauri::State<'_, AppState>,
-) -> Result<FlashData, ()> {
+) -> Result<Broadcast, ()> {
   MutationCore::delete_all_characters(&state.conn)
     .await
     .expect("could not purge all characters");
 
-  let data = FlashData {
+  let data = Broadcast {
     kind: "success".to_owned(),
     message: "status.character.purged".to_owned()
   };
@@ -130,8 +131,8 @@ async fn purge_characters(
 #[tauri::command]
 async fn list_characters(
   state: tauri::State<'_, AppState>,
-  params: Params,
-) -> Result<Vec<characters::Model>, ()> {
+  params: ListParams,
+) -> Result<Vec<character::Model>, ()> {
   let page = params.page.unwrap_or(1);
   let characters_per_page = params.characters_per_page.unwrap_or(5);
 
@@ -144,19 +145,36 @@ async fn list_characters(
   Ok(chars)
 }
 
+#[tauri::command]
+async fn get_character(
+  state: tauri::State<'_, AppState>,
+  params: GetParams
+) -> Result<character::Model, ()> {
+  let id = params.id;
+  let character = QueryCore::find_character_by_id(&state.conn, id).await.expect("Cannot find character");
+  let data = character.unwrap();
+
+  Ok(data)
+}
+
 #[derive(Clone)]
 struct AppState {
   conn: DatabaseConnection
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
-struct FlashData {
+struct Broadcast {
   kind: String,
   message: String,
 }
 
 #[derive(Deserialize)]
-struct Params {
+struct ListParams {
   page: Option<u64>,
   characters_per_page: Option<u64>,
 }
+
+#[derive(Deserialize)]
+struct GetParams {
+  id: String
+} 

@@ -1,80 +1,60 @@
-import { buildToken } from '@shared/core/data'
-
-const ideologies: string[] = [
-  'vanguardist',
-  'collectivist',
-  'libertarian_socialist',
-  'social_democrat',
-  'social_liberal',
-  'market_liberal',
-  'social_conservative',
-  'authoritarian_democrat',
-  'paternal_autocrat',
-  'national_populist',
-  'valkist'
-]
-
-export function getIdeologyToken(ideology: string): string {
-  return buildToken(ideology)
-}
-
-export function getIdeologySuffix(ideology: string): string {
-  switch (ideology) {
-    case 'vanguardist':
-      return 'van'
-    case 'collectivist':
-      return 'col'
-    case 'libertarian_socialist':
-      return 'lib'
-    case 'social_democrat':
-      return 'sde'
-    case 'social_liberal':
-      return 'sli'
-    case 'market_liberal':
-      return 'mli'
-    case 'social_conservative':
-      return 'sco'
-    case 'authoritarian_democrat':
-      return 'ade'
-    case 'paternal_autocrat':
-      return 'pau'
-    case 'national_populist':
-      return 'npo'
-    case 'valkist':
-      return 'val'
-    default: return ''
+/**
+ * Function used to get the ideology from the definitions
+ * in the configuration object.
+ *
+ * @param key the ideology key
+ * @param config the configuration object from the useConfigurationStore
+ * @returns the ideology
+ */
+export function getIdeology(
+  key: string | null,
+  config: Automator.Configuration
+): Automator.Ideology | null {
+  if (key) {
+    const ideology = config.ideologies[key]
+    if (ideology) return { ...ideology, key }
   }
+  return null
 }
 
-export function isIdeologyToken(ideology: string) {
-  return ideologies.includes(ideology)
+/**
+ * Function used to get the ideology suffix or the short name from the
+ * definitions in the configuration object.
+ *
+ * @param key the ideology key
+ * @param config the configuration object from the useConfigurationStore
+ * @returns the ideology suffix
+ */
+export function getIdeologySuffix(key: string | null, config: Automator.Configuration): string {
+  return getIdeology(key, config)?.short ?? ''
 }
 
-export function parseIdeology(ideology: string | null | undefined): string | null {
-  switch (ideology) {
-    case 'van':
-      return 'vanguardist'
-    case 'col':
-      return 'collectivist'
-    case 'lib':
-      return 'libertarian_socialist'
-    case 'sde':
-      return 'social_democrat'
-    case 'sli':
-      return 'social_liberal'
-    case 'mli':
-      return 'market_liberal'
-    case 'sco':
-      return 'social_conservative'
-    case 'ade':
-      return 'authoritarian_democrat'
-    case 'pau':
-      return 'paternal_autocrat'
-    case 'npo':
-      return 'national_populist'
-    case 'val':
-      return 'valkist'
-    default:
-      return null
-  }
+/**
+ * Function used to check whether the ideology key provided is part
+ * on the ideology definitions in the configuration.
+ *
+ * @param ideology the ideology key
+ * @param config the configuration object from the useConfigurationStore
+ * @returns the ideology suffix
+ */
+export function isIdeologyToken(ideology: string, config: Automator.Configuration): boolean {
+  return Object.keys(config.ideologies).includes(ideology)
+}
+
+/**
+ * Function used to parse the ideology shortname to the ideology
+ * object
+ *
+ * @param ideology the ideology short name
+ * @param config the configuration object from the useConfigurationStore
+ * @returns the ideology key
+ */
+export function getIdeologyKeyFromShort(
+  short: string | null | undefined,
+  config: Automator.Configuration
+): string | null {
+  const ideology = Object.entries(config.ideologies).find(([_, value]) => value.short === short)
+  if (ideology) return ideology[0]
+
+  return null
 }

@@ -4,9 +4,9 @@ import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
-import { getPositionSuffix, isCivilianPosition, isMilitaryPosition } from '@shared/utils/position'
+import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
-import { loadCountryTags, readSpriteDefinitions, countryTags } from './reader'
+import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -19,7 +19,7 @@ function buildSmallPortraitPath(name: string, tag: string) {
 
 function definePortraits(character: CharacterWithId): string {
   const { name, tag, roles } = character
-  const hasCivillian = roles.includes('leader') || roles.includes('minister')
+  const hasCivillian = roles.includes('leader') || roles.includes('advisor')
   const hasArmy = roles.includes('marshal') || roles.includes('general')
   const hasArmyWithOfficer = hasArmy || roles.includes('officer')
   const hasNavy = roles.includes('admiral')
@@ -30,7 +30,7 @@ function definePortraits(character: CharacterWithId): string {
 
     if (roles.includes('leader'))
       template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
-    if (roles.includes('minister'))
+    if (roles.includes('advisor'))
       template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
 
     template = template.concat('\n\t\t\t}')
@@ -61,12 +61,12 @@ function definePortraits(character: CharacterWithId): string {
 
 function defineCountryLeader(character: CharacterWithId): string {
   const roles: string[] = []
-  const ideologies = Array.from(new Set(character.leaderIdeologies))
-  ideologies.forEach((ideology) => {
+
+  Array.from(new Set(character.leaderRoles)).forEach((e) => {
     roles.push(`\n\t\tcountry_leader = {
-      ideology = ${ideology}_subtype
+      ideology = ${e.subideology}_subtype
       traits = {
-        ${character.leaderTraits.join('\n')}
+        ${e.trait}
       }
     }`)
   })
@@ -109,89 +109,44 @@ function defineCommandingRole(character: CharacterWithId): string {
   return ''
 }
 
-function defineMinisterialRole(character: CharacterWithId): string {
-  const { positions, ministerTraits, cost } = character
-  const token = `${buildCharacterToken(character)}`
+function defineAdvisorRole(character: CharacterWithId, config: Automator.Configuration): string {
+  const { advisorRoles } = character
+  const token = buildCharacterToken(character)
 
-  let advisor = ''
-  const ministerPositions = positions.filter((e) => isCivilianPosition(e))
-  ministerPositions.forEach((position) => {
+  let advisors = ''
+  advisorRoles.forEach((advisor) => {
     const ideology = character.ideology
-    const trait = ministerTraits[position as MinisterPosition]
-    const suffix = ideology ? getIdeologySuffix(ideology) : ''
-    const idea = `${token}_${getPositionSuffix(position)}_${suffix}`
+    const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
+    const position = advisor.slot as unknown as Automator.Position
+    const ideaToken = `${token}_${getPositionSuffix(position, config)}_${suffix}`
 
-    const template = `\n\t\tadvisor = {
-      cost = ${cost}
-      slot = ${position}
-      available = { 
-        hidden_trigger = { has_country_flag = ${idea}_hired }
+    let template = `\n\t\tadvisor = {
+      cost = ${advisor.cost}
+      slot = ${advisor.slot}
+      idea_token = ${ideaToken}`
+    if (advisor.hirable) {
+      template = template.concat(`\n\t\t\tavailable = {
+        ROOT = { has_country_flag = ${ideaToken}_hired } 
       }
-      idea_token = ${idea}
-      can_be_fired = no
       on_add = {
-        ROOT = { set_country_flag = ${idea}_hired }
+        ROOT = { set_country_flag = ${ideaToken}_hired }
       }
       on_remove = {
-        ROOT = { clr_country_flag = ${idea}_hired }
-      }
-      traits = {
-        ${ideology}
-        ${trait}
-      }
-    }`
-    advisor = advisor.concat(template)
+        ROOT = { clr_country_flag = ${ideaToken}_hired }
+      }`)
+    }
+    if (advisor.removeable) template = template.concat(`\n\t\t\tcan_be_fired = no`)
+    template = template.concat(`\n\t\t\ttraits = {
+        ${character.ideology}
+        ${advisor.trait}
+      }`)
+    advisors = advisors.concat(template)
   })
 
-  return advisor
+  return advisors
 }
 
-function defineOfficerRole(character: CharacterWithId): string {
-  const { positions, officerTraits, cost } = character
-  const token = `${buildCharacterToken(character)}`
-  const positionPrevention = useSettingsStore().$state.positionPrevention
-
-  let advisor = ''
-  const officerPositions = positions.filter((e) => isMilitaryPosition(e))
-
-  officerPositions.forEach((position, index) => {
-    const trait = officerTraits[position as MilitaryPosition]
-    const idea = `${token}_${getPositionSuffix(position)}`
-    const hasMoreThanOneRoles = officerPositions.length > 1 && !positionPrevention
-
-    // Add the position to the new array
-    const allOtherPositions = officerPositions.filter((_, i) => i !== index)
-
-    const availableBlock = hasMoreThanOneRoles
-      ? `available = {\n${allOtherPositions.map((otherPosition) => `        is_${otherPosition} = no`).join('\n')}\n      }`
-      : ''
-
-    // Add available block inline before traits conditionally
-    const templateWithAvailable = `\n\t\tadvisor = {
-      cost = ${cost}
-      slot = ${position}
-      idea_token = ${idea}
-      ${availableBlock}
-      traits = {
-        ${trait}
-      }
-    }`
-
-    advisor = advisor.concat(templateWithAvailable)
-  })
-  const lines = advisor.split('\n')
-  advisor =
-    lines[0] +
-    '\n' +
-    lines
-      .slice(1)
-      .filter((line) => line.trim() !== '')
-      .join('\n')
-
-  return advisor
-}
-
-export function writeCharacter(characters: CharacterWithId[]) {
+export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
   let content: string = ''
   for (const character of characters) {
     const portraits = definePortraits(character)
@@ -205,26 +160,28 @@ ${portraits}
 
     const leaders = defineCountryLeader(character)
     const commanding = defineCommandingRole(character)
-    const minister = defineMinisterialRole(character)
-    const officer = defineOfficerRole(character)
+    const minister = defineAdvisorRole(character, config)
 
     if (hasLeaderRole && leaders.trim().length > 0) data = data.concat(leaders)
     if (commanding.trim().length > 0) data = data.concat(commanding)
     if (minister.trim().length > 0) data = data.concat(minister)
-    if (officer.trim().length > 0) data = data.concat(officer)
 
-    data = data.concat('\n\t}\n')
+    data = data.concat('\n\t\t}\n\t}')
     content = content.concat(data)
   }
 
   return content
 }
 
-export async function exportCharacters(characters: CharacterWithId[], destination: string) {
+export async function exportCharacters(
+  characters: CharacterWithId[],
+  destination: string,
+  config: Automator.Configuration
+) {
   if (Array.isArray(characters)) {
     const grouped = groupBy(characters, 'tag')
     for (const [key, value] of Object.entries(grouped)) {
-      const content = writeCharacter(value)
+      const content = writeCharacter(value, config)
       const template = ` # Characters for ${key}
 characters = {
 ${content}
@@ -387,128 +344,4 @@ export async function appendToHistory(characters: CharacterWithId[], destination
       await writeTextFile(path, content)
     }
   }
-}
-
-export async function appendCharacterLocalisation(
-  characters: CharacterWithId[],
-  path: string,
-  content: string
-): Promise<void> {
-  if (Array.isArray(characters)) {
-    const group = groupBy(characters, 'tag')
-    let data = ''
-    const commonDir = useModStore().getCommonDirectory
-    for (const [_, value] of Object.entries(group)) {
-      for (const character of value) {
-        console.log(useModStore().getCommonDirectory)
-        console.log(character.tag)
-        const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
-        const token = buildCharacterToken(character)
-        if (!content.includes(`${token}: "${character.name}"`)) {
-          data = data.concat(`  ${token}: "${character.name}"\n`)
-        }
-        const charContent = await readTextFile(characterPath)
-        const lines = charContent.split('\n')
-        const newcharContent: string[] = []
-        lines.forEach((line, _) => {
-          let nLine = line
-          if (/\bname\b/.test(line)) {
-            nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
-          }
-          newcharContent.push(nLine)
-        })
-        const result = newcharContent.join('\n')
-        try {
-          await writeTextFile(characterPath, result)
-        } catch (error) {
-          console.error(`Error writing file ${characterPath}: ${error}`)
-          throw error
-        }
-      }
-    }
-    if (data !== '') {
-      const comment = '\n\n### Generated Character Names ###\n'
-      content = content.concat(`${comment}\n${data}`)
-      try {
-        await writeTextFile(path, content)
-      } catch (error) {
-        console.error(`Error writing file ${path}: ${error}`)
-        throw error
-      }
-    }
-  }
-}
-
-export async function fixSprites(path: string, content: string): Promise<void> {
-  await loadCountryTags(`${useModStore().getCommonDirectory?.path}/country_tags/00_countries.txt`)
-  const spriteTypes: SpriteEntryWithTag[] = extractSpriteTypes(content)
-
-  assignTagIndexes(spriteTypes)
-
-  sortSpriteTypes(spriteTypes)
-
-  const spriteTypesBlock = generateSpriteTypesBlock(spriteTypes)
-
-  try {
-    await writeTextFile(path, spriteTypesBlock)
-    console.log('Sprites have been fixed and written to file successfully.')
-  } catch (error) {
-    console.error('Error occurred while writing sprites to file:', error)
-  }
-}
-
-function assignTagIndexes(spriteTypes: SpriteEntryWithTag[]): void {
-  spriteTypes.forEach((sprite) => {
-    const tagIndex = sprite.tag ? countryTags.indexOf(sprite.tag) : -1
-    sprite.tagIndex = tagIndex !== -1 ? tagIndex : countryTags.length
-  })
-}
-
-function sortSpriteTypes(spriteTypes: SpriteEntryWithTag[]): void {
-  spriteTypes.sort((a, b) => {
-    if (a.tagIndex !== b.tagIndex) {
-      return a.tagIndex! - b.tagIndex!
-    } else {
-      return a.name.localeCompare(b.name)
-    }
-  })
-}
-
-function extractSpriteTypes(content: string): SpriteEntryWithTag[] {
-  const regex: RegExp = /spriteType\s*=\s*{\s*name\s*=\s*"(.*?)".+?texturefile\s*=\s*"(.*?)"/gis
-  const spriteTypes: SpriteEntryWithTag[] = []
-  const existingSpriteTypes: Set<string> = new Set()
-
-  let match: RegExpExecArray | null
-  while ((match = regex.exec(content)) !== null) {
-    const name = match[1]
-    const texturefile = match[2]
-    const spriteKey = name + texturefile
-
-    if (!existingSpriteTypes.has(spriteKey)) {
-      const tag = extractTagFromName(name)
-      spriteTypes.push({ name, texturefile, tag })
-      existingSpriteTypes.add(spriteKey)
-    }
-  }
-
-  return spriteTypes
-}
-
-function extractTagFromName(name: string): string | undefined {
-  const match = name.match(/(?:ideas_|goals_|focus_)([A-Z]{3})/)
-  return match ? match[1] : undefined
-}
-
-function generateSpriteTypesBlock(spriteTypes: SpriteEntry[]): string {
-  const sprites: string[] = spriteTypes.map(({ name, texturefile }) => {
-    return `\tspriteType = {
-        name = "${name}"
-        texturefile = "${texturefile}"
-    }`
-  })
-
-  return `spriteTypes = {
-${sprites.join('\n')}
-}`
 }

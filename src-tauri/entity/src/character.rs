@@ -4,21 +4,17 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "characters")]
+#[sea_orm(table_name = "character")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
     pub name: String,
     pub tag: String,
     pub ideology: Option<String>,
-    pub positions: Option<String>,
-    pub leader_traits: Option<String>,
-    pub leader_ideologies: Option<String>,
+    pub leader_roles: Option<String>,
     pub commander_traits: Option<String>,
-    pub minister_traits: Option<String>,
-    pub officer_traits: Option<String>,
+    pub advisor_roles: Option<String>,
     pub roles: Option<String>,
-    pub cost: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -11,7 +11,7 @@ const themeStore = useThemeStore()
 const { theme } = storeToRefs(themeStore)
 const { change } = themeStore
 
-const themes: Theme[] = ['light', 'dark', 'auto']
+const themes: UserInterface.Theme[] = ['light', 'dark', 'auto']
 </script>
 
 <template>

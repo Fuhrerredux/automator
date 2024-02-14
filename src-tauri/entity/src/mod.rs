@@ -2,4 +2,4 @@
 
 pub mod prelude;
 
-pub mod characters;
+pub mod character;
