@@ -1,44 +1,31 @@
-<script
-  setup
-  lang="ts"
-  generic="
-    V extends string | number | boolean | object | null | undefined,
-    I extends object | string
-  ">
-import { computed } from 'vue'
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import useKeys from '@composables/use-keys'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
-const props = defineProps<{
-  options: I[]
-  valueKey: KeyOfType<I, V> | ((item: I) => V)
-  displayKey: keyof I | ((item: I) => string)
-  modelValue: V
+defineProps<{
+  options: UserInterface.DataOption[]
+  modelValue: UserInterface.DataOption | undefined | null
   disabled?: boolean
   localise?: boolean
   multiple?: boolean
 }>()
 defineEmits<{
-  (e: 'update:modelValue', value: V): void
+  (e: 'update:modelValue', value: UserInterface.DataOption): void
 }>()
-const { valueFunc, displayFunc } = useKeys<V, I>(props)
-
-const item = computed(() => props.options.find((i) => valueFunc(i) === props.modelValue))
 </script>
 
 <template>
   <listbox
-    :model-value="item"
+    :model-value="modelValue"
     :disabled="disabled"
-    @update:model-value="$emit('update:modelValue', valueFunc($event))"
+    @update:model-value="$emit('update:modelValue', $event)"
     as="div"
     class="relative">
     <listbox-button class="dropdown-button w-full">
       <span class="flex-1 text-left truncate">
-        {{ item ? t(displayFunc(item)) : t('placeholder.dropdown') }}
+        {{ modelValue ? modelValue.label : t('placeholder.dropdown') }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
     </listbox-button>
@@ -51,13 +38,13 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option
+          as="template"
           v-for="option in options"
           v-slot="{ selected }"
-          :value="option"
-          as="template">
-          <li :key="String(valueFunc(option))" class="dropdown-option truncate">
+          :value="option">
+          <li :key="option.value" class="dropdown-option truncate">
             <span>
-              {{ localise ? t(displayFunc(option)) : displayFunc(option) }}
+              {{ localise ? t(option.label) : option.label }}
             </span>
             <span
               v-if="selected"

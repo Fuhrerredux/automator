@@ -1,45 +1,29 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useSettingsStore from '@/stores/settings'
+import Dropdown from '@components/dropdown.vue'
 import Page from '@components/page.vue'
 import SwitchButton from '@components/switch.vue'
-import { ref } from 'vue'
-import Dropdown from '@components/dropdown.vue'
-import useConfigurationPresets from '@shared/const/settings'
-import { relaunch } from '@tauri-apps/api/process';
-import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import { removeFile, BaseDirectory } from '@tauri-apps/api/fs'
+import predefinedConfigurations from '@shared/const/config'
+import useConfiguration from '@stores/config'
 
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
+const configurationStore = useConfiguration()
 
-const options = ref<{
-  id: number;
-  name: string;
-}[]>([
-  { id: 0, name: t('settings.ideologies.fx-ideologies') },
-  { id: 1, name: t('settings.ideologies.kr-ideologies') },
-  { id: 2, name: t('settings.ideologies.vanilla-ideologies') }
-])
+const config = ref(predefinedConfigurations[0])
 
-const selectedOption = ref<number>(
-  settingsStore.getNumericalSetting('ideologiesType')
-)
-
-const updateSelectedOption = async (val: number) => {
-  await useConfigurationPresets(val)
-  settingsStore.updateNumericalSetting('ideologiesType', val)
+const handleConfiguration = (value: boolean) => {
+  settingsStore.toggleCustomConfig()
+  if (!value) configurationStore.revert()
 }
 
-async function reloadApplication() {
-  await relaunch()
+const handleConfigurationChange = (value: DropdownOption<string>) => {
+  settingsStore.updatePreference('predefinedConfiguration', value.value)
+  configurationStore.change(value.value)
+  config.value = value
 }
-
-async function deleteDatabase() {
-  await reloadApplication()
-  await removeFile('.automator/data/db.sqlite', { dir: BaseDirectory.Home})
-}
-
 </script>
 
 <template>
@@ -49,49 +33,39 @@ async function deleteDatabase() {
     </div>
     <div class="space-y-4 mt-4">
       <section class="space-y-4">
-        <h2 class="text-sm font-medium uppercase">Character Settings</h2>
+        <h2 class="section-header">{{ t('settings.character') }}</h2>
         <switch-button
-        :checked="settingsStore.getPositionPrevention()"
-        :label="t('settings.position-prevention')"
-        @update:model-value="settingsStore.togglePositionPrevention" />
+          :checked="settingsStore.getPositionPrevention()"
+          :label="t('settings.position-prevention')"
+          @update:model-value="settingsStore.togglePositionPrevention" />
       </section>
       <section class="space-y-4">
-        <h2 class="text-sm font-medium uppercase">Logging Settings</h2>
+        <h2 class="section-header">{{ t('settings.logging') }}</h2>
         <switch-button
           :checked="settingsStore.getOptionLogging()"
           :label="t('settings.option-logging')"
-          @update:model-value="settingsStore.toggleOptionLogging"
-        />
+          @update:model-value="handleConfiguration" />
       </section>
       <section class="space-y-4">
-        <h2 class="text-sm font-medium uppercase">Configuration</h2>
+        <h2 class="section-header">{{ t('settings.configuration') }}</h2>
         <switch-button
           :checked="settingsStore.getCustomConfig()"
           :label="t('settings.custom-config')"
-          @update:model-value="settingsStore.toggleCustomConfig"
-        />
-        <h3 class="ml-2 text-sm font-medium">{{ t('settings.predefined-ideology-label') }}</h3>
-          <dropdown
-            :options="options"
-            localise
-            :value-key="(item) => item.id"
-            :display-key="'name'"
-            v-model="selectedOption"
-            @update:model-value="updateSelectedOption"
-          />
-      </section>
-      <section class="space-y-4">
-        <div class="dialog-actions">
-          <button type="button" class="button-destructive flex" @click="reloadApplication()">
-            <exclamation-triangle-icon class="h-6 w-6 mr-2" />
-            Reload Application
-          </button>
-          <button type="button" class="button-destructive flex" @click="deleteDatabase()">
-            <exclamation-triangle-icon class="h-6 w-6 mr-2" />
-            Delete Database
-          </button>
+          @update:model-value="settingsStore.toggleCustomConfig" />
+        <div className="flex items-center gap-4" v-if="settingsStore.getCustomConfig()">
+          <legend class="text-sm shrink-0 font-medium">
+            {{ t('settings.predefined-configs') }}
+          </legend>
+          <div class="flex-1">
+            <dropdown
+              localise
+              :options="predefinedConfigurations"
+              v-model="config"
+              @update:model-value="handleConfigurationChange" />
+          </div>
         </div>
       </section>
     </div>
   </page>
 </template>
+@/shared/const/config

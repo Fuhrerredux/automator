@@ -93,4 +93,7 @@
   .chip-error {
     @apply rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-medium text-rose-800 dark:bg-rose-900 dark:text-rose-300;
   }
+  .section-header {
+    @apply mb-2 text-sm font-medium text-zinc-400;
+  }
 }

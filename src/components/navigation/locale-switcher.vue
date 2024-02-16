@@ -1,7 +1,7 @@
 <script lang="ts">
+import useSettingsStore from '@/stores/settings'
 import Dropdown from '@components/dropdown.vue'
 import getLanguageName from '@shared/core/locale'
-import useSettingsStore from '@/stores/settings';
 
 export default {
   name: 'LocaleSwitcher',
@@ -13,9 +13,17 @@ export default {
       return savedLang || 'en'
     },
     updateLanguage(newLang: string) {
-      useSettingsStore().setLanguage(newLang);
-      this.$i18n.locale = newLang;
+      useSettingsStore().setLanguage(newLang)
+      this.$i18n.locale = newLang
+    }
+  },
+  computed: {
+    languageOptions() {
+      return this.$i18n.availableLocales.map((e) => ({ value: e, label: getLanguageName(e) }))
     },
+    currentLanguage() {
+      return this.languageOptions.find((e) => e.value === this.getDefaultLanguage())
+    }
   }
 }
 </script>
@@ -23,10 +31,8 @@ export default {
 <template>
   <div class="locale-changer w-32">
     <dropdown
-      :options="$i18n.availableLocales"
-      :model-value="getDefaultLanguage()"
-      :display-key="(e: string) => getLanguageName(e)"
-      :value-key="(e: string) => e"
-      @update:model-value="(newLang: string) => updateLanguage(newLang)" />
+      :options="languageOptions"
+      :model-value="currentLanguage"
+      @update:model-value="updateLanguage($event.value)" />
   </div>
 </template>

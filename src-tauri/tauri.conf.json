@@ -27,12 +27,6 @@
       },
       "path": {
         "all": true
-      },
-      "process": {
-        "all": false,
-        "exit": true,
-        "relaunch": true,
-        "relaunchDangerousAllowSymlinkMacos": false
       }
     },
     "updater": {

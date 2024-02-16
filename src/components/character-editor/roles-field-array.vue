@@ -41,9 +41,14 @@ const { resetForm, handleSubmit } = useForm<Advisor>({
 })
 const { value: characterSlot } = useField<string>('slot')
 
-const options = computed(() => {
+const slotOptions = computed(() => {
   const slots = props.fields.map((e) => e.value.slot)
-  return positionsArray.filter((e) => !slots.includes(e.key))
+  return positionsArray
+    .map((e) => ({ value: e.key, label: e.name }))
+    .filter((e) => !slots.includes(e.value))
+})
+const traitOptions = computed(() => {
+  return traits[characterSlot.value as Position].map((e) => ({ label: e, value: e }))
 })
 
 const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
@@ -105,9 +110,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
           <legend class="form-label">Character Slot</legend>
           <dropdown
             localise
-            display-key="name"
-            value-key="key"
-            :options="options"
+            :options="slotOptions"
             :model-value="value"
             @update:model-value="handleChange" />
         </Field>
@@ -117,9 +120,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
           <legend class="form-label">Trait</legend>
           <dropdown
             localise
-            :display-key="(e) => String(e)"
-            :value-key="(e: string) => e"
-            :options="traits[characterSlot as Position]"
+            :options="traitOptions"
             :model-value="value"
             @update:model-value="handleChange" />
         </Field>

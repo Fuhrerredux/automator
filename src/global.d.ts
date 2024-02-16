@@ -20,6 +20,7 @@ declare global {
       panel: Component
       label: string
     }
+    type DataOption = { value: string; label: string }
   }
   namespace Automator {
     type Definition = { key: string; name: string; short: string }
@@ -31,6 +32,14 @@ declare global {
       character: {
         defaultCost: number
       }
+    }
+
+    type Preference = {
+      customConfig: boolean
+      positionPrevention: boolean
+      optionLogging: boolean
+      language: string
+      predefinedConfiguration: string | null
     }
   }
 
@@ -111,13 +120,13 @@ declare global {
   }
 
   type SpriteEntry = {
-    name: string;
-    texturefile: string;
+    name: string
+    texturefile: string
   }
 
   type SpriteEntryWithTag = SpriteEntry & {
-    tag?: string;
-    tagIndex?: number;
+    tag?: string
+    tagIndex?: number
   }
 
   type TauriStatus = {

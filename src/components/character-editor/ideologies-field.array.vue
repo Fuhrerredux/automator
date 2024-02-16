@@ -41,7 +41,9 @@ const [trait, traitAttr] = defineField('trait')
 
 const options = computed(() => {
   const ideologies = props.fields.map((e) => e.value.subideology.key)
-  return ideologiesArray.filter((e) => !ideologies.includes(e.key))
+  return ideologiesArray
+    .map((e) => ({ value: e.key, label: e.name }))
+    .filter((e) => !ideologies.includes(e.value))
 })
 
 const onSubmit = handleSubmit((formData: CountryLeaderForm) => {

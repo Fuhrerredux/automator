@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
 import { Field, useField, useFieldArray, useForm } from 'vee-validate'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
@@ -93,6 +93,10 @@ onMounted(async () => {
     })
   }
 })
+
+const ideologiesOptions = computed(() =>
+  ideologiesArray.map((e) => ({ value: e.key, label: e.name }))
+)
 </script>
 
 <template>
@@ -143,7 +147,7 @@ onMounted(async () => {
               value-key="key"
               display-key="name"
               :model-value="value"
-              :options="ideologiesArray"
+              :options="ideologiesOptions"
               @update:model-value="handleChange" />
           </Field>
         </div>
