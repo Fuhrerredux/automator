@@ -8,6 +8,9 @@ const props = defineProps<{
   preferenceKey: keyof Automator.Preference
   label: string
 }>()
+const emit = defineEmits<{
+  (e: 'change', v: boolean): void
+}>()
 
 const settingsStore = useSettingsStore()
 const { t } = useI18n()
@@ -16,6 +19,8 @@ const checked = toRef(settingsStore.getPreference(props.preferenceKey) as boolea
 
 const onChange = (event: boolean) => {
   settingsStore.updatePreference(props.preferenceKey, event)
+
+  emit('change', event)
   checked.value = event
 }
 </script>

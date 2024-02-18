@@ -14,6 +14,9 @@
   },
   "settings": {
     "header": "Settings",
+    "character": "Character",
+    "logging": "Logging",
+    "configuration": "Configuration",
     "position-prevention": "Prevent an officer from having more than 1 role at a time.",
     "custom-config": "Use custom configuration",
     "option-logging": "Add log statements on options as well as events.",
@@ -124,7 +127,8 @@
     "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
     "no-dir-short": "No mod directory selected",
     "no-characters-to-export": "There are no characters to export",
-    "file-not-found": "File not found"
+    "file-not-found": "File not found",
+    "no-file-selected-config": "You haven't selected any file to import. Custom configuration setting will be disabled."
   },
   "others": {
     "shine": {

@@ -1,14 +1,22 @@
+import { validateConfiguration } from '@shared/utils/configuration'
 import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology'
-import {
-  getPositionSuffix,
-  isCivilianPosition,
-  isMilitaryPosition,
-  parsePosition
-} from '@shared/utils/position'
+import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
 
 export let countryTags: string[] = []
+
+export async function readConfigurationFile(filePath: string): Promise<Automator.Configuration> {
+  try {
+    const raw = await readTextFile(filePath)
+    const json = JSON.parse(raw)
+    if (validateConfiguration(json)) {
+      return json as Automator.Configuration
+    } else throw Error('Invalid Configuration')
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
 
 export async function readSpriteUsage(sprite: SpriteType, base: string) {
   const dir = `${base}/${sprite.directory}`
@@ -156,12 +164,8 @@ export function readCharacterFile(
           const trimmed = e.trim()
           positions.forEach((position) => {
             const prefix = getPositionSuffix(position as unknown as Automator.Position, config)
-            if (trimmed.startsWith(`${prefix}_`)) {
-              if (isCivilianPosition(position)) {
-                parsed.ministerTraits[`${position}`] = trimmed
-              } else if (isMilitaryPosition(position)) {
-                parsed.officerTraits[`${position}`] = trimmed
-              }
+            if (trimmed.startsWith(`${prefix}_`) && isAdvisorPosition(position, config)) {
+              parsed.advisorRoles[`${position}`] = trimmed
             }
           })
         })
@@ -203,11 +207,8 @@ export function readCharacterFile(
           const position = extractValue(content).trim()
           parsed.positions = [...parsed.positions, position]
 
-          if (isCivilianPosition(position as Position) && !parsed.roles.includes('minister')) {
-            parsed.roles = [...parsed.roles, 'minister']
-          }
-          if (isMilitaryPosition(position as Position) && !parsed.roles.includes('officer')) {
-            parsed.roles = [...parsed.roles, 'officer']
+          if (isAdvisorPosition(position, config) && !parsed.roles.includes('advisor')) {
+            parsed.roles = [...parsed.roles, 'advisor']
           }
         }
       })
@@ -271,9 +272,9 @@ export function readLocalisationFile(content: string, config: Automator.Configur
     const position = parsePosition(extractPosition(token), config)
     const ideology = extractIdeology(token)
 
-    const parts = trimmed.split('"');
-    if (parts.length < 3) continue; // If there are not enough quotes, skip this line
-    const name = parts[1];
+    const parts = trimmed.split('"')
+    if (parts.length < 3) continue // If there are not enough quotes, skip this line
+    const name = parts[1]
 
     const record: Character = {
       name,
@@ -288,21 +289,21 @@ export function readLocalisationFile(content: string, config: Automator.Configur
     const index = records.findIndex((e) => e.name === name)
     if (index >= 0) {
       const curr = records[index]
-      if (position) {
-        if (isCivilianPosition(position) && !curr.roles.includes('advisor')) {
-          curr.roles = [...curr.roles, 'minister']
-        } else if (isMilitaryPosition(position) && !curr.roles.includes('officer')) {
-          curr.roles = [...curr.roles, 'officer']
-        }
+      if (
+        position &&
+        isAdvisorPosition(String(position), config) &&
+        !curr.roles.includes('advisor')
+      ) {
+        curr.roles = [...curr.roles, 'advisor']
       }
       records[index] = curr
     } else {
-      if (position) {
-        if (isCivilianPosition(position) && !record.roles.includes('minister')) {
-          record.roles = [...record.roles, 'minister']
-        } else if (isMilitaryPosition(position) && !record.roles.includes('officer')) {
-          record.roles = [...record.roles, 'officer']
-        }
+      if (
+        position &&
+        isAdvisorPosition(String(position), config) &&
+        !record.roles.includes('advisor')
+      ) {
+        record.roles = [...record.roles, 'advisor']
       }
       records.push(record)
     }
@@ -312,16 +313,16 @@ export function readLocalisationFile(content: string, config: Automator.Configur
 }
 
 export async function loadCountryTags(filePath: string): Promise<void> {
-  const content = await readTextFile(filePath);
-  const lines = content.split('\n');
+  const content = await readTextFile(filePath)
+  const lines = content.split('\n')
 
   for (const line of lines) {
-      const tag = line.split('=')[0].trim();
-      if (tag && !tag.startsWith('#')) {
-          countryTags.push(tag);
-      }
+    const tag = line.split('=')[0].trim()
+    if (tag && !tag.startsWith('#')) {
+      countryTags.push(tag)
+    }
   }
 
   // Sort country tags alphabetically
-  countryTags.sort();
+  countryTags.sort()
 }

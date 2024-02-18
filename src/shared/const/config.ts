@@ -1,3 +1,6 @@
-const predefinedConfigurations = [{value: 'none', label: 'None'},{ value: 'kr', label: 'Kaiserreich' }]
+const predefinedConfigurations = [
+  { value: 'custom', label: 'Custom' },
+  { value: 'kr', label: 'Kaiserreich' }
+]
 
 export default predefinedConfigurations

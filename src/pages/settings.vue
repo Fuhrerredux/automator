@@ -2,13 +2,14 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
-import SwitchPreference from '@/components/settings/switch-preference.vue'
 import Dropdown from '@components/dropdown.vue'
 import Page from '@components/page.vue'
 import PreferenceGroup from '@components/settings/preference-group.vue'
+import SwitchPreference from '@components/settings/switch-preference.vue'
 import predefinedConfigurations from '@shared/const/config'
 import useConfiguration from '@stores/config'
 import useSettingsStore from '@stores/settings'
+import { message, open } from '@tauri-apps/api/dialog'
 
 const $toast = useToast()
 const { t } = useI18n()
@@ -17,15 +18,37 @@ const configurationStore = useConfiguration()
 
 const config = ref(predefinedConfigurations[0])
 
-const handleConfigurationChange = (value: DropdownOption<string>) => {
-  if (value.value !== 'none') {
+const onCustomConfigurationChange = (enabled: boolean) => {
+  if (!enabled) {
+    configurationStore.revert()
+    $toast.success(t('status.config-removed'))
+  }
+}
+
+const handleConfigurationChange = async (value: DropdownOption<string>) => {
+  if (value.value !== 'custom') {
     settingsStore.updatePreference('predefinedConfiguration', value.value)
     configurationStore.change(value.value)
     config.value = value
 
     $toast.success(t('status.config-updated'))
   } else {
-    $toast.success(t('status.config-removed'))
+    const filePath = await open({
+      filters: [
+        {
+          name: '*',
+          extensions: ['json', 'txt']
+        }
+      ]
+    })
+
+    if (filePath !== null && !Array.isArray(filePath)) {
+      try {
+      } catch {}
+    } else {
+      await message(t('no-file-selected-config'))
+      settingsStore.updatePreference('customConfig', false)
+    }
   }
 }
 </script>
@@ -45,12 +68,15 @@ const handleConfigurationChange = (value: DropdownOption<string>) => {
         <switch-preference label="settings.option-logging" preference-key="optionLogging" />
       </preference-group>
       <preference-group title="settings.configuration">
-        <switch-preference label="settings.custom-config" preference-key="customConfig" />
+        <switch-preference
+          label="settings.custom-config"
+          preference-key="customConfig"
+          @change="onCustomConfigurationChange" />
         <div className="flex items-center gap-4" v-if="settingsStore.getCustomConfig()">
           <legend class="text-sm shrink-0 font-medium">
             {{ t('settings.predefined-configs') }}
           </legend>
-          <div class="flex-1">
+          <div class="flex-1 space-y-2">
             <dropdown
               localise
               :options="predefinedConfigurations"

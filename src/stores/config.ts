@@ -35,18 +35,26 @@ const useConfiguration = defineStore({
     }
   },
   getters: {
-    ideologiesArray: ({ config: { ideologies } }) =>
-      Object.entries(ideologies).map(([key, value]) => ({
-        key,
-        name: value.name,
-        short: value.short
-      })),
-    positionsArray: ({ config: { positions } }) =>
-      Object.entries(positions).map(([key, value]) => ({
-        key,
-        name: value.name,
-        short: value.name
-      }))
+    ideologiesArray: ({ config: { ideologies } }) => {
+      if (ideologies)
+        Object.entries(ideologies).map(([key, value]) => ({
+          key,
+          name: value.name,
+          short: value.short
+        }))
+
+      return [] as Automator.Ideology[]
+    },
+    positionsArray: ({ config: { positions } }) => {
+      if (positions)
+        Object.entries(positions).map(([key, value]) => ({
+          key,
+          name: value.name,
+          short: value.name
+        }))
+
+      return [] as Automator.Position[]
+    }
   },
   actions: {
     async import() {

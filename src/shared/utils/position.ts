@@ -6,23 +6,8 @@ export function getPositionSuffix(position: Automator.Position, config: Automato
   return ''
 }
 
-export function isCivilianPosition(position: Position) {
-  return (
-    position === 'head_of_government' ||
-    position === 'foreign_minister' ||
-    position === 'economy_minister' ||
-    position === 'security_minister'
-  )
-}
-
-export function isMilitaryPosition(position: Position) {
-  return (
-    position === 'high_command' ||
-    position === 'army_chief' ||
-    position === 'navy_chief' ||
-    position === 'air_chief' ||
-    position === 'theorist'
-  )
+export function isAdvisorPosition(position: string, config: Automator.Configuration): boolean {
+  return Object.keys(config.positions).includes(position)
 }
 
 export function parsePosition(
