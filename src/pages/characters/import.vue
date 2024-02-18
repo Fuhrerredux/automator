@@ -21,11 +21,9 @@ const { importAll } = characterStore
 const { remove } = importStore
 
 const importing = ref(false)
-const editor = ref(false)
-const confirm = ref(false)
 const character = ref<CharacterWithId | null>(null)
 
-async function handleImport() {
+const onCharacterImport = () => {
   importing.value = true
   try {
     importAll(importStore.characters)
@@ -37,13 +35,12 @@ async function handleImport() {
     importing.value = false
   }
 }
-function handleUpdate(char: CharacterWithId) {
-  character.value = char
-  editor.value = true
+
+const onCharacterUpdate = (param: CharacterWithId) => {
+  router.push(`/edit?characterId=${param.id}`)
 }
-function handleRemove(char: CharacterWithId) {
-  character.value = char
-  confirm.value = true
+const onCharacterRemove = (param: CharacterWithId) => {
+  character.value = param
 }
 </script>
 
@@ -53,7 +50,7 @@ function handleRemove(char: CharacterWithId) {
       type="button"
       class="button-primary flex items-center"
       :loading="importing"
-      @click="handleImport">
+      @click="onCharacterImport">
       <template #content>
         <check-icon class="h-5 w-5 mr-2" />
         <span>{{ t('action.import') }}</span>
@@ -65,12 +62,15 @@ function handleRemove(char: CharacterWithId) {
     </spinner-button>
   </app-header>
   <main class="content px-8 page">
-    <character-table :characters="characters" @update="handleUpdate" @remove="handleRemove" />
+    <character-table
+      :characters="characters"
+      @update="onCharacterUpdate"
+      @remove="onCharacterRemove" />
   </main>
   <remove-character
-    v-if="confirm"
-    :open="confirm"
+    v-if="character"
+    :open="!!character"
     :character="character!"
     :remove-fn="remove"
-    @hide="confirm = false" />
+    @hide="character = null" />
 </template>
