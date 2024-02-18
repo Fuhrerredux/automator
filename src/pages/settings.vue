@@ -1,28 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useSettingsStore from '@/stores/settings'
+import { useToast } from 'vue-toast-notification'
+import SwitchPreference from '@/components/settings/switch-preference.vue'
 import Dropdown from '@components/dropdown.vue'
 import Page from '@components/page.vue'
-import SwitchButton from '@components/switch.vue'
+import PreferenceGroup from '@components/settings/preference-group.vue'
 import predefinedConfigurations from '@shared/const/config'
 import useConfiguration from '@stores/config'
+import useSettingsStore from '@stores/settings'
 
+const $toast = useToast()
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const configurationStore = useConfiguration()
 
 const config = ref(predefinedConfigurations[0])
 
-const handleConfiguration = (value: boolean) => {
-  settingsStore.toggleCustomConfig()
-  if (!value) configurationStore.revert()
-}
-
 const handleConfigurationChange = (value: DropdownOption<string>) => {
-  settingsStore.updatePreference('predefinedConfiguration', value.value)
-  configurationStore.change(value.value)
-  config.value = value
+  if (value.value !== 'none') {
+    settingsStore.updatePreference('predefinedConfiguration', value.value)
+    configurationStore.change(value.value)
+    config.value = value
+
+    $toast.success(t('status.config-updated'))
+  } else {
+    $toast.success(t('status.config-removed'))
+  }
 }
 </script>
 
@@ -32,26 +36,16 @@ const handleConfigurationChange = (value: DropdownOption<string>) => {
       <h1 class="header">{{ t('settings.header') }}</h1>
     </div>
     <div class="space-y-4 mt-4">
-      <section class="space-y-4">
-        <h2 class="section-header">{{ t('settings.character') }}</h2>
-        <switch-button
-          :checked="settingsStore.getPositionPrevention()"
-          :label="t('settings.position-prevention')"
-          @update:model-value="settingsStore.togglePositionPrevention" />
-      </section>
-      <section class="space-y-4">
-        <h2 class="section-header">{{ t('settings.logging') }}</h2>
-        <switch-button
-          :checked="settingsStore.getOptionLogging()"
-          :label="t('settings.option-logging')"
-          @update:model-value="handleConfiguration" />
-      </section>
-      <section class="space-y-4">
-        <h2 class="section-header">{{ t('settings.configuration') }}</h2>
-        <switch-button
-          :checked="settingsStore.getCustomConfig()"
-          :label="t('settings.custom-config')"
-          @update:model-value="settingsStore.toggleCustomConfig" />
+      <preference-group title="settings.character">
+        <switch-preference
+          label="settings.position-prevention"
+          preference-key="positionPrevention" />
+      </preference-group>
+      <preference-group title="settings.logging">
+        <switch-preference label="settings.option-logging" preference-key="optionLogging" />
+      </preference-group>
+      <preference-group title="settings.configuration">
+        <switch-preference label="settings.custom-config" preference-key="customConfig" />
         <div className="flex items-center gap-4" v-if="settingsStore.getCustomConfig()">
           <legend class="text-sm shrink-0 font-medium">
             {{ t('settings.predefined-configs') }}
@@ -64,7 +58,7 @@ const handleConfigurationChange = (value: DropdownOption<string>) => {
               @update:model-value="handleConfigurationChange" />
           </div>
         </div>
-      </section>
+      </preference-group>
     </div>
   </page>
 </template>
