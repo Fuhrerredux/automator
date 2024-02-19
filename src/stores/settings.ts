@@ -67,6 +67,7 @@ const useSettingsStore = defineStore({
       data: T
     ) {
       this.$state = { ...this.$state, [key]: data }
+      this.save()
     },
     getPreference(key: keyof Automator.Preference) {
       return this.$state[key]

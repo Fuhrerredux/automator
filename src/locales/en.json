@@ -38,7 +38,9 @@
     "leader-roles": "Leader Roles",
     "dropzone": "Drag and drop file here, or click to browse a file",
     "dropzone-active": "Drop the file here",
-    "cost": "Cost"
+    "cost": "Cost",
+    "hirable": "Hirable",
+    "removeable": "Removable"
   },
   "placeholder": {
     "tag": "USA",
@@ -117,7 +119,9 @@
     "shines-generated": "Shines generated",
     "event-logged": "Event Logging Added",
     "log-removed": "Logging Removed",
-    "sprites-fixed": "Sprite Entries Fixed"
+    "sprites-fixed": "Sprite Entries Fixed",
+    "config-removed": "Configuration removed",
+    "config-updated": "Configuration updated"
   },
   "info": {
     "import-ext": "You can use characters file or the localization file which has definitions for the ministers that will be imported. {end}"

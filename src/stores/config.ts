@@ -36,31 +36,51 @@ const useConfiguration = defineStore({
   },
   getters: {
     ideologiesArray: ({ config: { ideologies } }) => {
-      if (ideologies)
-        Object.entries(ideologies).map(([key, value]) => ({
-          key,
-          name: value.name,
-          short: value.short
-        }))
-
-      return [] as Automator.Ideology[]
+      return Object.entries(ideologies).map(([key, value]) => ({
+        key,
+        name: value.name,
+        short: value.short
+      }))
     },
-    positionsArray: ({ config: { positions } }) => {
-      if (positions)
-        Object.entries(positions).map(([key, value]) => ({
-          key,
-          name: value.name,
-          short: value.name
-        }))
-
-      return [] as Automator.Position[]
+    positionsArray: ({ config: { positions } }): Automator.Position[] => {
+      return Object.entries(positions).map(([key, value]) => ({
+        key,
+        name: value.name,
+        short: value.name,
+        hirable: value.hirable,
+        removable: value.removable
+      }))
     }
   },
   actions: {
-    async import() {
-      const json = await readTextFile(CONFIG_SOURCE, { dir: BaseDirectory.Home })
+    /**
+     * Function to load the configuration data from the
+     * default source file. Can also be used to load
+     * configuration data from other file if a file path
+     * string is provided.
+     *
+     * @param source file path, if skipped, the default path will be used.
+     */
+    async import(source: string = CONFIG_SOURCE) {
+      const json = await readTextFile(source, { dir: BaseDirectory.Home })
       this.$state = { ...this.$state, ...JSON.parse(json) }
     },
+    /**
+     * Function to change the current values of the configuration
+     * data from another config object.
+     *
+     * @param config configuration data object
+     */
+    async replace(config: Automator.Configuration) {
+      this.$state = { config }
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config), { dir: BaseDirectory.Home })
+    },
+    /**
+     * Function used to change the current configuration
+     * data to a predefined one.
+     *
+     * @param key the key from a predefined config data.
+     */
     async change(key: string) {
       const newConfig = configuration.find((e) => e.key === key)
       if (newConfig) {
@@ -70,8 +90,16 @@ const useConfiguration = defineStore({
         })
       }
     },
-    revert() {
+    /**
+     * Function used to revert the configuration data to
+     * it's defaults and remove all custom data defined
+     * in the source file.
+     */
+    async revert() {
       this.$state.config = defaultConfiguration
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(defaultConfiguration), {
+        dir: BaseDirectory.Home
+      })
     }
   }
 })

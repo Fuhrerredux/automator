@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
+import { readConfigurationFile } from '@/shared/core/reader'
 import Dropdown from '@components/dropdown.vue'
 import Page from '@components/page.vue'
 import PreferenceGroup from '@components/settings/preference-group.vue'
@@ -22,7 +23,7 @@ const onCustomConfigurationChange = (enabled: boolean) => {
   if (!enabled) {
     configurationStore.revert()
     $toast.success(t('status.config-removed'))
-  }
+  } else handleConfigurationChange(config.value)
 }
 
 const handleConfigurationChange = async (value: DropdownOption<string>) => {
@@ -44,7 +45,11 @@ const handleConfigurationChange = async (value: DropdownOption<string>) => {
 
     if (filePath !== null && !Array.isArray(filePath)) {
       try {
-      } catch {}
+        const config = await readConfigurationFile(filePath)
+        await configurationStore.replace(config)
+      } catch (e) {
+        await message(String(e))
+      }
     } else {
       await message(t('no-file-selected-config'))
       settingsStore.updatePreference('customConfig', false)

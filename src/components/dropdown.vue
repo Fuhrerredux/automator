@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
-defineProps<{
+const props = defineProps<{
   options: UserInterface.DataOption[]
   modelValue: UserInterface.DataOption | undefined | null
   disabled?: boolean
@@ -14,6 +15,8 @@ defineProps<{
 defineEmits<{
   (e: 'update:modelValue', value: UserInterface.DataOption): void
 }>()
+
+const keys = computed(() => props.options.map((e) => e.value))
 </script>
 
 <template>
@@ -25,7 +28,11 @@ defineEmits<{
     class="relative">
     <listbox-button class="dropdown-button w-full">
       <span class="flex-1 text-left truncate">
-        {{ modelValue ? modelValue.label : t('placeholder.dropdown') }}
+        {{
+          modelValue && keys.includes(modelValue.value)
+            ? modelValue.label
+            : t('placeholder.dropdown')
+        }}
       </span>
       <chevron-down-icon class="ml-2 h-4 w-4" />
     </listbox-button>

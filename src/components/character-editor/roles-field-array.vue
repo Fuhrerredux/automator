@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Field, type FieldEntry, useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useConfiguration from '@/stores/config'
 import Dropdown from '@components/dropdown.vue'
@@ -30,7 +30,7 @@ const schema = toTypedSchema(
 const { t } = useI18n()
 const { traits } = useTraits()
 const { config, positionsArray } = useConfiguration()
-const { resetForm, handleSubmit } = useForm<Advisor>({
+const { resetForm, setValues, handleSubmit } = useForm<Advisor>({
   initialValues: {
     slot: positionsArray.length > 0 ? positionsArray[0].key : '',
     removeable: false,
@@ -49,6 +49,14 @@ const slotOptions = computed(() => {
 })
 const traitOptions = computed(() => {
   return traits[characterSlot.value as Position].map((e) => ({ label: e, value: e }))
+})
+
+watch(characterSlot, () => {
+  if (typeof characterSlot === 'object') {
+    const key = (characterSlot.value as unknown as UserInterface.DataOption).value
+    const slot = positionsArray.find((e) => e.key === key)
+    setValues({ hirable: slot?.hirable, removeable: slot?.removable })
+  }
 })
 
 const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {

@@ -1,6 +1,6 @@
 const predefinedConfigurations = [
-  { value: 'custom', label: 'Custom' },
-  { value: 'kr', label: 'Kaiserreich' }
+  { value: 'kr', label: 'Kaiserreich' },
+  { value: 'custom', label: 'Custom' }
 ]
 
 export default predefinedConfigurations
