@@ -26,7 +26,7 @@ defineProps<{
 }>()
 const emits = defineEmits(['hide'])
 
-async function onFileSelected(dropped: File) {
+const onFileDropped = async (dropped: File) => {
   files.value = [dropped]
   const content = await readFileObject(dropped)
 
@@ -39,7 +39,12 @@ async function onFileSelected(dropped: File) {
   }
 }
 
-async function triggerImport() {
+const onFileRemoved = () => {
+  files.value = []
+  characters.value = []
+}
+
+const onImportCharacters = async () => {
   loading.value = true
   if (characters.value.length <= 0) {
     $toast.error(t('error.no-dir-selected'))
@@ -70,7 +75,7 @@ const handleClick = () =>
     <template #body>
       <div class="space-y-4">
         <div>
-          <drop-zone :files="files" @dropped="onFileSelected" @reset="files = []" />
+          <drop-zone :files="files" @dropped="onFileDropped" @reset="onFileRemoved" />
           <p v-if="characters.length > 0" class="text-sm text-center text-zinc-500">
             {{ t('placeholder.character-parsed', { num: characters.length }) }}
           </p>
@@ -97,7 +102,7 @@ const handleClick = () =>
             class="button-primary"
             :loading="loading"
             :disabled="characters.length <= 0 || loading"
-            @click="triggerImport">
+            @click="onImportCharacters">
             <template #content>
               {{ t('action.import') }}
             </template>

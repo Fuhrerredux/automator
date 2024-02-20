@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import ActionItem from '@components/action-item.vue'
-import FileSelectModal from '@components/file-select-modal.vue'
+import FileSelectModal from '@components/modal/file-select-modal.vue'
 import { BoltIcon } from '@heroicons/vue/24/outline'
 import { exportShine } from '@shared/core/writer'
 import { readFileObject } from '@shared/utils/reader'
@@ -27,7 +27,8 @@ async function generate(files: File[]) {
     const fileNameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.gfx'))
 
     const content = await readFileObject(selected)
-    const filePath = await save({ // assume that opened gfx file was on interface folder already
+    const filePath = await save({
+      // assume that opened gfx file was on interface folder already
       defaultPath: `${fileNameWithoutExtension}_shine.gfx`
     })
 
