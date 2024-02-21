@@ -8,6 +8,8 @@ import spriteFixer from '@components/others/fix-sprites.vue'
 import OptimizeGfx from '@components/others/optimize-gfx.vue'
 import ShineGeneration from '@components/others/shine-generation.vue'
 import Page from '@components/page.vue'
+import PreferenceGroup from '@components/settings/preference-group.vue'
+import OptionList from '@/components/settings/option-list.vue'
 
 const { t } = useI18n()
 </script>
@@ -19,34 +21,21 @@ const { t } = useI18n()
     </div>
     <div class="mt-4 space-y-4">
       <!-- GFX Optimization -->
-      <div>
-        <h2 class="section-header">{{ t('sections.gfx-optimization') }}</h2>
-        <ul class="space-y-4">
-          <shine-generation />
-          <spriteFixer />
-          <optimize-gfx />
-        </ul>
-      </div>
-
+      <option-list title="sections.gfx-optimization">
+        <shine-generation />
+        <spriteFixer />
+        <optimize-gfx />
+      </option-list>
       <!-- Character Management -->
-      <div>
-        <h2 class="section-header">
-          {{ t('sections.character-management') }}
-        </h2>
-        <ul class="space-y-4">
-          <character-recruit />
-          <character-localisation />
-        </ul>
-      </div>
-
+      <option-list title="sections.character-management">
+        <character-recruit />
+        <character-localisation />
+      </option-list>
       <!-- Event Handling -->
-      <div>
-        <h2 class="section-header">{{ t('sections.event-handling') }}</h2>
-        <ul class="space-y-4">
-          <log-remover />
-          <event-logger />
-        </ul>
-      </div>
+      <option-list title="sections.event-handling">
+        <log-remover />
+        <event-logger />
+      </option-list>
     </div>
   </page>
 </template>

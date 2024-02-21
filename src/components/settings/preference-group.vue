@@ -9,7 +9,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <section class="space-y-4">
+  <section class="space-y-4 highlight-section">
     <h2 class="section-header">{{ t(title) }}</h2>
     <div class="space-y-2">
       <slot />

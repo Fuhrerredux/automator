@@ -96,4 +96,7 @@
   .section-header {
     @apply mb-2 text-sm font-medium text-zinc-400;
   }
+  .highlight-section {
+    @apply bg-gray-100 dark:bg-zinc-800 rounded-lg  shadow-md  p-4 mt-4
+  }
 }
