@@ -73,7 +73,7 @@ const useConfiguration = defineStore({
      */
     async replace(config: Automator.Configuration) {
       this.$state = { config }
-      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config), { dir: BaseDirectory.Home })
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config, null, 4), { dir: BaseDirectory.Home })
     },
     /**
      * Function used to change the current configuration
@@ -85,7 +85,7 @@ const useConfiguration = defineStore({
       const newConfig = configuration.find((e) => e.key === key)
       if (newConfig) {
         this.$state.config = newConfig.definition
-        await writeTextFile(CONFIG_SOURCE, JSON.stringify(newConfig.definition), {
+        await writeTextFile(CONFIG_SOURCE, JSON.stringify(newConfig.definition, null, 4), {
           dir: BaseDirectory.Home
         })
       }
@@ -97,7 +97,7 @@ const useConfiguration = defineStore({
      */
     async revert() {
       this.$state.config = defaultConfiguration
-      await writeTextFile(CONFIG_SOURCE, JSON.stringify(defaultConfiguration), {
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(defaultConfiguration, null, 4), {
         dir: BaseDirectory.Home
       })
     }
