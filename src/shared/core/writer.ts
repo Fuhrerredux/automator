@@ -470,3 +470,59 @@ function generateSpriteTypesBlock(spriteTypes: SpriteEntry[]): string {
 ${sprites.join('\n')}
 }`
 }
+
+
+export async function localiseFocuses(outputPath: string, content: string): Promise<void> {
+  let focuses: Focus[] = []
+  let locEntries: FocusLocEntry[] = []
+  let prevLine: string = ''
+  const addedKeys = new Set<string>()
+  content.split('\n').forEach((line, _) => {
+    if (prevLine && prevLine.includes('focus = {') && line.includes('id')) {
+      const id = `${line.substring(line.indexOf('=') + 1).trim().split('#')[0]}`
+      focuses.push({ id })
+    }
+    prevLine = line
+  })
+  let outputFile = await readTextFile(outputPath);
+  let bom = '';
+  if (outputFile.charCodeAt(0) === 0xFEFF) { // Check if BOM exists
+    bom = '\uFEFF';
+    outputFile = outputFile.slice(1); // Remove BOM
+  }
+  let updatedOutputFile = ''
+  const generatedLoc = '\n\n# Generated\n\n'
+  updatedOutputFile += generatedLoc
+  
+  focuses.forEach(({ id }) => {
+    const idKey = `${id}: ""`;
+    const descKey = `${id}_desc: ""`;
+    const idKeyFind = `${id}`
+    const descKeyFind = `${id}_desc`
+
+    // Check if idKey or descKey already exist in the outputFile or have been added
+    if (!addedKeys.has(idKeyFind) && !outputFile.includes(idKeyFind)) {
+      const idPattern = new RegExp(`\\b${id}\\b`);
+      if (outputFile.split('\n').includes(idKeyFind) && !outputFile.split('\n').includes(descKeyFind)) {
+        let index = outputFile.split('\n').findIndex(line => line.includes(idKeyFind))
+        updatedOutputFile.split('\n')[index] += `\n${descKey}`
+        addedKeys.add(descKey)
+      } else if (!outputFile.split('\n').some(line => idPattern.test(line))) {
+        updatedOutputFile += `${idKey}\n`;
+        addedKeys.add(idKey);
+      }
+    }
+    if (!addedKeys.has(descKeyFind) && !outputFile.includes(descKeyFind)) {
+      const descPattern = new RegExp(`\\b${id}_desc\\b`);
+      if (outputFile.split('\n').includes(descKeyFind) && !outputFile.split('\n').includes(idKeyFind)) {
+        let index = outputFile.split('\n').findIndex(line => line.includes(descKeyFind))
+        updatedOutputFile.split('\n')[index] += `\n${idKey}`
+        addedKeys.add(idKey)
+      } else if (!outputFile.split('\n').some(line => descPattern.test(line))) {
+        updatedOutputFile += `${descKey}\n`;
+        addedKeys.add(descKey);
+      }
+    }
+  });
+  await writeTextFile(outputPath, bom + outputFile + updatedOutputFile)
+}

@@ -7,8 +7,8 @@ import CharacterRecruit from '@components/others/character-recruit.vue'
 import spriteFixer from '@components/others/fix-sprites.vue'
 import OptimizeGfx from '@components/others/optimize-gfx.vue'
 import ShineGeneration from '@components/others/shine-generation.vue'
+import FocusLocalisation from '@/components/others/focus-localisation.vue'
 import Page from '@components/page.vue'
-import PreferenceGroup from '@components/settings/preference-group.vue'
 import OptionList from '@/components/settings/option-list.vue'
 
 const { t } = useI18n()
@@ -35,6 +35,10 @@ const { t } = useI18n()
       <option-list title="sections.event-handling">
         <log-remover />
         <event-logger />
+      </option-list>
+      <!-- Localisation -->
+      <option-list title="sections.localisation">
+        <focus-localisation />
       </option-list>
     </div>
   </page>

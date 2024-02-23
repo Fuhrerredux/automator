@@ -129,6 +129,21 @@ declare global {
     tagIndex?: number
   }
 
+  type Focus = {
+    tag?: string
+    id: string
+  }
+
+  type FocusTree = {
+    tag: string
+    focuses: Focus[]
+  }
+
+  type FocusLocEntry = {
+    id: string
+    desc: string
+  }
+
   type TauriStatus = {
     kind: string
     message: string
