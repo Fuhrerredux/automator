@@ -10,7 +10,7 @@
     "vite:dev": "vite",
     "vite:build": "vue-tsc --noEmit && vite build",
     "vite:preview": "vite preview",
-    "tauri:dev": "yarn tauri dev",
+    "tauri:dev": "tauri dev",
     "tauri:build": "yarn tauri build"
   },
   "repository": {

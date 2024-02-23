@@ -19,16 +19,17 @@ function buildSmallPortraitPath(name: string, tag: string) {
 
 function definePortraits(character: CharacterWithId): string {
   const { name, tag, roles } = character
-  const hasCivillian = roles.includes('leader') || roles.includes('advisor')
+  // a character may not have roles, we still need portrait defined
+  const hasCivillian = roles.length === 0 || roles.includes('leader') || roles.includes('advisor') 
   const hasArmy = roles.includes('marshal') || roles.includes('general')
   const hasArmyWithOfficer = hasArmy || roles.includes('officer')
   const hasNavy = roles.includes('admiral')
 
   let portraits = ''
   if (hasCivillian) {
-    let template = '\t\t\tcivilian = {'
+    let template = `        civilian = {` // /t gives wrong spacing
 
-    if (roles.includes('leader'))
+    if (roles.includes('leader') || roles.length === 0)
       template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
     if (roles.includes('advisor'))
       template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
@@ -153,10 +154,10 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
     const hasLeaderRole = character.roles.includes('leader')
 
     let data = `\t${buildCharacterToken(character)} = {
-    name = "${character.name}"
-    portraits = {
-${portraits}
-    }`
+        name = "${character.name}"
+        portraits = {
+    ${portraits}
+        }`
 
     const leaders = defineCountryLeader(character)
     const commanding = defineCommandingRole(character)
@@ -166,7 +167,7 @@ ${portraits}
     if (commanding.trim().length > 0) data = data.concat(commanding)
     if (minister.trim().length > 0) data = data.concat(minister)
 
-    data = data.concat('\n\t\t}\n\t}')
+    data = data.concat('\n\t}')
     content = content.concat(data)
   }
 

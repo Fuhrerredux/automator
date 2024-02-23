@@ -23,7 +23,7 @@ declare global {
     type DataOption = { value: string; label: string }
   }
   namespace Automator {
-    type Definition = { key: string; name: string; short: string }
+    type Definition = { key: string; name: string; short?: string }
     type Ideology = Definition
     type Position = Definition & { hirable?: boolean; removable?: boolean }
     type Configuration = {

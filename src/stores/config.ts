@@ -39,7 +39,7 @@ const useConfiguration = defineStore({
       return Object.entries(ideologies).map(([key, value]) => ({
         key,
         name: value.name,
-        short: value.short
+        short: value.short || ''
       }))
     },
     positionsArray: ({ config: { positions } }): Automator.Position[] => {

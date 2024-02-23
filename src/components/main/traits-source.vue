@@ -37,11 +37,14 @@ const fileOptions = computed(() =>
     <span class="form-label">{{ t('field.traits-def') }}</span>
     <div class="flex items-center gap-4">
       <div class="w-full">
+        <!-- :disabled="modStore.directory.length <= 0 -->
         <dropdown
           :options="fileOptions"
           :model-value="traitSource"
-          :disabled="modStore.directory.length <= 0"
-          @update:model-value="onChangeTraitSource" />
+          @update:model-value="onChangeTraitSource"
+          disabled
+          />
+          <!-- For now load all traits automatically till we figure out a better solution -->
       </div>
       <button
         type="button"

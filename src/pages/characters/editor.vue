@@ -59,6 +59,11 @@ const {
   remove: advisorRolesRemove
 } = useFieldArray<Advisor>('advisorRoles')
 
+const onTagInput = (event: InputEvent) => {
+  const inputValue = (event.target as HTMLInputElement).value.replace(/[^A-Za-z]/g, '').toUpperCase()
+  tag.value = inputValue
+}
+
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
   const id = typeof characterId === 'string' ? characterId : nanoid()
 
@@ -136,6 +141,8 @@ const ideologiesOptions = computed(() =>
               id="tag"
               v-model="tag"
               v-bind="tagAttrs"
+              maxlength="3"
+              @input="onTagInput"
               :label="t('field.tag')"
               :placeholder="t('placeholder.tag')" />
           </label>

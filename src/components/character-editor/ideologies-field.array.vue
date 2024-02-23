@@ -22,7 +22,7 @@ const schema = toTypedSchema(
       .shape({
         key: yup.string().required(),
         name: yup.string().required(),
-        short: yup.string().required()
+        short: yup.string()
       })
       .required(),
     trait: yup.string()
