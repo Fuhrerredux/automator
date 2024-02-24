@@ -77,7 +77,7 @@ const handleConfigurationChange = async (value: DropdownOption<string>) => {
           label="settings.custom-config"
           preference-key="customConfig"
           @change="onCustomConfigurationChange" />
-        <div className="flex items-center gap-4" v-if="settingsStore.getCustomConfig()">
+        <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
           <legend class="text-sm shrink-0 font-medium">
             {{ t('settings.predefined-configs') }}
           </legend>
