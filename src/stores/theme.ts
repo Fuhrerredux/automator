@@ -5,6 +5,11 @@ const useThemeStore = defineStore({
   state: () => ({
     theme: 'dark' as UserInterface.Theme
   }),
+  getters: {
+    isDarkTheme(): boolean {
+      return this.theme === 'dark'
+    }
+  },
   actions: {
     fetch() {
       const themeFromLocalStorage = localStorage.getItem('theme') as UserInterface.Theme
