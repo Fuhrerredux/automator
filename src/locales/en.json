@@ -7,11 +7,6 @@
     "character-import": "Character Importer",
     "analyze-gfx": "Analyze GFX"
   },
-  "theme": {
-    "auto": "System",
-    "dark": "Dark",
-    "light": "Light"
-  },
   "settings": {
     "header": "Settings",
     "character": "Character",

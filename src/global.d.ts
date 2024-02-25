@@ -15,7 +15,7 @@ declare global {
     }
   }
   namespace UserInterface {
-    type Theme = 'light' | 'dark' | 'auto'
+    type Theme = 'light' | 'dark'
     type TabData = {
       panel: Component
       label: string
