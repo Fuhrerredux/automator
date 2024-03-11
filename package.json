@@ -31,7 +31,7 @@
     "pinia": "2.1.7",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "vue": "3.4.21",
-    "vue-i18n": "9.9.1",
+    "vue-i18n": "9.10.1",
     "vue-router": "4.3.0",
     "vue-tippy": "^6.4.1",
     "vue-toast-notification": "3.1.2",
