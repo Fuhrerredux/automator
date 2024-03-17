@@ -17,7 +17,7 @@ const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const configurationStore = useConfiguration()
 
-const config = ref(predefinedConfigurations[0])
+const config = ref(predefinedConfigurations[0].value)
 
 const onCustomConfigurationChange = (enabled: boolean) => {
   if (!enabled) {
@@ -26,10 +26,10 @@ const onCustomConfigurationChange = (enabled: boolean) => {
   } else handleConfigurationChange(config.value)
 }
 
-const handleConfigurationChange = async (value: DropdownOption<string>) => {
-  if (value.value !== 'custom') {
-    settingsStore.updatePreference('predefinedConfiguration', value.value)
-    configurationStore.change(value.value)
+const handleConfigurationChange = async (value: string) => {
+  if (value !== 'custom') {
+    settingsStore.updatePreference('predefinedConfiguration', value)
+    configurationStore.change(value)
     config.value = value
 
     $toast.success(t('status.config-updated'))

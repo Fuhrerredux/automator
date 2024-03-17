@@ -22,7 +22,7 @@ export default {
       return this.$i18n.availableLocales.map((e) => ({ value: e, label: getLanguageName(e) }))
     },
     currentLanguage() {
-      return this.languageOptions.find((e) => e.value === this.getDefaultLanguage())
+      return this.languageOptions.find((e) => e.value === this.getDefaultLanguage())?.value
     }
   }
 }
@@ -33,6 +33,6 @@ export default {
     <dropdown
       :options="languageOptions"
       :model-value="currentLanguage"
-      @update:model-value="updateLanguage($event.value)" />
+      @update:model-value="updateLanguage($event)" />
   </div>
 </template>

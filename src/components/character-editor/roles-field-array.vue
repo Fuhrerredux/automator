@@ -52,11 +52,9 @@ const traitOptions = computed(() => {
 })
 
 watch(characterSlot, () => {
-  if (typeof characterSlot === 'object') {
-    const key = (characterSlot.value as unknown as UserInterface.DataOption).value
-    const slot = positionsArray.find((e) => e.key === key)
-    setValues({ hirable: slot?.hirable, removeable: slot?.removable })
-  }
+  const key = characterSlot.value
+  const slot = positionsArray.find((e) => e.key === key)
+  setValues({ hirable: slot?.hirable, removeable: slot?.removable })
 })
 
 const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {

@@ -14,22 +14,21 @@ const traitStore = useTraitsStore()
 const { config } = useConfiguration()
 const { files } = storeToRefs(traitStore)
 
-const traitSource = ref<UserInterface.DataOption | null>(null)
+const traitSource = ref<string | null>(null)
+const fileOptions = computed(() =>
+  files.value.map((e) => ({ value: e.path, label: e.name ?? e.path }))
+)
 
 const onSaveTraits = () => {
   traitStore.readTraits(config)
 }
-const onChangeTraitSource = (event: UserInterface.DataOption | null) => {
+const onChangeTraitSource = (event: string) => {
   if (event) {
-    traitStore.$patch({ trait: event.value })
-    localStorage.setItem('trait', event.value)
+    traitStore.$patch({ trait: event })
+    localStorage.setItem('trait', event)
     traitSource.value = event
   }
 }
-
-const fileOptions = computed(() =>
-  files.value.map((e) => ({ value: e.path, label: e.name ?? e.path }))
-)
 </script>
 
 <template>
