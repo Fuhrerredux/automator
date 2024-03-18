@@ -7,12 +7,14 @@ import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import useConfiguration from '@stores/config'
 import useModStore from '@stores/mod'
 import useTraitsStore from '@stores/traits'
+import { useToast } from 'vue-toast-notification'
 
 const { t } = useI18n()
 const modStore = useModStore()
 const traitStore = useTraitsStore()
 const { config } = useConfiguration()
 const { files } = storeToRefs(traitStore)
+const $t = useToast()
 
 const traitSource = ref<UserInterface.DataOption | null>(null)
 
@@ -24,6 +26,7 @@ const onChangeTraitSource = (event: UserInterface.DataOption | null) => {
     traitStore.$patch({ trait: event.value })
     localStorage.setItem('trait', event.value)
     traitSource.value = event
+    $t.success('Success')
   }
 }
 
@@ -37,21 +40,19 @@ const fileOptions = computed(() =>
     <span class="form-label">{{ t('field.traits-def') }}</span>
     <div class="flex items-center gap-4">
       <div class="w-full">
-        <!-- :disabled="modStore.directory.length <= 0 -->
         <dropdown
           :options="fileOptions"
           :model-value="traitSource"
           @update:model-value="onChangeTraitSource"
-          disabled
-          />
-          <!-- For now load all traits automatically till we figure out a better solution -->
+          :disabled="modStore.directory.length <= 0"
+        />
       </div>
       <button
         type="button"
-        class="button-primary flex items-center shrink-0"
+        class="flex items-center button-primary shrink-0"
         :disabled="modStore.directory.length <= 0"
         @click="onSaveTraits">
-        <arrow-path-icon class="h-5 w-5 mr-2" />
+        <arrow-path-icon class="w-5 h-5 mr-2" />
         <span>{{ t('action.load') }}</span>
       </button>
     </div>

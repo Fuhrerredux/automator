@@ -20,6 +20,7 @@
   "bugs": {
     "url": "https://github.com/Fuhrerredux/automator/issues"
   },
+  "types": "global.d.ts",
   "homepage": "https://github.com/Fuhrerredux/automator#readme",
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.0",

@@ -25,7 +25,10 @@ declare global {
   namespace Automator {
     type Definition = { key: string; name: string; short?: string }
     type Ideology = Definition
-    type Position = Definition & { hirable?: boolean; removable?: boolean }
+    type Position = Definition & { 
+      hirable?: boolean
+      removable?: boolean
+    }
     type Configuration = {
       ideologies: Record<string, Omit<Ideology, 'key'>>
       positions: Record<string, Omit<Position, 'key'>>
@@ -33,14 +36,20 @@ declare global {
         defaultCost: number
       }
     }
-
     type Preference = {
       customConfig: boolean
       positionPrevention: boolean
       optionLogging: boolean
       language: string
       predefinedConfiguration: string | null
+      // traitFiles: boolean
     }
+    // namespace CharacterDefinitions {
+    //   type CharacterPositions = {
+    //     config: Automator.Configuration
+    //     positions: Automator.Position[]
+    //   }
+    // } for future trait rework
   }
 
   type KeyOfType<T, V> = keyof {
@@ -68,7 +77,7 @@ declare global {
     tag: string
     ideology: string | null
     leaderRoles: CountryLeader[]
-    advisorRoles: Advisor[]
+    advisorRoles: Advisor[] // ?
     commanderTraits: string[]
     roles: CharacterRole[]
   }
@@ -98,6 +107,32 @@ declare global {
     removeable: boolean
     trait: string
     cost: number
+  }
+  namespace Characters {
+    type Portrait = {
+      small?: string
+      large?: string
+    }
+    type Officer = Advisor
+    type ArmyPortrait = Portrait;
+    type CivilianPortrait = Portrait;
+    type NavyPortrait = Portrait;
+    type GeneralRole = Exclude<CommandingRole, "officer">;
+    type General = {
+      type: GeneralRole;
+      traits: string;
+    }
+    type CharacterRoles = {
+      leaderRoles?: CountryLeader[]
+      commandingRoles?: General[]
+      advisorRoles?: Advisor[]
+    }
+
+    type AdvisorWithToken = Advisor & { ideaToken: string }
+    type Commanding = {
+      [key in Characters.GeneralRole]?: Characters.General;
+    }
+    type GeneralPartial = Partial<Record<Characters.GeneralRole, Characters.General>>
   }
   type Sprite = {
     name: string

@@ -3,7 +3,7 @@ import { Field, type FieldEntry, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { computed } from 'vue'
 import Dropdown from '@components/dropdown.vue'
-import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
+import { MinusIcon, PlusIcon } from   '@heroicons/vue/20/solid'
 import useConfiguration from '@stores/config'
 import { toTypedSchema } from '@vee-validate/yup'
 
@@ -79,7 +79,7 @@ const onSubmit = handleSubmit((formData: CountryLeaderForm) => {
           </label>
         </div>
         <button type="button" class="button-primary shrink-0" @click="$emit('remove', index)">
-          <minus-icon class="h-5 w-5" />
+          <minus-icon class="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -102,7 +102,7 @@ const onSubmit = handleSubmit((formData: CountryLeaderForm) => {
         </label>
       </div>
       <button type="submit" class="button-primary shrink-0">
-        <plus-icon class="h-5 w-5" />
+        <plus-icon class="w-5 h-5" />
       </button>
     </form>
   </div>

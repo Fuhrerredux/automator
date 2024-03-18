@@ -26,7 +26,7 @@ const keys = computed(() => props.options.map((e) => e.value))
     @update:model-value="$emit('update:modelValue', $event)"
     as="div"
     class="relative">
-    <listbox-button class="dropdown-button w-full">
+    <listbox-button class="w-full dropdown-button">
       <span class="flex-1 text-left truncate">
         {{
           modelValue && keys.includes(modelValue.value)
@@ -34,7 +34,7 @@ const keys = computed(() => props.options.map((e) => e.value))
             : t('placeholder.dropdown')
         }}
       </span>
-      <chevron-down-icon class="ml-2 h-4 w-4" />
+      <chevron-down-icon class="w-4 h-4 ml-2" />
     </listbox-button>
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -49,14 +49,14 @@ const keys = computed(() => props.options.map((e) => e.value))
           v-for="option in options"
           v-slot="{ selected }"
           :value="option">
-          <li :key="option.value" class="dropdown-option truncate">
+          <li :key="option.value" class="truncate dropdown-option">
             <span>
               {{ localise ? t(option.label) : option.label }}
             </span>
             <span
               v-if="selected"
               class="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-600">
-              <check-icon class="h-4 w-4" aria-hidden="true" />
+              <check-icon class="w-4 h-4" aria-hidden="true" />
             </span>
           </li>
         </listbox-option>

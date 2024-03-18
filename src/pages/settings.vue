@@ -63,7 +63,7 @@ const handleConfigurationChange = async (value: DropdownOption<string>) => {
     <div class="items-center justify-between flex-auto">
       <h1 class="header">{{ t('settings.header') }}</h1>
     </div>
-    <div class="space-y-4 mt-4">
+    <div class="mt-4 space-y-4">
       <preference-group title="settings.character">
         <switch-preference
           label="settings.position-prevention"
@@ -78,7 +78,7 @@ const handleConfigurationChange = async (value: DropdownOption<string>) => {
           preference-key="customConfig"
           @change="onCustomConfigurationChange" />
         <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
-          <legend class="text-sm shrink-0 font-medium">
+          <legend class="text-sm font-medium shrink-0">
             {{ t('settings.predefined-configs') }}
           </legend>
           <div class="flex-1 space-y-2">
