@@ -83,7 +83,7 @@ function defineCommandingRole(
 ): Characters.Commanding {
   const commandingRolesType: Characters.GeneralPartial = {} as Characters.GeneralPartial
   roles.forEach((role) => {
-    commandingRolesType[role] = { type: role, traits: character.commanderTraits.join('  ') }
+    commandingRolesType[role] = { type: role, trait: character.commanderTraits.join('  ') }
   })
 
   return commandingRolesType
