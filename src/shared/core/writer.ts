@@ -92,28 +92,35 @@ function defineCommandingRole(
 function defineAdvisorRole(
   character: CharacterWithId,
   config: Automator.Configuration
-): { advisors: Characters.AdvisorWithToken[] } {
+): { advisors: Characters.AdvisorWithPositionPrevention[] } {
   const { advisorRoles, ideology } = character
   const token = buildCharacterToken(character)
-  const advisors: Characters.AdvisorWithToken[] = []
+  const advisors: Characters.AdvisorWithPositionPrevention[] = []
+  const positionPrevention = useSettingsStore().getPreference('positionPrevention') === false
+
   if (advisorRoles) {
-    advisorRoles.forEach((role) => {
-      if (role) {
-        advisorRoles.forEach((advisor: Advisor) => {
-          const position = advisor.slot as unknown as Automator.Position
-          const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-          const ideaToken = `${token}_${getPositionSuffix(position, config)}_${suffix}`
-          let advisorObject: Characters.AdvisorWithToken = {
-            slot: advisor.slot,
-            hirable: advisor.hirable,
-            removeable: advisor.removeable,
-            trait: advisor.trait,
-            cost: advisor.cost,
-            ideaToken: ideaToken
-          }
-          advisors.push(advisorObject)
-        })
+    advisorRoles.forEach((advisor: Advisor, index) => {
+      console.log(advisor)
+      const position = advisor.slot as unknown as Automator.Position
+      const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
+      const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
+      const ideaToken = usesIdeologySuffix && suffix != ''
+        ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
+        : `${token}_${getPositionSuffix(position, config)}`
+      const hasMoreThanOneRoles = advisorRoles.length > 1 && !positionPrevention
+      const allOtherPositions = advisorRoles.filter((_, i) => i !== index)
+      let advisorObject: Characters.AdvisorWithPositionPrevention = {
+        slot: advisor.slot,
+        hirable: advisor.hirable,
+        removeable: advisor.removeable,
+        trait: advisor.trait,
+        cost: advisor.cost,
+        ideaToken: ideaToken,
+        positionPrevention: hasMoreThanOneRoles
+        ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
+        : '',  
       }
+      advisors.push(advisorObject)
     })
   }
   return { advisors }
@@ -152,7 +159,9 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
     const leaders = defineCountryLeader(character)
     console.log(character, generalRoles)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
+    console.log(character)
     const minister = defineAdvisorRole(character, config)
+    console.log(minister)
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
@@ -180,22 +189,41 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
     rolesBlock = rolesBlock.replace("marshal", "field_marshal").replace("general", "corps_commander").replace("admiral", "navy_leader")
   
     minister.advisors.forEach((advisor) => {
+      let available = '';
+      console.log(advisor.positionPrevention)
+      if (!advisor.hirable) {
+          available += `
+                ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
+          `;
+      }
+      if (advisor.positionPrevention) {
+          available += `
+              ${advisor.positionPrevention}
+          `;
+      }
       rolesBlock += `
         advisor = {
             cost = ${advisor.cost}
             slot = ${advisor.slot}
-            idea_token = ${advisor.ideaToken}`
-      rolesBlock += !advisor.hirable ? `
-            available = { ROOT  = { has_country_flag = ${advisor.ideaToken}_hired } }
+            idea_token = ${advisor.ideaToken}
+            available = {
+              ${available}
+            } 
+            ${!advisor.hirable ? `
             on_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }
-            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` : ''
-      rolesBlock += advisor.removeable ? `
-            can_be_fired = no` : ''
-      rolesBlock += `
-            traits = { ${character.ideology} ${advisor.trait} }
-        }`
-  })
+            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` 
+            : ''}
+            ${advisor.removeable ? `\n\t\t\tcan_be_fired = no` : ''}
+            traits = { ${character.ideology ? character.ideology : ''} ${advisor.trait} }
+        }
+      `;
+  });
 
+  const lines = rolesBlock.split('\n')
+  rolesBlock = lines[0] + '\n' + lines
+    .slice(1)
+    .filter((line) => line.trim() !== '')
+    .join('\n')
 
     let data = `\t${buildCharacterToken(character)} = {
         name = "${character.name}"

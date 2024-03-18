@@ -8,7 +8,8 @@ const useSettingsStore = defineStore({
       positionPrevention: false,
       optionLogging: true,
       language: 'en',
-      predefinedConfiguration: null
+      predefinedConfiguration: null,
+      usesIdeologySuffixOnToken: true,
     }
   },
   actions: {

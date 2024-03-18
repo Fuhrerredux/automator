@@ -42,6 +42,7 @@ declare global {
       optionLogging: boolean
       language: string
       predefinedConfiguration: string | null
+      usesIdeologySuffixOnToken: boolean
       // traitFiles: boolean
     }
     // namespace CharacterDefinitions {
@@ -132,6 +133,7 @@ declare global {
     }
 
     type AdvisorWithToken = Advisor & { ideaToken: string }
+    type AdvisorWithPositionPrevention = AdvisorWithToken & { positionPrevention: string }
     type Commanding = {
       [key in Characters.GeneralRole]?: Characters.General;
     }

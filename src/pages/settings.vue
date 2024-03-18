@@ -67,16 +67,25 @@ const handleConfigurationChange = async (value: string) => {
       <preference-group title="settings.character">
         <switch-preference
           label="settings.position-prevention"
-          preference-key="positionPrevention" />
+          preference-key="positionPrevention" 
+        />
+        <switch-preference
+          label="settings.uses-ideology-suffix"
+          preference-key="usesIdeologySuffixOnToken"
+        />
       </preference-group>
       <preference-group title="settings.logging">
-        <switch-preference label="settings.option-logging" preference-key="optionLogging" />
+        <switch-preference 
+          label="settings.option-logging" 
+          preference-key="optionLogging" 
+        />
       </preference-group>
       <preference-group title="settings.configuration">
         <switch-preference
           label="settings.custom-config"
           preference-key="customConfig"
-          @change="onCustomConfigurationChange" />
+          @change="onCustomConfigurationChange" 
+        />
         <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
           <legend class="text-sm font-medium shrink-0">
             {{ t('settings.predefined-configs') }}

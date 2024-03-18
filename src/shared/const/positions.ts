@@ -2,25 +2,25 @@ const defaultPositions: Record<string, Omit<Automator.Position, 'key'>> = {
   head_of_government: {
     name: 'Head of Government',
     short: 'hog',
-    hirable: true,
+    hirable: false,
     removable: false
   },
   foreign_minister: {
     name: 'Foreign Minister',
     short: 'for',
-    hirable: true,
+    hirable: false,
     removable: false
   },
   economy_minister: {
     name: 'Economy Minister',
     short: 'eco',
-    hirable: true,
+    hirable: false,
     removable: false
   },
   security_minister: {
     name: 'Security Minister',
     short: 'sec',
-    hirable: true,
+    hirable: false,
     removable: false
   },
   high_command: { name: 'Chief of Staff', short: 'cos' },
