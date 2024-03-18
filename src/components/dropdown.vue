@@ -7,32 +7,33 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 const { t } = useI18n()
 const props = defineProps<{
   options: UserInterface.DataOption[]
-  modelValue: UserInterface.DataOption | undefined | null
+  modelValue: string | undefined | null
   disabled?: boolean
   localise?: boolean
   multiple?: boolean
 }>()
-defineEmits<{
-  (e: 'update:modelValue', value: UserInterface.DataOption): void
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: string): void
 }>()
 
+const item = computed(() => props.options.find((e) => e.value === props.modelValue))
 const keys = computed(() => props.options.map((e) => e.value))
+
+const onChange = (item: UserInterface.DataOption) => {
+  emits('update:modelValue', item.value)
+}
 </script>
 
 <template>
   <listbox
-    :model-value="modelValue"
+    :model-value="item"
     :disabled="disabled"
-    @update:model-value="$emit('update:modelValue', $event)"
+    @update:model-value="onChange"
     as="div"
     class="relative">
     <listbox-button class="w-full dropdown-button">
       <span class="flex-1 text-left truncate">
-        {{
-          modelValue && keys.includes(modelValue.value)
-            ? modelValue.label
-            : t('placeholder.dropdown')
-        }}
+        {{ item && keys.includes(item.value) ? item?.label : t('placeholder.dropdown') }}
       </span>
       <chevron-down-icon class="w-4 h-4 ml-2" />
     </listbox-button>

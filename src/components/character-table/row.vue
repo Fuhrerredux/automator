@@ -29,7 +29,7 @@ const { t } = useI18n()
         <template #default>
           <div class="p-1">
             <menu-item>
-              <button type="button" class="menu-item hidden" @click="$emit('update', character)">
+              <button type="button" class="menu-item" @click="$emit('update', character)">
                 {{ t('action.edit') }}
               </button>
             </menu-item>
