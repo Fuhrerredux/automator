@@ -82,7 +82,6 @@ function defineCommandingRole(
   roles: Characters.GeneralRole[]
 ): Characters.Commanding {
   const commandingRolesType: Characters.GeneralPartial = {} as Characters.GeneralPartial
-
   roles.forEach((role) => {
     commandingRolesType[role] = { type: role, traits: character.commanderTraits.join('  ') }
   })
@@ -94,18 +93,16 @@ function defineAdvisorRole(
   character: CharacterWithId,
   config: Automator.Configuration
 ): { advisors: Characters.AdvisorWithToken[] } {
-  const { advisorRoles, leaderRoles, ideology } = character
+  const { advisorRoles, ideology } = character
   const token = buildCharacterToken(character)
   const advisors: Characters.AdvisorWithToken[] = []
-  let roles = [advisorRoles, leaderRoles] as Characters.CharacterRoles[]
-  if (roles) {
-    roles.forEach((role) => {
-      if (role.advisorRoles) {
-        role.advisorRoles.forEach((advisor: Advisor) => {
+  if (advisorRoles) {
+    advisorRoles.forEach((role) => {
+      if (role) {
+        advisorRoles.forEach((advisor: Advisor) => {
           const position = advisor.slot as unknown as Automator.Position
           const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
           const ideaToken = `${token}_${getPositionSuffix(position, config)}_${suffix}`
-
           let advisorObject: Characters.AdvisorWithToken = {
             slot: advisor.slot,
             hirable: advisor.hirable,
@@ -136,7 +133,7 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         if (!isFirstBlock) {
           portraitsBlock += '\n\t';
         }
-        portraitsBlock += ` \t\t${type} = {\n`
+        portraitsBlock += `        ${type} = {\n`
         if (portrait.large) {
           portraitsBlock += `\t\t\t\tlarge = "${portrait.large}"\n`
         }
@@ -147,20 +144,19 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         isFirstBlock = false
       }
     }
-    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral'].filter(
-      (role) => character.roles.includes(role as CommandingRole)
-    ) as Characters.GeneralRole[]
-
-    console.log(character.leaderRoles)
+    console.log(character.roles )
+    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
+      .filter((role) => character.roles
+        .includes(role as CommandingRole
+      )) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
-    console.log(leaders)
+    console.log(character, generalRoles)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
     const minister = defineAdvisorRole(character, config)
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
       leaders.countryLeader.forEach((leader) => {
-        console.log(leader.ideology)
         rolesBlock += `\n\t\tcountry_leader = {
         \tideology = ${leader.ideology}
         \ttraits = { ${leader.traits} }
@@ -185,27 +181,29 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
   
     minister.advisors.forEach((advisor) => {
       rolesBlock += `
-        \n\t\tadvisor = {
-          cost = ${advisor.cost}
-          slot = ${advisor.slot}
-          idea_token = ${advisor.ideaToken}
-          ${advisor.hirable ? `\n\t\t\tavailable = { ROOT = { has_country_flag = ${advisor.ideaToken}_hired } }` : ''}
-          ${advisor.hirable ? `\n\t\t\ton_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }` : ''}
-          ${advisor.hirable ? `\n\t\t\ton_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` : ''}
-          ${advisor.removeable ? `\n\t\t\tcan_be_fired = no` : ''}
-          traits = { ${character.ideology} ${advisor.trait} }
-        \n\t\t}`
-    })
+        advisor = {
+            cost = ${advisor.cost}
+            slot = ${advisor.slot}
+            idea_token = ${advisor.ideaToken}`
+      rolesBlock += !advisor.hirable ? `
+            available = { ROOT  = { has_country_flag = ${advisor.ideaToken}_hired } }
+            on_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }
+            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` : ''
+      rolesBlock += advisor.removeable ? `
+            can_be_fired = no` : ''
+      rolesBlock += `
+            traits = { ${character.ideology} ${advisor.trait} }
+        }`
+  })
 
 
     let data = `\t${buildCharacterToken(character)} = {
-    \tname = "${character.name}"
-    \tportraits = {
+        name = "${character.name}"
+        portraits = {
     ${portraitsBlock}
-    \t}
+        }
 ${rolesBlock}
     }\n`
-
     content = content.concat(data)
   }
 

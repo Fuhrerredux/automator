@@ -52,7 +52,7 @@ const {
   fields: commanderTraitsFields,
   push: commanderTraitsPush,
   remove: commanderTraitsRemove
-} = useFieldArray<string>('command')
+} = useFieldArray<string>('commanderTraits')
 const {
   fields: advisorRolesFields,
   push: advisorRolesPush,
@@ -197,7 +197,6 @@ const ideologiesOptions = computed(() =>
           <div>
             <legend class="form-label">{{ t('field.role') }}</legend>
             <Field name="commanderRole" v-slot="{ value, handleChange }">
-              <!-- TODO: add support for multiple roles -->
               <dropdown
                 localise
                 value-key="value"

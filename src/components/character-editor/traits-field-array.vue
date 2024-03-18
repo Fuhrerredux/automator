@@ -25,8 +25,11 @@ const { defineField, resetForm, errors, handleSubmit } = useForm<{ value: string
   validationSchema: schema
 })
 const [value, valueAttr] = defineField('value')
+console.log(errors.value)
 
 const onSubmit = handleSubmit(({ value }: { value: string }) => {
+  console.log(errors.value)
+  console.log(value)
   emit('push', value)
   resetForm()
 })
@@ -39,7 +42,7 @@ const onSubmit = handleSubmit(({ value }: { value: string }) => {
         <input readonly type="text" class="form-input" :value="field.value" />
       </label>
       <button type="button" class="button-primary shrink-0" @click="$emit('remove', index)">
-        <minus-icon class="h-5 w-5" />
+        <minus-icon class="w-5 h-5" />
       </button>
     </div>
     <form class="flex items-start gap-2" @submit="onSubmit">
@@ -58,7 +61,7 @@ const onSubmit = handleSubmit(({ value }: { value: string }) => {
         </p>
       </div>
       <button type="submit" class="button-primary shrink-0">
-        <plus-icon class="h-5 w-5" />
+        <plus-icon class="w-5 h-5" />
       </button>
     </form>
   </div>

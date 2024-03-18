@@ -96,11 +96,14 @@ declare global {
     subideology: string
     trait: string
   }
-  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: Automator.Ideology }
+  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & 
+    { subideology: Automator.Ideology }
   type Commander = {
     type: CommandingRole
-    traits: string
+    trait: string
   }
+  type GeneralForm = Omit<Characters.General, 'type'> &
+    { type: DropdownOption<Characters.General> }
   type Advisor = {
     slot: string
     hirable: boolean
@@ -120,7 +123,7 @@ declare global {
     type GeneralRole = Exclude<CommandingRole, "officer">;
     type General = {
       type: GeneralRole;
-      traits: string;
+      trait: string;
     }
     type CharacterRoles = {
       leaderRoles?: CountryLeader[]
