@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import { computed, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useConfiguration from '@/stores/config'
-import Dropdown from '@components/dropdown.vue'
+import Combobox from '@components/combobox.vue'
 import Switch from '@components/switch.vue'
 import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import useTraitsStore from '@stores/traits'
@@ -67,6 +67,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
   emit('push', advisor)
   resetForm()
 })
+
 </script>
 
 <template>
@@ -119,7 +120,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
       <div>
         <Field name="slot" v-slot="{ value, handleChange }">
           <legend class="form-label">Character Slot</legend>
-          <dropdown
+          <combobox
             localise
             :options="slotOptions"
             :model-value="value"
@@ -129,7 +130,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
       <div v-if="Object.keys(traits).includes(characterSlot)">
         <Field name="trait" v-slot="{ value, handleChange }">
           <legend class="form-label">Trait</legend>
-          <dropdown
+          <combobox
             localise
             :options="traitOptions"
             :model-value="value"

@@ -2,7 +2,7 @@
 import { Field, type FieldEntry, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { computed } from 'vue'
-import Dropdown from '@components/dropdown.vue'
+import Combobox from '@components/combobox.vue'
 import { MinusIcon, PlusIcon } from   '@heroicons/vue/20/solid'
 import useConfiguration from '@stores/config'
 import { toTypedSchema } from '@vee-validate/yup'
@@ -87,7 +87,7 @@ const onSubmit = handleSubmit((formData: CountryLeaderForm) => {
       <div class="flex-1">
         <legend class="form-label">Subideology</legend>
         <Field name="subideology" v-slot="{ value, handleChange }">
-          <dropdown
+          <combobox
             value-key="key"
             display-key="name"
             :model-value="value"
