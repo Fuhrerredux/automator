@@ -87,7 +87,7 @@ declare global {
     subideology: string
     trait: string
   }
-  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: Automator.Ideology }
+  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: string }
   type Commander = {
     type: CommandingRole
     traits: string
