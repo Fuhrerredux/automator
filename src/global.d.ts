@@ -75,7 +75,7 @@ declare global {
   type CharacterWithId = Character & { id: string }
   type CharacterForm = {
     ideology: Automator.Ideology | string | null
-    commanderRole: DropdownOption<CommandingRole> | null
+    commanderRole: CommandingRole | null
     commanderTraits: string[]
     advisorRoles: Advisor[]
 
