@@ -15,8 +15,8 @@ export function toFormData(
 
   return {
     ...rest,
-    ideology: ideologies.find((e) => e.key === ideology) ?? null,
-    commanderRole: commanding.find((e) => roles.includes(e.value)) ?? null,
+    ideology: ideologies.find((e) => e.key === ideology)?.key ?? null,
+    commanderRole: commanding.find((e) => roles.includes(e.value))?.value ?? null,
     addLeaderRole: roles.includes('leader'),
     addCommanderRole:
       roles.includes('marshal') || roles.includes('admiral') || roles.includes('general'),
@@ -46,7 +46,7 @@ export function fromFormData(character: CharacterForm): Character {
   } = character
   const roles: CharacterRole[] = []
   if (addLeaderRole) roles.push('leader')
-  if (addCommanderRole && commanderRole?.value) roles.push(commanderRole.value)
+  if (addCommanderRole && commanderRole) roles.push(commanderRole)
   if (addAdvisorRole) roles.push('advisor')
 
   return {

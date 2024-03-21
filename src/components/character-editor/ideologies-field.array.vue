@@ -17,14 +17,7 @@ const emit = defineEmits<{
 
 const schema = toTypedSchema(
   yup.object().shape({
-    subideology: yup
-      .object()
-      .shape({
-        key: yup.string().required(),
-        name: yup.string().required(),
-        short: yup.string()
-      })
-      .required(),
+    subideology: yup.string().required(),
     trait: yup.string()
   })
 )
@@ -32,7 +25,7 @@ const schema = toTypedSchema(
 const { ideologiesArray } = useConfiguration()
 const { defineField, resetForm, handleSubmit } = useForm<CountryLeaderForm>({
   initialValues: {
-    subideology: ideologiesArray[0],
+    subideology: ideologiesArray[0].key,
     trait: ''
   },
   validationSchema: schema
@@ -40,7 +33,7 @@ const { defineField, resetForm, handleSubmit } = useForm<CountryLeaderForm>({
 const [trait, traitAttr] = defineField('trait')
 
 const options = computed(() => {
-  const ideologies = props.fields.map((e) => e.value.subideology.key)
+  const ideologies = props.fields.map((e) => e.value.subideology)
   return ideologiesArray
     .map((e) => ({ value: e.key, label: e.name }))
     .filter((e) => !ideologies.includes(e.value))
@@ -64,7 +57,7 @@ const onSubmit = handleSubmit((formData: CountryLeaderForm) => {
               type="text"
               class="form-input"
               :id="`subideology-${field.key}`"
-              :value="field.value.subideology.name" />
+              :value="field.value.subideology" />
           </label>
         </div>
         <div class="flex-1">

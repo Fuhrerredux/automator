@@ -85,7 +85,7 @@ declare global {
   type CharacterWithId = Character & { id: string }
   type CharacterForm = {
     ideology: Automator.Ideology | string | null
-    commanderRole: DropdownOption<CommandingRole> | null
+    commanderRole: CommandingRole | null
     commanderTraits: string[]
     advisorRoles: Advisor[]
 
@@ -97,8 +97,7 @@ declare global {
     subideology: string
     trait: string
   }
-  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & 
-    { subideology: Automator.Ideology }
+  type CountryLeaderForm = Omit<CountryLeader, 'subideology'> & { subideology: string }
   type Commander = {
     type: CommandingRole
     trait: string

@@ -32,7 +32,8 @@ const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
     tag: '',
     leaderRoles: [],
     commanderTraits: [],
-    advisorRoles: []
+    advisorRoles: [],
+    commanderRole: null
   }
 })
 
@@ -73,6 +74,7 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     id,
     ...fromFormData(data)
   }
+  if (data.commanderRole) character.roles = character.roles.concat([data.commanderRole])
 
   if (typeof characterId === 'string') {
     const status = await update(character)
@@ -90,6 +92,7 @@ onMounted(async () => {
   if (characterId && typeof characterId === 'string') {
     const characterRaw = await findOne(characterId)
     const formData = toFormData(characterRaw, config)
+
     resetForm({
       values: {
         ...formData,
