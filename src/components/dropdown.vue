@@ -33,7 +33,11 @@ const onChange = (item: UserInterface.DataOption) => {
     class="relative">
     <listbox-button class="w-full dropdown-button">
       <span class="flex-1 text-left truncate">
-        {{ item && keys.includes(item.value) ? item?.label : t('placeholder.dropdown') }}
+        {{ 
+          item && keys.includes(item.value) 
+          ? localise ? t(item?.label) : item?.value
+          : t('placeholder.dropdown') 
+        }}
       </span>
       <chevron-down-icon class="w-4 h-4 ml-2" />
     </listbox-button>

@@ -22,7 +22,6 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-let selected = ref(props.options[0])
 let query = ref('')
 
 const filteredOptions = computed(() =>
@@ -76,12 +75,6 @@ const showAllOptions = () => {
       leave-to-class="transform scale-95 opacity-0"
       @after-leave="query = ''">
       <combobox-options as="ul" class="dropdown-panel">
-        <!-- <div
-          v-if="filteredOptions.length === 0 && query !== ''"
-          class="absolute inset-y-0 right-0 flex items-center px-4 py-2 pr-3 text-zinc-600"
-        >
-        Nothing found.
-        </div> -->
         <template v-if="filteredOptions.length === 0 && query !== ''">
           <li class="truncate dropdown-option">
             <span>Nothing found.</span>
