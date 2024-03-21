@@ -1,6 +1,6 @@
 [package]
 name = "automator"
-version = "0.0.6"
+version = "1.0.0"
 description = "Automator"
 authors = ["dax0102"]
 license = "GPL-3.0"
