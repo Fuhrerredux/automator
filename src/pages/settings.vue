@@ -99,6 +99,12 @@ const handleConfigurationChange = async (value: string) => {
           </div>
         </div>
       </preference-group>
+      <preference-group title="settings.interface">
+        <switch-preference
+          label="settings.advisor-trait-input"
+          preference-key="useInputForAdvisorTraitBox"
+        />
+      </preference-group>
     </div>
   </page>
 </template>

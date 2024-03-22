@@ -10,6 +10,7 @@ const useSettingsStore = defineStore({
       language: 'en',
       predefinedConfiguration: null,
       usesIdeologySuffixOnToken: true,
+      useInputForAdvisorTraitBox: false,
     }
   },
   actions: {

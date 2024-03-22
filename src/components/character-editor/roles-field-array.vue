@@ -9,6 +9,8 @@ import Switch from '@components/switch.vue'
 import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import useTraitsStore from '@stores/traits'
 import { toTypedSchema } from '@vee-validate/yup'
+import useSettingsStore from '@/stores/settings'
+
 
 const props = defineProps<{
   fields: FieldEntry<Advisor>[]
@@ -23,15 +25,23 @@ const schema = toTypedSchema(
     slot: yup.string().required('Advisor slot is required'),
     removeable: yup.boolean().required(),
     hirable: yup.boolean().required(),
-    trait: yup.string().required('Trait is required'),
+    //.required('Trait is required'),
+    trait: yup.string(),
     cost: yup.number()
   })
 )
 
+// const {
+//   fields: advisorTraitFields,
+//   push: advisorTraitPush,
+//   remove: advisorTraitRemove
+// } = useFieldArray<string>('trait')
+
 const { t } = useI18n()
 const { traits } = useTraitsStore()
 const { config, positionsArray } = useConfiguration()
-const { resetForm, setValues, handleSubmit, errors } = useForm<Advisor>({
+const settingsStore = useSettingsStore()
+const { defineField, resetForm, setValues, handleSubmit, errors } = useForm<Advisor>({
   initialValues: {
     slot: positionsArray.length > 0 ? positionsArray[0].key : '',
     removeable: false,
@@ -44,13 +54,18 @@ const { resetForm, setValues, handleSubmit, errors } = useForm<Advisor>({
 console.log(errors.value)
 const { value: characterSlot } = useField<string>('slot')
 
+const [trait, traitAttr] = defineField('trait')
+
+
 const slotOptions = computed(() => {
   const slots = props.fields.map((e) => e.value.slot)
+  console.log(errors.value)
   return positionsArray
     .map((e) => ({ value: e.key, label: e.name }))
     .filter((e) => !slots.includes(e.value))
 })
 const traitOptions = computed(() => {
+  console.log(errors.value)
   return traits[characterSlot.value as Position].map((e) => ({ label: e, value: e }))
 })
 
@@ -62,10 +77,14 @@ watch(characterSlot, () => {
 })
 
 
-const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
-  const advisor = { ...rest, slot: String(slot) }
+const onSubmit = handleSubmit(({ slot, ...rest }: Advisor & { trait?: string }) => {
+  console.log(errors.value)
+  const advisor = { ...rest, slot: String(slot), trait: rest.trait }
   emit('push', advisor)
   resetForm()
+  if (settingsStore.getPreference('useInputForAdvisorTraitBox')) {
+    setValues({ trait: '' })
+  }
 })
 
 </script>
@@ -127,15 +146,33 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
             @update:model-value="handleChange" />
         </Field>
       </div>
-      <div v-if="Object.keys(traits).includes(characterSlot)">
+      <div v-if="Object.keys(traits).includes(characterSlot) && !settingsStore.getPreference('useInputForAdvisorTraitBox')">
         <Field name="trait" v-slot="{ value, handleChange }">
           <legend class="form-label">Trait</legend>
-          <combobox
+          <combobox v-if="!settingsStore.getPreference('useInputForAdvisorTraitBox')"
             localise
             :options="traitOptions"
             :model-value="value"
             @update:model-value="handleChange" />
+          <!-- <role-trait-field-array v-if="settingsStore.getPreference('useInputForAdvisorTraitBox')"
+            :fields=advisorTraitFields
+            @push="advisorTraitPush"
+            @remove="advisorTraitRemove"
+            @update:model-value="handleChange"
+          /> -->
         </Field>
+      </div>
+      <div >
+        <label for="traitInput">
+          <span class="form-label">Trait</span>
+          <input v-if="settingsStore.getPreference('useInputForAdvisorTraitBox')"
+            type="text"
+            id="traitInput"
+            class="form-input"
+            v-model="trait"
+            v-bind="traitAttr"
+          />
+        </label>
       </div>
       <div>
         <Field name="cost" v-slot="{ value, handleChange }">

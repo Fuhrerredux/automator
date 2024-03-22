@@ -5,7 +5,7 @@ import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import IdeologyFieldArray from '@components/character-editor/ideologies-field.array.vue'
+import IdeologyFieldArray from '@components/character-editor/ideologies-field-array.vue'
 import RolesFieldArray from '@components/character-editor/roles-field-array.vue'
 import TraitsFieldArray from '@components/character-editor/traits-field-array.vue'
 import Dropdown from '@components/dropdown.vue'
@@ -26,7 +26,7 @@ const { query } = useRoute()
 const { config, ideologiesArray } = useConfiguration()
 const { create, update, findOne } = useCharacterStore()
 const { characterId } = query
-const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
+const { defineField, resetForm, handleSubmit, errors } = useForm<CharacterForm>({
   initialValues: {
     name: '',
     tag: '',
@@ -36,6 +36,7 @@ const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
     commanderRole: null
   }
 })
+console.log(errors.value)
 
 const [name, nameAttrs] = defineField('name')
 const [tag, tagAttrs] = defineField('tag')
@@ -68,6 +69,7 @@ const onTagInput = (event: InputEvent) => {
 
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
   console.log(data)
+  console.log(errors.value)
   const id = typeof characterId === 'string' ? characterId : nanoid()
 
   const character: CharacterWithId = {
@@ -92,7 +94,7 @@ onMounted(async () => {
   if (characterId && typeof characterId === 'string') {
     const characterRaw = await findOne(characterId)
     const formData = toFormData(characterRaw, config)
-
+    console.log(errors.value)
     resetForm({
       values: {
         ...formData,

@@ -43,6 +43,7 @@ declare global {
       language: string
       predefinedConfiguration: string | null
       usesIdeologySuffixOnToken: boolean
+      useInputForAdvisorTraitBox: boolean
       // traitFiles: boolean
     }
     // namespace CharacterDefinitions {
