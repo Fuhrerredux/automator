@@ -1,0 +1,182 @@
+{
+	"app": "Automator",
+	"route": {
+		"main": "Principal",
+		"characters": "Personajes",
+		"others": "Otros",
+		"character-import": "Importación de Personajes",
+		"analyze-gfx": "Analizar GFX"
+	},
+	"settings": {
+		"header": "Configuración",
+		"character": {
+			"name": "Personaje",
+			"position-prevention": "Prevenir que un oficial tenga más de 1 rol a la vez.",
+			"uses-ideology-suffix": "Usar sufijo de ideología en fichas de idea de asesor."
+		},
+		"logging": {
+			"name": "Registro",
+			"option-logging": "Agregar declaraciones de registro en opciones además de eventos."
+		},
+		"configuration": {
+			"name": "Configuración",
+			"custom-config": "Usar configuración personalizada",
+			"predefined-configs": "Configuraciones Predefinidas Disponibles"
+		},
+		"interface": {
+			"name": "Interfaz",
+			"advisor-trait-input": "Hacer que el cuadro de rasgos del asesor sea una entrada"
+		}
+	},
+	"field": {
+		"tag": "Etiqueta del País",
+		"name": "Nombre del Personaje",
+		"ideology": "Ideología",
+		"leader-role": "Agregar Rol de Líder",
+		"commanding-role": "Agregar Rol de Comandante",
+		"advisor-role": "Agregar Rol de Asesor",
+		"role": "Rol",
+		"roles": "Roles",
+		"traits": "Rasgos",
+		"actions": "Acciones",
+		"mod-dir": "Directorio del Mod",
+		"traits-def": "Definiciones de Rasgos",
+		"leader-roles": "Roles de Líder",
+		"dropzone": "Arrastra y suelta el archivo aquí, o haz clic para buscar un archivo",
+		"dropzone-active": "Suelta el archivo aquí",
+		"cost": "Costo",
+		"hirable": "Contratable",
+		"removeable": "Removible"
+	},
+	"placeholder": {
+		"tag": "USA",
+		"name": "Douglas MacArthur",
+		"dropdown": "Elegir uno",
+		"dropdown-multiple": "Elegir varios",
+		"traits": "Ingresa los rasgos aquí, asegúrate de separarlos por coma",
+		"remaining": "{num} más",
+		"character-parsed": "{num} personajes analizados"
+	},
+	"action": {
+		"create": "Crear",
+		"edit": "Editar",
+		"import": "Importar",
+		"remove": "Eliminar",
+		"cancel": "Cancelar",
+		"export": "Exportar",
+		"row-actions": "Acciones",
+		"browse": "Explorar",
+		"generate": "Generar",
+		"load": "Cargar",
+		"purge": "Purgar",
+		"learn-more": "Más información",
+		"select": "Seleccionar",
+		"save": "Guardar"
+	},
+	"loading": {
+		"saving": "Guardando",
+		"removing": "Eliminando",
+		"exporting": "Exportando",
+		"purging": "Purgando"
+	},
+	"roles": {
+		"marshal": "Mariscal de Campo",
+		"general": "Comandante de Cuerpo",
+		"admiral": "Almirante"
+	},
+	"modal": {
+		"character-editor": {
+			"create": "Crear Personaje",
+			"update": "Actualizar Personaje"
+		},
+		"remove-character": {
+			"heading": "¿Eliminar personaje?",
+			"summary": "¿Estás seguro de que deseas eliminar al personaje \"{name}\" para la etiqueta {tag}? Esta acción no se puede deshacer."
+		},
+		"purge-characters": {
+			"heading": "¿Eliminar todos los personajes?",
+			"summary": "¿Estás seguro de que deseas purgar o eliminar cada entrada de personaje en la base de datos? Esta acción no se puede deshacer."
+		},
+		"character-export": {
+			"heading": "Exportador de Personajes",
+			"summary": "Todos los personajes definidos en la base de datos se exportarán a los archivos del mod; en la carpeta de personajes. Sin embargo, esto sobrescribirá las definiciones actuales, asegúrate de hacer una copia de seguridad antes de usar esta función."
+		},
+		"character-import": {
+			"heading": "Importación de Personajes",
+			"summary": "Importar definiciones de personajes desde los archivos del mod."
+		},
+		"file-select": {
+			"heading": "Elige un archivo",
+			"summary": "Explora y selecciona un archivo para procesar"
+		}
+	},
+	"status": {
+		"character": {
+			"created": "Personaje creado",
+			"updated": "Personaje actualizado",
+			"removed": "Personaje eliminado",
+			"purged": "Personajes purgados"
+		},
+		"saved": "Guardado",
+		"characters-exported": "Personajes exportados",
+		"characters-imported": "Personajes importados",
+		"character-removed": "Personaje eliminado",
+		"characters-localised": "Personajes Localizados",
+		"shines-generated": "Destellos generados",
+		"event-logged": "Registro de Eventos Agregado",
+		"log-removed": "Registro Eliminado",
+		"sprites-fixed": "Entradas de Sprites Arregladas",
+		"config-removed": "Configuración eliminada",
+		"config-updated": "Configuración actualizada"
+	},
+	"info": {
+		"import-ext": "Puedes usar un archivo de personajes o el archivo de localización que tenga definiciones para los ministros que se importarán. {end}"
+	},
+	"error": {
+		"generic-dir-read": "Error al leer el directorio",
+		"no-dir": "No se ha seleccionado ningún directorio de mod. Debes explorar la raíz de tu directorio de mod para comenzar.",
+		"no-dir-short": "No se ha seleccionado ningún directorio de mod",
+		"no-characters-to-export": "No hay personajes para exportar",
+		"file-not-found": "Archivo no encontrado",
+		"no-file-selected-config": "No has seleccionado ningún archivo para importar. La configuración personalizada se desactivará."
+	},
+	"others": {
+		"shine": {
+			"heading": "Generador de Destellos GFX de Enfoque",
+			"summary": "Genera destellos para sprites definidos en el archivo FX_goals.gfx."
+		},
+		"logremoving": {
+			"heading": "Eliminar Registro",
+			"summary": "Elimina declaraciones de registro agregadas en archivos. Se ha probado en eventos, pero puede funcionar en otros como enfoques o decisiones. Siempre hacer antes de intentar agregar registro a eventos."
+		},
+		"eventlogging": {
+			"heading": "Registrar Eventos",
+			"summary": "Agrega declaraciones de registro a eventos y sus opciones. ADVERTENCIA: Si el evento ya tiene un bloque inmediato, se creará uno nuevo independientemente. ADVERTENCIA: Si los bloques de eventos dentro de las opciones abarcan múltiples bloques, también se agregará registro."
+		},
+		"character-recruit": {
+			"heading": "Agregar Personajes a Archivos de Historia",
+			"summary": "Agrega efectos 'recruit_character' al final de los archivos de historia"
+		},
+		"character-localisation": {
+			"heading": "Localizar Personajes",
+			"summary": "Localiza Personajes agregando sus nombres en el archivo de localización seleccionado. ADVERTENCIA: Los personajes deben importarse para localizarlos correctamente."
+		},
+		"optimize-gfx": {
+			"heading": "Optimizar Definiciones de Sprites",
+			"summary": "Verifica si las definiciones de sprites no tienen rutas de archivo faltantes."
+		},
+		"fix-sprites": {
+			"heading": "Arreglar Definiciones de Sprites",
+			"summary": "Elimina automáticamente las definiciones de sprites duplicadas y las ordena alfabéticamente según las etiquetas en common/country_tags/00_countries.txt."
+		}
+	},
+	"tab": {
+		"orphaned": "Huérfano",
+		"duplicate": "Duplicado"
+	},
+	"sections": {
+		"gfx-optimization": "Optimización de GFX",
+		"character-management": "Gestión de Personajes",
+		"event-handling": "Manejo de Eventos"
+	}
+}

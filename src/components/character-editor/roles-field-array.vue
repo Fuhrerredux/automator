@@ -156,7 +156,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor & { trait?: string }) 
             @update:model-value="handleChange" />
         </Field>
       </div>
-      <div >
+      <div v-if="settingsStore.getPreference('useInputForAdvisorTraitBox')"></div>
         <label for="traitInput">
           <span class="form-label">Trait</span>
           <input v-if="settingsStore.getPreference('useInputForAdvisorTraitBox')"

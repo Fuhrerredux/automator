@@ -3,7 +3,8 @@ const languageNames: { [key: string]: string } = {
   el: 'Ελληνικά',
   it: 'Italiano',
   de: 'Deutsch',
-  fr: 'Français'
+  fr: 'Français',
+  es: "Español"
 };
 
 export default function getLanguageName(locale: string): string {
