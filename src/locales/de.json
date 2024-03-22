@@ -7,10 +7,18 @@
     "character-import": "Charakter-Importer",
     "analyze-gfx": "GFX analysieren"
   },
-  "theme": {
-    "auto": "System",
-    "dark": "Dunkel",
-    "light": "Hell"
+  "settings": {
+    "header": "Einstellungen",
+    "character": "Charakter",
+    "logging": "Protokollierung",
+    "configuration": "Konfiguration",
+    "interface": "Schnittstelle",
+    "position-prevention": "Verhindern, dass ein Offizier mehr als 1 Rolle gleichzeitig hat.",
+    "custom-config": "Benutzerdefinierte Konfiguration verwenden",
+    "option-logging": "Protokollierung auf Optionen sowie Ereignisse hinzufügen.",
+    "predefined-configs": "Verfügbare Voreinstellungen",
+    "uses-ideology-suffix": "Verwenden Sie einen ideologischen Suffix auf Berater-Ideen-Token.",
+    "advisor-trait-input": "Machen Sie das Berater-Eigenschaftsfeld zu einer Eingabe"
   },
   "field": {
     "tag": "Länderkennung",
@@ -18,8 +26,7 @@
     "ideology": "Ideologie",
     "leader-role": "Führungsrolle hinzufügen",
     "commanding-role": "Befehlshaber-Rolle hinzufügen",
-    "minister-role": "Minister-Rolle hinzufügen",
-    "officer-role": "Offiziersrolle hinzufügen",
+    "advisor-role": "Beraterrolle hinzufügen",
     "role": "Rolle",
     "roles": "Rollen",
     "traits": "Eigenschaften",
@@ -28,7 +35,10 @@
     "traits-def": "Eigenschaftsdefinitionen",
     "leader-roles": "Führungsrollen",
     "dropzone": "Datei hierher ziehen oder klicken, um eine Datei zu durchsuchen",
-    "dropzone-active": "Datei hier ablegen"
+    "dropzone-active": "Datei hier ablegen",
+    "cost": "Kosten",
+    "hirable": "Einstellbar",
+    "removeable": "Entfernbar"
   },
   "placeholder": {
     "tag": "GER",
@@ -52,7 +62,8 @@
     "load": "Laden",
     "purge": "Bereinigen",
     "learn-more": "Erfahren Sie mehr",
-    "select": "Auswählen"
+    "select": "Auswählen",
+    "save": "Speichern"
   },
   "loading": {
     "saving": "Speichern",
@@ -60,32 +71,10 @@
     "exporting": "Exportieren",
     "purging": "Bereinigen"
   },
-  "ideology": {
-    "vanguardist": "Nationaler Kollektivist",
-    "collectivist": "Sozialist",
-    "libertarian_socialist": "Libertärer Sozialist",
-    "social_democrat": "Sozialdemokrat",
-    "social_liberal": "Sozialliberal",
-    "market_liberal": "Marktliberal",
-    "social_conservative": "Sozialkonservativ",
-    "authoritarian_democrat": "Autoritärer Demokrat",
-    "paternal_autocrat": "Väterlicher Autokrat",
-    "national_populist": "Nationalpopulist",
-    "valkist": "Valkist"
-  },
   "roles": {
     "marshal": "Feldmarschall",
-    "general": "Korpskommandant",
-    "admiral": "Admiral",
-    "head_of_government": "Regierungschef",
-    "foreign_minister": "Außenminister",
-    "economy_minister": "Wirtschaftsminister",
-    "security_minister": "Sicherheitsminister",
-    "high_command": "Generalstab",
-    "army_chief": "Heereschef",
-    "air_chief": "Luftwaffenchef",
-    "navy_chief": "Marinechef",
-    "theorist": "Theoretiker"
+    "general": "Korpskommandeur",
+    "admiral": "Admiral"
   },
   "modal": {
     "character-editor": {
@@ -98,7 +87,7 @@
     },
     "purge-characters": {
       "heading": "Alle Charaktere entfernen?",
-      "summary": "Sind Sie sicher, dass Sie jede Charaktereinträge in der Datenbank bereinigen oder entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+      "summary": "Sind Sie sicher, dass Sie jeden Charaktereintrag in der Datenbank bereinigen oder entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
     },
     "character-export": {
       "heading": "Charakterexporteur",
@@ -114,11 +103,22 @@
     }
   },
   "status": {
+    "character": {
+      "created": "Charakter erstellt",
+      "updated": "Charakter aktualisiert",
+      "removed": "Charakter gelöscht",
+      "purged": "Charaktere bereinigt"
+    },
     "saved": "Gespeichert",
     "characters-exported": "Charaktere exportiert",
     "characters-imported": "Charaktere importiert",
     "character-removed": "Charakter entfernt",
-    "shines-generated": "Shines generiert"
+    "shines-generated": "Shines generiert",
+    "event-logged": "Ereignisprotokollierung hinzugefügt",
+    "log-removed": "Protokollierung entfernt",
+    "sprites-fixed": "Sprite-Einträge behoben",
+    "config-removed": "Konfiguration entfernt",
+    "config-updated": "Konfiguration aktualisiert"
   },
   "info": {
     "import-ext": "Sie können eine Zeichen- oder Lokalisierungsdatei verwenden, die Definitionen für die Minister enthält, die importiert werden sollen. {end}"
@@ -128,24 +128,44 @@
     "no-dir": "Kein Mod-Verzeichnis ausgewählt. Sie müssen das Stammverzeichnis Ihres Mod-Verzeichnisses durchsuchen, um loszulegen.",
     "no-dir-short": "Kein Mod-Verzeichnis ausgewählt",
     "no-characters-to-export": "Es gibt keine Charaktere zum Exportieren",
-    "file-not-found": "Datei nicht gefunden"
+    "file-not-found": "Datei nicht gefunden",
+    "no-file-selected-config": "Sie haben keine Datei zum Importieren ausgewählt. Die Einstellung für die benutzerdefinierte Konfiguration wird deaktiviert."
   },
-  "others": {
-    "shine": {
-      "heading": "Fokus-GFX-Shine-Generator",
-      "summary": "Generieren Sie Glanz für in der Datei FX_goals.gfx definierte Sprites."
-    },
-    "character-recruit": {
-      "heading": "Charaktere am Ende der Geschichtsdateien hinzufügen",
-      "summary": "Fügt 'recruit_character'-Effekte am Ende der Geschichtsdateien hinzu"
-    },
-    "optimize-gfx": {
-      "heading": "Sprite-Definitionen optimieren",
-      "summary": "Überprüfen Sie, ob Sprite-Definitionen keine fehlenden Dateipfade haben."
-    }
+  "shine": {
+    "heading": "Fokus-GFX-Glanz-Generator",
+    "summary": "Generieren Sie Glanz für in der Datei FX_goals.gfx definierte Sprites."
+  },
+  "logremoving": {
+    "heading": "Protokollierung entfernen",
+    "summary": "Entfernt in Dateien hinzugefügte Protokollierungsaussagen. Es wurde auf Ereignisse getestet, kann aber auch bei anderen wie Fokussen oder Entscheidungen funktionieren. Führen Sie diese Aktion immer aus, bevor Sie versuchen, Ereignissen Protokollierung hinzuzufügen."
+  },
+  "eventlogging": {
+    "heading": "Ereignisse protokollieren",
+    "summary": "Fügt Ereignissen und ihren Optionen Protokollierungsaussagen hinzu. WARNUNG: Wenn das Ereignis bereits einen sofortigen Block hat, wird unabhängig davon ein neuer erstellt. WARNUNG: Wenn Ereignisblöcke in Optionen mehrere Blöcke umfassen, wird auch Protokollierung hinzugefügt."
+  },
+  "character-recruit": {
+    "heading": "Charaktere am Ende der Geschichtsdateien hinzufügen",
+    "summary": "Fügt 'recruit_character'-Effekte am Ende der Geschichtsdateien hinzu"
+  },
+  "character-localisation": {
+    "heading": "Charaktere lokalisieren",
+    "summary": "Lokalisiert Charaktere, indem ihre Namen in die ausgewählte Lokalisierungsdatei eingefügt werden. WARNUNG: Die Charaktere müssen importiert werden, damit sie korrekt lokalisiert werden."
+  },
+  "optimize-gfx": {
+    "heading": "Sprite-Definitionen optimieren",
+    "summary": "Überprüfen Sie, ob Sprite-Definitionen keine fehlenden Dateipfade haben."
+  },
+  "fix-sprites": {
+    "heading": "Sprite-Definitionen reparieren",
+    "summary": "Entfernt automatisch doppelte Sprite-Definitionen und sortiert sie alphabetisch anhand der Tags in common/country_tags/00_countries.txt."
   },
   "tab": {
     "orphaned": "Verwaist",
     "duplicate": "Duplikat"
+  },
+  "sections": {
+    "gfx-optimization": "GFX-Optimierung",
+    "character-management": "Charakterverwaltung",
+    "event-handling": "Ereignisverarbeitung"
   }
 }

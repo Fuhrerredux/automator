@@ -7,19 +7,34 @@
 		"character-import": "Importateur de personnages",
 		"analyze-gfx": "Analyser GFX"
 	},
-	"theme": {
-		"auto": "Système",
-		"dark": "Foncé",
-		"light": "Clair"
-	},
+	"settings": {
+		"header": "Paramètres",
+		"character": {
+			"name": "Personnage",
+			"position-prevention": "Empêcher un officier d'avoir plus d'un rôle à la fois.",
+			"uses-ideology-suffix": "Utiliser un suffixe d'idéologie sur les jetons d'idées des conseillers."
+		},
+		"logging": {
+			"name": "Journalisation",
+			"option-logging": "Ajouter des déclarations de journalisation sur les options ainsi que sur les événements."
+		},
+		"configuration": {
+			"name": "Configuration",
+			"custom-config": "Utiliser une configuration personnalisée",
+			"predefined-configs": "Configurations prédéfinies disponibles"
+		},
+		"interface": {
+			"name": "Interface",
+			"advisor-trait-input": "Faire de la boîte de caractéristiques de conseiller une entrée"
+		}
+	},	  
 	"field": {
 		"tag": "Tag du pays",
 		"name": "Nom du personnage",
 		"ideology": "Idéologie",
 		"leader-role": "Ajouter un rôle de leader",
 		"commanding-role": "Ajouter un rôle de commandant",
-		"minister-role": "Ajouter un rôle de ministre",
-		"officer-role": "Ajouter un rôle d'officier",
+		"advisor-role": "Ajouter un rôle conseiller",
 		"role": "Rôle",
 		"roles": "Rôles",
 		"traits": "Traits",
@@ -28,7 +43,10 @@
 		"traits-def": "Définitions des traits",
 		"leader-roles": "Rôles de leader",
 		"dropzone": "Glissez-déposez le fichier ici ou cliquez pour parcourir un fichier",
-		"dropzone-active": "Déposez le fichier ici"
+		"dropzone-active": "Déposez le fichier ici",
+		"cost": "Coût",
+		"hirable": "Engageable",
+		"removeable": "Supprimable"
 	},
 	"placeholder": {
 		"tag": "USA",
@@ -52,7 +70,8 @@
 		"load": "Charger",
 		"purge": "Purger",
 		"learn-more": "En savoir plus",
-		"select": "Sélectionner"
+		"select": "Sélectionner",
+		"save": "Enregistrer",
 	},
 	"loading": {
 		"saving": "Enregistrement",
@@ -60,32 +79,10 @@
 		"exporting": "Exportation",
 		"purging": "Purge"
 	},
-	"ideology": {
-		"vanguardist": "Collectiviste national",
-		"collectivist": "Socialiste",
-		"libertarian_socialist": "Socialiste libertaire",
-		"social_democrat": "Social-démocrate",
-		"social_liberal": "Libéral social",
-		"market_liberal": "Libéral de marché",
-		"social_conservative": "Conservateur social",
-		"authoritarian_democrat": "Démocrate autoritaire",
-		"paternal_autocrat": "Autocrate paternaliste",
-		"national_populist": "Populiste national",
-		"valkist": "Valkiste"
-	},
 	"roles": {
 		"marshal": "Maréchal de champ",
 		"general": "Commandant de corps",
-		"admiral": "Amiral",
-		"head_of_government": "Chef de gouvernement",
-		"foreign_minister": "Ministre des Affaires étrangères",
-		"economy_minister": "Ministre de l'Économie",
-		"security_minister": "Ministre de la Sécurité",
-		"high_command": "Chef d'état-major",
-		"army_chief": "Chef d'armée",
-		"air_chief": "Chef de l'armée de l'air",
-		"navy_chief": "Chef de la marine",
-		"theorist": "Théoricien"
+		"admiral": "Amiral"
 	},
 	"modal": {
 		"character-editor": {
@@ -114,10 +111,22 @@
 		}
 	},
 	"status": {
+		"character": {
+			"created": "Personnage créé",
+			"updated": "Personnage mis à jour",
+			"removed": "Personnage supprimé",
+			"purged": "Personnages purgés"
+		},
 		"saved": "Enregistré",
 		"characters-exported": "Personnages exportés",
 		"characters-imported": "Personnages importés",
 		"character-removed": "Personnage supprimé",
+		"characters-localised": "Personnages Localisés",
+		"event-logged": "Journalisation de l'événement ajoutée",
+		"log-removed": "Journalisation supprimée",
+		"sprites-fixed": "Entrées de sprite corrigées",
+		"config-removed": "Configuration supprimée",
+		"config-updated": "Configuration mise à jour",
 		"shines-generated": "Shines générés"
 	},
 	"info": {
@@ -128,24 +137,46 @@
 		"no-dir": "Aucun répertoire mod sélectionné. Vous devez parcourir la racine de votre répertoire mod pour commencer.",
 		"no-dir-short": "Aucun répertoire mod sélectionné",
 		"no-characters-to-export": "Il n'y a aucun personnage à exporter",
-		"file-not-found": "Fichier introuvable"
+		"file-not-found": "Fichier introuvable",
+		"no-file-selected-config": "Vous n'avez sélectionné aucun fichier à importer. Le réglage de la configuration personnalisée sera désactivé."
 	},
 	"others": {
 		"shine": {
 			"heading": "Générateur de brillance GFX",
 			"summary": "Génère des effets de brillance pour les sprites définies dans le fichier FX_goals.gfx."
 		},
+		"logremoving": {
+			"heading": "Supprimer la Journalisation",
+			"summary": "Supprime les déclarations de journalisation ajoutées dans les fichiers. Testé sur les événements, mais peut fonctionner sur d'autres comme les focuses ou les décisions. Toujours faire avant de tenter d'ajouter de la journalisation aux événements."
+		},
+		"eventlogging": {
+			"heading": "Journaliser les Événements",
+			"summary": "Ajoute des déclarations de journalisation aux événements et à leurs options. AVERTISSEMENT : Si l'événement a déjà un bloc immédiat, un nouveau sera créé indépendamment. AVERTISSEMENT : Si des blocs d'événements à l'intérieur des options englobent plusieurs blocs, la journalisation sera également ajoutée."
+		},
 		"character-recruit": {
 			"heading": "Ajouter des personnages aux fichiers d'histoire",
 			"summary": "Ajoute des effets 'recruit_character' à la fin des fichiers d'histoire"
 		},
+		"character-localisation": {
+			"heading": "Localiser les Personnages",
+			"summary": "Localise les personnages en ajoutant leurs noms dans le fichier de localisation sélectionné. AVERTISSEMENT : Les personnages doivent être importés pour être correctement localisés."
+		},
 		"optimize-gfx": {
 			"heading": "Optimiser les définitions des sprites",
 			"summary": "Vérifiez si les définitions des sprites n'ont pas de chemins de fichiers manquants."
+		},
+		"fix-sprites": {
+			"heading": "Corriger les Définitions de Sprite",
+			"summary": "Supprime automatiquement les définitions de sprite en double et les trie alphabétiquement en fonction des tags sur common/country_tags/00_countries.txt."
 		}
 	},
 	"tab": {
 		"orphaned": "Orphelin",
 		"duplicate": "Dupliqué"
-	}
+	},
+	"sections": {
+    "gfx-optimization": "Optimisation des GFX",
+    "character-management": "Gestion des Personnages",
+    "event-handling": "Gestion des Événements"
+  }
 }

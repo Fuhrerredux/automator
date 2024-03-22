@@ -9,16 +9,24 @@
   },
   "settings": {
     "header": "Settings",
-    "character": "Character",
-    "logging": "Logging",
-    "configuration": "Configuration",
-    "interface": "Interface",
-    "position-prevention": "Prevent an officer from having more than 1 role at a time.",
-    "custom-config": "Use custom configuration",
-    "option-logging": "Add log statements on options as well as events.",
-    "predefined-configs": "Available Presets",
-    "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens",
-    "advisor-trait-input": "Make advisor trait box be an input"
+    "character": {
+      "name": "Character",
+      "position-prevention": "Prevent an officer from having more than 1 role at a time.",
+      "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens"
+    },
+    "logging": {
+      "name": "Logging",
+      "option-logging": "Add log statements on options as well as events."
+    },
+    "configuration": {
+      "name": "Configuration",
+      "custom-config": "Use custom configuration",
+      "predefined-configs": "Available Presets"
+    },
+    "interface": {
+      "name": "Interface",
+      "advisor-trait-input": "Make advisor trait box be an input"
+    }
   },
   "field": {
     "tag": "Country Tag",

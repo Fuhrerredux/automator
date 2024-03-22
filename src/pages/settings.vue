@@ -64,31 +64,31 @@ const handleConfigurationChange = async (value: string) => {
       <h1 class="header">{{ t('settings.header') }}</h1>
     </div>
     <div class="mt-4 space-y-4">
-      <preference-group title="settings.character">
+      <preference-group title="settings.character.name">
         <switch-preference
-          label="settings.position-prevention"
+          label="settings.character.position-prevention"
           preference-key="positionPrevention" 
         />
         <switch-preference
-          label="settings.uses-ideology-suffix"
+          label="settings.character.uses-ideology-suffix"
           preference-key="usesIdeologySuffixOnToken"
         />
       </preference-group>
-      <preference-group title="settings.logging">
+      <preference-group title="settings.logging.name">
         <switch-preference 
-          label="settings.option-logging" 
+          label="settings.logging.option-logging" 
           preference-key="optionLogging" 
         />
       </preference-group>
-      <preference-group title="settings.configuration">
+      <preference-group title="settings.configuration.name">
         <switch-preference
-          label="settings.custom-config"
+          label="settings.configuration.custom-config"
           preference-key="customConfig"
           @change="onCustomConfigurationChange" 
         />
         <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
           <legend class="text-sm font-medium shrink-0">
-            {{ t('settings.predefined-configs') }}
+            {{ t('settings.configuration.predefined-configs') }}
           </legend>
           <div class="flex-1 space-y-2">
             <dropdown
@@ -99,9 +99,9 @@ const handleConfigurationChange = async (value: string) => {
           </div>
         </div>
       </preference-group>
-      <preference-group title="settings.interface">
+      <preference-group title="settings.interface.name">
         <switch-preference
-          label="settings.advisor-trait-input"
+          label="settings.interface.advisor-trait-input"
           preference-key="useInputForAdvisorTraitBox"
         />
       </preference-group>
