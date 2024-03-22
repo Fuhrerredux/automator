@@ -6,7 +6,7 @@ import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
-import { loadCountryTags, readSpriteDefinitions, countryTags } from './reader'
+import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -17,156 +17,221 @@ function buildSmallPortraitPath(name: string, tag: string) {
   return `gfx/interface/ministers/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 
-function definePortraits(character: CharacterWithId): string {
+function definePortraits(character: CharacterWithId): {
+  civilian?: Characters.CivilianPortrait
+  army?: Characters.ArmyPortrait
+  navy?: Characters.NavyPortrait
+} {
   const { name, tag, roles } = character
-  const hasCivillian = roles.includes('leader') || roles.includes('advisor')
-  const hasArmy = roles.includes('marshal') || roles.includes('general')
-  const hasArmyWithOfficer = hasArmy || roles.includes('officer')
-  const hasNavy = roles.includes('admiral')
-
-  let portraits = ''
+  const slots = roles
+  // a character may not have slots, we still need portrait defined
+  const hasCivillian =
+    !slots || slots.length === 0 || slots.includes('leader') || slots.includes('advisor')
+  const hasArmy = slots && slots.some((role) => ['marshal', 'general'].includes(role))
+  const hasArmyWithOfficer = slots && (hasArmy || slots.includes('officer'))
+  const hasNavy = slots && slots.includes('admiral')
+  let portraits: {
+    civilian?: Characters.CivilianPortrait
+    army?: Characters.ArmyPortrait
+    navy?: Characters.NavyPortrait
+  } = {}
   if (hasCivillian) {
-    let template = '\t\t\tcivilian = {'
+    const portrait: Characters.CivilianPortrait = {}
 
-    if (roles.includes('leader'))
-      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
-    if (roles.includes('advisor'))
-      template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
-
-    template = template.concat('\n\t\t\t}')
-    portraits = portraits.concat(template)
+    if (slots?.length === 0 || slots?.includes('leader'))
+      portrait.large = buildLargePortaitPath(name, tag)
+    if (slots?.includes('advisor')) portrait.small = buildSmallPortraitPath(name, tag)
+    portraits.civilian = portrait
   }
   if (hasArmyWithOfficer) {
-    let template = ''
-    // spacing issues
-    if (hasCivillian) template = '\n'
-    template = template.concat('\t\t\tarmy = {')
-
-    if (hasArmy)
-      template = template.concat(`\n\t\t\t\tlarge = "${buildLargePortaitPath(name, tag)}"`)
-    if (roles.includes('officer'))
-      template = template.concat(`\n\t\t\t\tsmall = "${buildSmallPortraitPath(name, tag)}"`)
-
-    template = template.concat('\n\t\t\t}')
-    portraits = portraits.concat(template)
+    const portrait: Characters.ArmyPortrait = {}
+    if (hasArmy) portrait.large = buildLargePortaitPath(name, tag)
+    if (slots.includes('officer')) portrait.small = buildLargePortaitPath(name, tag)
+    portraits.army = portrait
   }
   if (hasNavy) {
-    let template = `\n\t\t\tnavy = {
-        large = ${buildLargePortaitPath(name, tag)}
-      }`
-    portraits = portraits.concat(template)
+    const portrait: Characters.NavyPortrait = {}
+    portrait.large = buildLargePortaitPath(name, tag)
+    portraits.navy = portrait
   }
+
   return portraits
 }
 
-function defineCountryLeader(character: CharacterWithId): string {
-  const roles: string[] = []
-
+function defineCountryLeader(character: CharacterWithId): { countryLeader: { ideology: string; traits: string[] }[] } {
+  const countryLeaderObjects: { ideology: string; traits: string[] }[] = [];
+  // set so no duplicates
   Array.from(new Set(character.leaderRoles)).forEach((e) => {
-    roles.push(`\n\t\tcountry_leader = {
-      ideology = ${e.subideology}_subtype
-      traits = {
-        ${e.trait}
-      }
-    }`)
-  })
-
-  return roles.join('')
-}
-
-function defineCommandingRole(character: CharacterWithId): string {
-  if (character.roles.includes('marshal')) {
-    return `\n\t\tfield_marshal = {
-      traits = { ${character.commanderTraits.join(' ')} }
-      skill = 1
-      attack_skill = 1
-      defense_skill = 1
-      planning_skill = 1
-      logistics_skill = 1
-    }`
-  }
-  if (character.roles.includes('general')) {
-    return `\n\t\tcorps_commander = {
-      traits = { ${character.commanderTraits.join(' ')} }
-      skill = 1
-      attack_skill = 1
-      defense_skill = 1
-      planning_skill = 1
-      logistics_skill = 1
-    }`
-  }
-  if (character.roles.includes('admiral')) {
-    return `\n\t\tnavy_leader = {
-      traits = { ${character.commanderTraits.join(' ')} }
-      skill = 1
-      attack_skill = 1
-      defense_skill = 1
-      maneuvering_skill = 1
-      coordination_skill = 1
-    }`
-  }
-
-  return ''
-}
-
-function defineAdvisorRole(character: CharacterWithId, config: Automator.Configuration): string {
-  const { advisorRoles } = character
-  const token = buildCharacterToken(character)
-
-  let advisors = ''
-  advisorRoles.forEach((advisor) => {
-    const ideology = character.ideology
-    const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-    const position = advisor.slot as unknown as Automator.Position
-    const ideaToken = `${token}_${getPositionSuffix(position, config)}_${suffix}`
-
-    let template = `\n\t\tadvisor = {
-      cost = ${advisor.cost}
-      slot = ${advisor.slot}
-      idea_token = ${ideaToken}`
-    if (advisor.hirable) {
-      template = template.concat(`\n\t\t\tavailable = {
-        ROOT = { has_country_flag = ${ideaToken}_hired } 
-      }
-      on_add = {
-        ROOT = { set_country_flag = ${ideaToken}_hired }
-      }
-      on_remove = {
-        ROOT = { clr_country_flag = ${ideaToken}_hired }
-      }`)
+    let ideologyKey = '';
+    if (typeof e.subideology === 'string') {
+      ideologyKey = e.subideology;
+    } else if (e.subideology && typeof e.subideology === 'object' && 'key' in e.subideology) {
+      ideologyKey = e.subideology.key; //ignore error
     }
-    if (advisor.removeable) template = template.concat(`\n\t\t\tcan_be_fired = no`)
-    template = template.concat(`\n\t\t\ttraits = {
-        ${character.ideology}
-        ${advisor.trait}
-      }`)
-    advisors = advisors.concat(template)
+    const countryLeader = {
+      ideology: `${ideologyKey}_subtype`,
+      traits: Array.isArray(e.trait) ? e.trait : [e.trait]
+    };
+    countryLeaderObjects.push(countryLeader);
+  });
+  return { countryLeader: countryLeaderObjects };
+}
+
+function defineCommandingRole(
+  character: CharacterWithId,
+  roles: Characters.GeneralRole[]
+): Characters.Commanding {
+  const commandingRolesType: Characters.GeneralPartial = {} as Characters.GeneralPartial
+  roles.forEach((role) => {
+    commandingRolesType[role] = { type: role, trait: character.commanderTraits.join('  ') }
   })
 
-  return advisors
+  return commandingRolesType
+}
+
+function defineAdvisorRole(
+  character: CharacterWithId,
+  config: Automator.Configuration
+): { advisors: Characters.AdvisorWithPositionPrevention[] } {
+  const { advisorRoles, ideology } = character
+  const token = buildCharacterToken(character)
+  const advisors: Characters.AdvisorWithPositionPrevention[] = []
+  const positionPrevention = useSettingsStore().getPreference('positionPrevention') === false
+
+  if (advisorRoles) {
+    advisorRoles.forEach((advisor: Advisor, index) => {
+      console.log(advisor)
+      const position = advisor.slot as unknown as Automator.Position
+      const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
+      const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
+      const ideaToken = usesIdeologySuffix && suffix != ''
+        ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
+        : `${token}_${getPositionSuffix(position, config)}`
+      const hasMoreThanOneRoles = advisorRoles.length > 1 && !positionPrevention
+      const allOtherPositions = advisorRoles.filter((_, i) => i !== index)
+      let advisorObject: Characters.AdvisorWithPositionPrevention = {
+        slot: advisor.slot,
+        hirable: advisor.hirable,
+        removeable: advisor.removeable,
+        trait: advisor.trait,
+        cost: advisor.cost,
+        ideaToken: ideaToken,
+        positionPrevention: hasMoreThanOneRoles
+        ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
+        : '',  
+      }
+      advisors.push(advisorObject)
+    })
+  }
+  return { advisors }
 }
 
 export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
   let content: string = ''
+  console.log(characters, config)
   for (const character of characters) {
-    const portraits = definePortraits(character)
-    const hasLeaderRole = character.roles.includes('leader')
+    const portraitsData = definePortraits(character)
+    let portraitsBlock = ''
+    let isFirstBlock = true;
+    for (const [type, portrait] of Object.entries(portraitsData)) {
+      // Check if the current portrait type exists and if it has either small or large portrait path
+      if (portrait && (portrait.small || portrait.large)) {
+        // Construct the portrait block for the current type
+        if (!isFirstBlock) {
+          portraitsBlock += '\n\t';
+        }
+        portraitsBlock += `        ${type} = {\n`
+        if (portrait.large) {
+          portraitsBlock += `\t\t\t\tlarge = "${portrait.large}"\n`
+        }
+        if (portrait.small) {
+          portraitsBlock += `\t\t\t\tsmall = "${portrait.small}"\n`
+        }
+        portraitsBlock += `\t\t\t}`
+        isFirstBlock = false
+      }
+    }
+    console.log(character.roles )
+    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
+      .filter((role) => character.roles
+        .includes(role as CommandingRole
+      )) as Characters.GeneralRole[]
+    const leaders = defineCountryLeader(character)
+    console.log(character, generalRoles)
+    const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
+    console.log(character)
+    const minister = defineAdvisorRole(character, config)
+    console.log(minister)
+    let rolesBlock = ''
+
+    if (leaders.countryLeader && leaders.countryLeader.length > 0) {
+      leaders.countryLeader.forEach((leader) => {
+        rolesBlock += `\n\t\tcountry_leader = {
+        \tideology = ${leader.ideology}
+        \ttraits = { ${leader.traits} }
+        }`
+      })
+    }
+
+    for (const role in commanding) {
+      rolesBlock += `
+          \n\t\t${role} = {
+            traits = { ${character.commanderTraits.join(' ')} }
+            skill = 1
+            attack_skill = 1
+            defense_skill = 1
+            ${role === 'admiral' 
+              ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1` 
+              : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
+            }
+          \n\t\t}`;
+      }
+    rolesBlock = rolesBlock.replace("marshal", "field_marshal").replace("general", "corps_commander").replace("admiral", "navy_leader")
+  
+    minister.advisors.forEach((advisor) => {
+      let available = '';
+      console.log(advisor.positionPrevention)
+      if (!advisor.hirable) {
+          available += `
+                ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
+          `;
+      }
+      if (advisor.positionPrevention) {
+          available += `
+              ${advisor.positionPrevention}
+          `;
+      }
+      rolesBlock += `
+        advisor = {
+            cost = ${advisor.cost}
+            slot = ${advisor.slot}
+            idea_token = ${advisor.ideaToken}
+            available = {
+              ${available}
+            } 
+            ${!advisor.hirable ? `
+            on_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }
+            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` 
+            : ''}
+            ${advisor.removeable ? `\n\t\t\tcan_be_fired = no` : ''}
+            traits = { ${character.ideology ? character.ideology : ''} ${advisor.trait} }
+        }
+      `;
+  });
+
+  const lines = rolesBlock.split('\n')
+  rolesBlock = lines[0] + '\n' + lines
+    .slice(1)
+    .filter((line) => line.trim() !== '')
+    .join('\n')
 
     let data = `\t${buildCharacterToken(character)} = {
-    name = "${character.name}"
-    portraits = {
-${portraits}
-    }`
-
-    const leaders = defineCountryLeader(character)
-    const commanding = defineCommandingRole(character)
-    const minister = defineAdvisorRole(character, config)
-
-    if (hasLeaderRole && leaders.trim().length > 0) data = data.concat(leaders)
-    if (commanding.trim().length > 0) data = data.concat(commanding)
-    if (minister.trim().length > 0) data = data.concat(minister)
-
-    data = data.concat('\n\t\t}\n\t}')
+        name = "${character.name}"
+        portraits = {
+    ${portraitsBlock}
+        }
+${rolesBlock}
+    }\n`
     content = content.concat(data)
   }
 
@@ -468,4 +533,72 @@ function generateSpriteTypesBlock(spriteTypes: SpriteEntry[]): string {
   return `spriteTypes = {
 ${sprites.join('\n')}
 }`
+}
+
+export async function localiseFocuses(outputPath: string, content: string): Promise<void> {
+  console.log(content)
+  let focuses: Focus[] = []
+  let locEntries: FocusLocEntry[] = []
+  let prevLine: string = ''
+  const addedKeys = new Set<string>()
+  content.split('\n').forEach((line, _) => {
+    if (prevLine && prevLine.includes('focus = {') && line.includes('id')) {
+      const id = `${
+        line
+          .substring(line.indexOf('=') + 1)
+          .trim()
+          .split('#')[0]
+      }`
+      focuses.push({ id })
+    }
+    prevLine = line
+  })
+  let outputFile = await readTextFile(outputPath)
+  let bom = ''
+  if (outputFile.charCodeAt(0) === 0xfeff) {
+    // Check if BOM exists
+    bom = '\uFEFF'
+    outputFile = outputFile.slice(1) // Remove BOM
+  }
+  let updatedOutputFile = ''
+  const generatedLoc = '\n\n# Generated\n\n'
+  updatedOutputFile += generatedLoc
+
+  focuses.forEach(({ id }) => {
+    const idKey = `${id}: ""`
+    const descKey = `${id}_desc: ""`
+    const idKeyFind = `${id}`
+    const descKeyFind = `${id}_desc`
+
+    // Check if idKey or descKey already exist in the outputFile or have been added
+    if (!addedKeys.has(idKeyFind) && !outputFile.includes(idKeyFind)) {
+      const idPattern = new RegExp(`\\b${id}\\b`)
+      if (
+        outputFile.split('\n').includes(idKeyFind) &&
+        !outputFile.split('\n').includes(descKeyFind)
+      ) {
+        let index = outputFile.split('\n').findIndex((line) => line.includes(idKeyFind))
+        updatedOutputFile.split('\n')[index] += `\n${descKey}`
+        addedKeys.add(descKey)
+      } else if (!outputFile.split('\n').some((line) => idPattern.test(line))) {
+        updatedOutputFile += `${idKey}\n`
+        addedKeys.add(idKey)
+      }
+    }
+    if (!addedKeys.has(descKeyFind) && !outputFile.includes(descKeyFind)) {
+      const descPattern = new RegExp(`\\b${id}_desc\\b`)
+      if (
+        outputFile.split('\n').includes(descKeyFind) &&
+        !outputFile.split('\n').includes(idKeyFind)
+      ) {
+        let index = outputFile.split('\n').findIndex((line) => line.includes(descKeyFind))
+        updatedOutputFile.split('\n')[index] += `\n${idKey}`
+        addedKeys.add(idKey)
+      } else if (!outputFile.split('\n').some((line) => descPattern.test(line))) {
+        updatedOutputFile += `${descKey}\n`
+        addedKeys.add(descKey)
+      }
+    }
+  })
+  await writeTextFile(outputPath, bom + outputFile + updatedOutputFile)
 }

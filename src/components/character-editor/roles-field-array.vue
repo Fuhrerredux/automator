@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Field, type FieldEntry, useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useConfiguration from '@/stores/config'
-import Dropdown from '@components/dropdown.vue'
+import Combobox from '@components/combobox.vue'
 import Switch from '@components/switch.vue'
 import { MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
-import useTraits from '@stores/traits'
+import useTraitsStore from '@stores/traits'
 import { toTypedSchema } from '@vee-validate/yup'
 
 const props = defineProps<{
@@ -22,23 +22,26 @@ const schema = toTypedSchema(
   yup.object().shape({
     slot: yup.string().required('Advisor slot is required'),
     removeable: yup.boolean().required(),
+    hirable: yup.boolean().required(),
     trait: yup.string().required('Trait is required'),
     cost: yup.number()
   })
 )
 
 const { t } = useI18n()
-const { traits } = useTraits()
+const { traits } = useTraitsStore()
 const { config, positionsArray } = useConfiguration()
-const { resetForm, setValues, handleSubmit } = useForm<Advisor>({
+const { resetForm, setValues, handleSubmit, errors } = useForm<Advisor>({
   initialValues: {
     slot: positionsArray.length > 0 ? positionsArray[0].key : '',
     removeable: false,
+    hirable: false,
     trait: '',
     cost: config.character.defaultCost
   },
   validationSchema: schema
 })
+console.log(errors.value)
 const { value: characterSlot } = useField<string>('slot')
 
 const slotOptions = computed(() => {
@@ -55,18 +58,21 @@ watch(characterSlot, () => {
   const key = characterSlot.value
   const slot = positionsArray.find((e) => e.key === key)
   setValues({ hirable: slot?.hirable, removeable: slot?.removable })
+  console.log(errors.value)
 })
+
 
 const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
   const advisor = { ...rest, slot: String(slot) }
   emit('push', advisor)
   resetForm()
 })
+
 </script>
 
 <template>
   <div
-    class="border dark:border-zinc-700 rounded-lg p-4 space-y-2"
+    class="p-4 space-y-2 border rounded-lg dark:border-zinc-700"
     v-for="(field, index) in fields">
     <fieldset class="grid grid-cols-2 gap-4">
       <div>
@@ -104,17 +110,17 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
     </fieldset>
     <div class="flex items-center justify-end">
       <button type="button" class="button-primary shrink-0" @click="$emit('remove', index)">
-        <minus-icon class="h-5 w-5" />
+        <minus-icon class="w-5 h-5" />
       </button>
     </div>
   </div>
 
-  <form class="border dark:border-zinc-700 rounded-lg p-4 space-y-2" @submit="onSubmit">
+  <form class="p-4 space-y-2 border rounded-lg dark:border-zinc-700" @submit="onSubmit">
     <fieldset class="grid grid-cols-2 gap-4">
       <div>
         <Field name="slot" v-slot="{ value, handleChange }">
           <legend class="form-label">Character Slot</legend>
-          <dropdown
+          <combobox
             localise
             :options="slotOptions"
             :model-value="value"
@@ -124,7 +130,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
       <div v-if="Object.keys(traits).includes(characterSlot)">
         <Field name="trait" v-slot="{ value, handleChange }">
           <legend class="form-label">Trait</legend>
-          <dropdown
+          <combobox
             localise
             :options="traitOptions"
             :model-value="value"
@@ -168,7 +174,7 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor) => {
     </fieldset>
     <div class="flex items-center justify-end">
       <button type="submit" class="button-primary shrink-0">
-        <plus-icon class="h-5 w-5" />
+        <plus-icon class="w-5 h-5" />
       </button>
     </div>
   </form>

@@ -32,6 +32,7 @@ const useTraitsStore = defineStore({
     async fetchFromLocalStorage(config: Automator.Configuration) {
       this.trait = localStorage.getItem('trait')
       await this.readTraits(config)
+      console.log(await this.readTraits(config))
     },
     async readDir(path: string) {
       const target = `${path}/country_leader`
@@ -41,9 +42,9 @@ const useTraitsStore = defineStore({
     },
     async readTraits(config: Automator.Configuration) {
       if (!this.trait) return Promise.resolve()
-
       const content = await readTextFile(this.trait)
       this.traits = extractTraits(content, config)
+      console.log(extractTraits(content, config))
     }
   }
 })

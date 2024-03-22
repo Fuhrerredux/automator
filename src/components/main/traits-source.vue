@@ -7,12 +7,14 @@ import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import useConfiguration from '@stores/config'
 import useModStore from '@stores/mod'
 import useTraitsStore from '@stores/traits'
+import { useToast } from 'vue-toast-notification'
 
 const { t } = useI18n()
 const modStore = useModStore()
 const traitStore = useTraitsStore()
 const { config } = useConfiguration()
 const { files } = storeToRefs(traitStore)
+const $t = useToast()
 
 const traitSource = ref<string | null>(null)
 const fileOptions = computed(() =>
@@ -27,6 +29,7 @@ const onChangeTraitSource = (event: string) => {
     traitStore.$patch({ trait: event })
     localStorage.setItem('trait', event)
     traitSource.value = event
+    $t.success('Success')
   }
 }
 </script>
@@ -39,15 +42,16 @@ const onChangeTraitSource = (event: string) => {
         <dropdown
           :options="fileOptions"
           :model-value="traitSource"
+          @update:model-value="onChangeTraitSource"
           :disabled="modStore.directory.length <= 0"
-          @update:model-value="onChangeTraitSource" />
+        />
       </div>
       <button
         type="button"
-        class="button-primary flex items-center shrink-0"
+        class="flex items-center button-primary shrink-0"
         :disabled="modStore.directory.length <= 0"
         @click="onSaveTraits">
-        <arrow-path-icon class="h-5 w-5 mr-2" />
+        <arrow-path-icon class="w-5 h-5 mr-2" />
         <span>{{ t('action.load') }}</span>
       </button>
     </div>

@@ -63,22 +63,31 @@ const handleConfigurationChange = async (value: string) => {
     <div class="items-center justify-between flex-auto">
       <h1 class="header">{{ t('settings.header') }}</h1>
     </div>
-    <div class="space-y-4 mt-4">
+    <div class="mt-4 space-y-4">
       <preference-group title="settings.character">
         <switch-preference
           label="settings.position-prevention"
-          preference-key="positionPrevention" />
+          preference-key="positionPrevention" 
+        />
+        <switch-preference
+          label="settings.uses-ideology-suffix"
+          preference-key="usesIdeologySuffixOnToken"
+        />
       </preference-group>
       <preference-group title="settings.logging">
-        <switch-preference label="settings.option-logging" preference-key="optionLogging" />
+        <switch-preference 
+          label="settings.option-logging" 
+          preference-key="optionLogging" 
+        />
       </preference-group>
       <preference-group title="settings.configuration">
         <switch-preference
           label="settings.custom-config"
           preference-key="customConfig"
-          @change="onCustomConfigurationChange" />
-        <div className="flex items-center gap-4" v-if="settingsStore.getCustomConfig()">
-          <legend class="text-sm shrink-0 font-medium">
+          @change="onCustomConfigurationChange" 
+        />
+        <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
+          <legend class="text-sm font-medium shrink-0">
             {{ t('settings.predefined-configs') }}
           </legend>
           <div class="flex-1 space-y-2">

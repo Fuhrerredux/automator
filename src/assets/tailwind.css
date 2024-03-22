@@ -72,6 +72,9 @@
   .dropdown-button {
     @apply z-0 flex items-center rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 shadow-sm hover:bg-zinc-100 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:border-zinc-100 disabled:text-zinc-300 disabled:hover:bg-inherit dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700;
   }
+  .combobox-input {
+    @apply z-0 flex items-center rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 shadow-sm hover:bg-zinc-100 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:border-zinc-100 disabled:text-zinc-300 disabled:hover:bg-inherit dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 dark:bg-zinc-800 w-full;
+  }
   .dropdown-panel {
     @apply absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base text-zinc-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm;
   }

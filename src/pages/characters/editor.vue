@@ -60,7 +60,14 @@ const {
   remove: advisorRolesRemove
 } = useFieldArray<Advisor>('advisorRoles')
 
+const onTagInput = (event: InputEvent) => {
+  const inputValue = (event.target as HTMLInputElement).value.replace(/[^A-Za-z]/g, '').toUpperCase()
+  tag.value = inputValue
+}
+
+
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
+  console.log(data)
   const id = typeof characterId === 'string' ? characterId : nanoid()
 
   const character: CharacterWithId = {
@@ -74,6 +81,7 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     $toast.success(t(status.message))
     router.back()
   } else {
+    console.log(character)
     const status = await create(character)
     $toast.success(t(status.message))
     router.back()
@@ -106,18 +114,18 @@ const ideologiesOptions = computed(() =>
   <form @submit="onSubmit">
     <app-header
       :title="t(characterId ? 'modal.character-editor.update' : 'modal.character-editor.create')">
-      <spinner-button type="submit" class="button-primary flex items-center" :loading="false">
+      <spinner-button type="submit" class="flex items-center button-primary" :loading="false">
         <template #content>
-          <check-icon class="h-5 w-5 mr-2" />
+          <check-icon class="w-5 h-5 mr-2" />
           <span>{{ t('action.save') }}</span>
         </template>
         <template #loading>
-          <check-icon class="h-5 w-5 mr-2" />
+          <check-icon class="w-5 h-5 mr-2" />
           <span>{{ t('loading.saving') }}</span>
         </template>
       </spinner-button>
     </app-header>
-    <main class="content px-8 page space-y-2">
+    <main class="px-8 space-y-2 content page">
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label for="name">
@@ -139,6 +147,8 @@ const ideologiesOptions = computed(() =>
               id="tag"
               v-model="tag"
               v-bind="tagAttrs"
+              maxlength="3"
+              @input="onTagInput"
               :label="t('field.tag')"
               :placeholder="t('placeholder.tag')" />
           </label>
@@ -186,7 +196,7 @@ const ideologiesOptions = computed(() =>
             :checked="value"
             @update:modelValue="handleChange" />
         </Field>
-        <div class="grid grid-cols-2 items-start gap-4" v-if="enableCommanderRole">
+        <div class="grid items-start grid-cols-2 gap-4" v-if="enableCommanderRole">
           <div>
             <legend class="form-label">{{ t('field.role') }}</legend>
             <Field name="commanderRole" v-slot="{ value, handleChange }">
