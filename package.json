@@ -10,7 +10,7 @@
     "vite:dev": "vite",
     "vite:build": "vue-tsc --noEmit && vite build",
     "vite:preview": "vite preview",
-    "tauri:dev": "yarn tauri dev",
+    "tauri:dev": "tauri dev",
     "tauri:build": "yarn tauri build"
   },
   "repository": {
@@ -20,8 +20,10 @@
   "bugs": {
     "url": "https://github.com/Fuhrerredux/automator/issues"
   },
+  "types": "global.d.ts",
   "homepage": "https://github.com/Fuhrerredux/automator#readme",
   "dependencies": {
+    "@headlessui/tailwindcss": "^0.2.0",
     "@headlessui/vue": "1.7.19",
     "@heroicons/vue": "2.1.1",
     "@tauri-apps/api": "1.5.3",
@@ -54,6 +56,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-theme-variants": "^2.0.0-beta.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-eslint": "^1.8.1",

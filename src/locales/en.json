@@ -7,11 +7,6 @@
     "character-import": "Character Importer",
     "analyze-gfx": "Analyze GFX"
   },
-  "theme": {
-    "auto": "System",
-    "dark": "Dark",
-    "light": "Light"
-  },
   "settings": {
     "header": "Settings",
     "character": "Character",
@@ -20,7 +15,8 @@
     "position-prevention": "Prevent an officer from having more than 1 role at a time.",
     "custom-config": "Use custom configuration",
     "option-logging": "Add log statements on options as well as events.",
-    "predefined-configs": "Available Presets"
+    "predefined-configs": "Available Presets",
+    "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens"
   },
   "field": {
     "tag": "Country Tag",

@@ -35,6 +35,7 @@ async function triggerExports() {
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
+    console.log(data)
     await exportCharacters(data, common.path, config)
 
     loading.value = false
@@ -53,8 +54,8 @@ async function triggerExports() {
       {{ t('modal.character-export.summary') }}
     </template>
     <template #body>
-      <div v-if="characters.length <= 0" class="banner-warning mx-auto w-2/3 text-center">
-        <exclamation-triangle-icon class="inline-block h-6 w-6" />
+      <div v-if="characters.length <= 0" class="w-2/3 mx-auto text-center banner-warning">
+        <exclamation-triangle-icon class="inline-block w-6 h-6" />
         <p>{{ t('error.no-characters-to-export') }}</p>
       </div>
       <div>
