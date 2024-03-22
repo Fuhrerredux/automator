@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Field, type FieldEntry, useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { computed, watch, ref } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useConfiguration from '@/stores/config'
 import Combobox from '@components/combobox.vue'
@@ -154,12 +154,6 @@ const onSubmit = handleSubmit(({ slot, ...rest }: Advisor & { trait?: string }) 
             :options="traitOptions"
             :model-value="value"
             @update:model-value="handleChange" />
-          <!-- <role-trait-field-array v-if="settingsStore.getPreference('useInputForAdvisorTraitBox')"
-            :fields=advisorTraitFields
-            @push="advisorTraitPush"
-            @remove="advisorTraitRemove"
-            @update:model-value="handleChange"
-          /> -->
         </Field>
       </div>
       <div >
