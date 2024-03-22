@@ -14,7 +14,8 @@ const emit = defineEmits<{
 
 const schema = toTypedSchema(
   yup.object().shape({
-    value: yup.string().required('Trait is required')
+    value: yup.string()
+    // .required('Trait is required') it shouldn't be required
   })
 )
 
@@ -45,8 +46,8 @@ const onSubmit = handleSubmit(({ value }: { value: string }) => {
     <form class="flex items-start gap-2" @submit="onSubmit">
       <div class="flex-1">
         <label for="new">
+          <!-- required not -->
           <input
-            required
             type="text"
             id="new"
             class="form-input"
