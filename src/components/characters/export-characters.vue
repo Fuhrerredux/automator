@@ -35,7 +35,6 @@ async function triggerExports() {
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
-    console.log(data)
     await exportCharacters(data, common.path, config)
 
     loading.value = false

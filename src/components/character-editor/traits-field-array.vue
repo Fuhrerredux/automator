@@ -26,11 +26,8 @@ const { defineField, resetForm, errors, handleSubmit } = useForm<{ value: string
   validationSchema: schema
 })
 const [value, valueAttr] = defineField('value')
-console.log(errors.value)
 
 const onSubmit = handleSubmit(({ value }: { value: string }) => {
-  console.log(errors.value)
-  console.log(value)
   emit('push', value)
   resetForm()
 })
@@ -50,12 +47,7 @@ const onSubmit = handleSubmit(({ value }: { value: string }) => {
       <div class="flex-1">
         <label for="new">
           <!-- required not -->
-          <input
-            type="text"
-            id="new"
-            class="form-input"
-            v-model="value"
-            v-bind="valueAttr" />
+          <input type="text" id="new" class="form-input" v-model="value" v-bind="valueAttr" />
         </label>
         <p class="form-helper-error" v-if="errors.value">
           {{ errors.value }}

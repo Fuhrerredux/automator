@@ -24,17 +24,10 @@ const schema = toTypedSchema(
     slot: yup.string().required('Advisor slot is required'),
     removeable: yup.boolean().required(),
     hirable: yup.boolean().required(),
-    //.required('Trait is required'),
     trait: yup.string(),
     cost: yup.number()
   })
 )
-
-// const {
-//   fields: advisorTraitFields,
-//   push: advisorTraitPush,
-//   remove: advisorTraitRemove
-// } = useFieldArray<string>('trait')
 
 const { t } = useI18n()
 const { traits } = useTraitsStore()

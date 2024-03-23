@@ -58,23 +58,25 @@ function definePortraits(character: CharacterWithId): {
   return portraits
 }
 
-function defineCountryLeader(character: CharacterWithId): { countryLeader: { ideology: string; traits: string[] }[] } {
-  const countryLeaderObjects: { ideology: string; traits: string[] }[] = [];
+function defineCountryLeader(character: CharacterWithId): {
+  countryLeader: { ideology: string; traits: string[] }[]
+} {
+  const countryLeaderObjects: { ideology: string; traits: string[] }[] = []
   // set so no duplicates
   Array.from(new Set(character.leaderRoles)).forEach((e) => {
-    let ideologyKey = '';
+    let ideologyKey = ''
     if (typeof e.subideology === 'string') {
-      ideologyKey = e.subideology;
+      ideologyKey = e.subideology
     } else if (e.subideology && typeof e.subideology === 'object' && 'key' in e.subideology) {
-      ideologyKey = e.subideology.key; //ignore error
+      ideologyKey = e.subideology['key'] //ignore error
     }
     const countryLeader = {
       ideology: `${ideologyKey}_subtype`,
       traits: Array.isArray(e.trait) ? e.trait : [e.trait]
-    };
-    countryLeaderObjects.push(countryLeader);
-  });
-  return { countryLeader: countryLeaderObjects };
+    }
+    countryLeaderObjects.push(countryLeader)
+  })
+  return { countryLeader: countryLeaderObjects }
 }
 
 function defineCommandingRole(
@@ -100,13 +102,13 @@ function defineAdvisorRole(
 
   if (advisorRoles) {
     advisorRoles.forEach((advisor: Advisor, index) => {
-      console.log(advisor)
       const position = advisor.slot as unknown as Automator.Position
       const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
       const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-      const ideaToken = usesIdeologySuffix && suffix != ''
-        ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
-        : `${token}_${getPositionSuffix(position, config)}`
+      const ideaToken =
+        usesIdeologySuffix && suffix != ''
+          ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
+          : `${token}_${getPositionSuffix(position, config)}`
       const hasMoreThanOneRoles = advisorRoles.length > 1 && !positionPrevention
       const allOtherPositions = advisorRoles.filter((_, i) => i !== index)
       let advisorObject: Characters.AdvisorWithPositionPrevention = {
@@ -117,8 +119,8 @@ function defineAdvisorRole(
         cost: advisor.cost,
         ideaToken: ideaToken,
         positionPrevention: hasMoreThanOneRoles
-        ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
-        : '',  
+          ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
+          : ''
       }
       advisors.push(advisorObject)
     })
@@ -128,17 +130,17 @@ function defineAdvisorRole(
 
 export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
   let content: string = ''
-  console.log(characters, config)
+
   for (const character of characters) {
     const portraitsData = definePortraits(character)
     let portraitsBlock = ''
-    let isFirstBlock = true;
+    let isFirstBlock = true
     for (const [type, portrait] of Object.entries(portraitsData)) {
       // Check if the current portrait type exists and if it has either small or large portrait path
       if (portrait && (portrait.small || portrait.large)) {
         // Construct the portrait block for the current type
         if (!isFirstBlock) {
-          portraitsBlock += '\n\t';
+          portraitsBlock += '\n\t'
         }
         portraitsBlock += `        ${type} = {\n`
         if (portrait.large) {
@@ -151,17 +153,14 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         isFirstBlock = false
       }
     }
-    console.log(character.roles )
-    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
-      .filter((role) => character.roles
-        .includes(role as CommandingRole
-      )) as Characters.GeneralRole[]
+    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral'].filter(
+      (role) => character.roles.includes(role as CommandingRole)
+    ) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
-    console.log(character, generalRoles)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
-    console.log(character)
+
     const minister = defineAdvisorRole(character, config)
-    console.log(minister)
+
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
@@ -180,26 +179,30 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
             skill = 1
             attack_skill = 1
             defense_skill = 1
-            ${role === 'admiral' 
-              ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1` 
-              : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
+            ${
+              role === 'admiral'
+                ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1`
+                : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
             }
-          \n\t\t}`;
-      }
-    rolesBlock = rolesBlock.replace("marshal", "field_marshal").replace("general", "corps_commander").replace("admiral", "navy_leader")
-  
+          \n\t\t}`
+    }
+    rolesBlock = rolesBlock
+      .replace('marshal', 'field_marshal')
+      .replace('general', 'corps_commander')
+      .replace('admiral', 'navy_leader')
+
     minister.advisors.forEach((advisor) => {
-      let available = '';
+      let available = ''
       console.log(advisor.positionPrevention)
       if (!advisor.hirable) {
-          available += `
+        available += `
                 ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
-          `;
+          `
       }
       if (advisor.positionPrevention) {
-          available += `
+        available += `
               ${advisor.positionPrevention}
-          `;
+          `
       }
       rolesBlock += `
         advisor = {
@@ -209,21 +212,27 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
             available = {
               ${available}
             } 
-            ${!advisor.hirable ? `
+            ${
+              !advisor.hirable
+                ? `
             on_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }
-            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` 
-            : ''}
+            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }`
+                : ''
+            }
             ${advisor.removeable ? `\n\t\t\tcan_be_fired = no` : ''}
             traits = { ${character.ideology ? character.ideology : ''} ${advisor.trait} }
         }
-      `;
-  });
+      `
+    })
 
-  const lines = rolesBlock.split('\n')
-  rolesBlock = lines[0] + '\n' + lines
-    .slice(1)
-    .filter((line) => line.trim() !== '')
-    .join('\n')
+    const lines = rolesBlock.split('\n')
+    rolesBlock =
+      lines[0] +
+      '\n' +
+      lines
+        .slice(1)
+        .filter((line) => line.trim() !== '')
+        .join('\n')
 
     let data = `\t${buildCharacterToken(character)} = {
         name = "${character.name}"
@@ -422,8 +431,6 @@ export async function appendCharacterLocalisation(
     const commonDir = useModStore().getCommonDirectory
     for (const [_, value] of Object.entries(group)) {
       for (const character of value) {
-        console.log(useModStore().getCommonDirectory)
-        console.log(character.tag)
         const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
         const token = buildCharacterToken(character)
         if (!content.includes(`${token}: "${character.name}"`)) {
@@ -536,7 +543,6 @@ ${sprites.join('\n')}
 }
 
 export async function localiseFocuses(outputPath: string, content: string): Promise<void> {
-  console.log(content)
   let focuses: Focus[] = []
   let locEntries: FocusLocEntry[] = []
   let prevLine: string = ''
