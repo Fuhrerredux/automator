@@ -3,34 +3,21 @@ import { defineStore } from 'pinia'
 const useThemeStore = defineStore({
   id: 'theme',
   state: () => ({
-    theme: 'dark' as UserInterface.Theme
+    theme: 'auto' as UserInterface.Theme
   }),
-  getters: {
-    isDarkTheme(): boolean {
-      return this.theme === 'dark'
-    }
-  },
   actions: {
     fetch() {
-      const themeFromLocalStorage = localStorage.getItem('theme') as UserInterface.Theme
-      if (!themeFromLocalStorage) {
-        const autoTheme = this.shouldUseAutoTheme()
-        this.change(autoTheme)
-      } else {
-        this.change(themeFromLocalStorage)
-      }
+      this.theme = localStorage.getItem('theme') as UserInterface.Theme
+      this.change(this.theme)
     },
     change(theme: UserInterface.Theme) {
       this.theme = theme
 
-      const isDarkMode = this.theme === 'dark'
+      const isDarkMode =
+      this.theme === 'dark' ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme === 'auto')
       document.body.classList.toggle('dark', isDarkMode)
       localStorage.setItem('theme', theme)
-    },
-    shouldUseAutoTheme(): UserInterface.Theme {
-      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const autoTheme = prefersDarkMode ? 'dark' : 'light'
-      return autoTheme
     }
   }
 })
