@@ -51,7 +51,8 @@
     "dropzone-active": "Drop the file here",
     "cost": "Cost",
     "hirable": "Hirable",
-    "removeable": "Removable"
+    "removeable": "Removable",
+    "trait": "Trait"
   },
   "placeholder": {
     "tag": "USA",
