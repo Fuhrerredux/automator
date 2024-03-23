@@ -34,6 +34,8 @@ declare global {
       positions: Record<string, Omit<Position, 'key'>>
       character: {
         defaultCost: number
+        largePortraitPath: string
+        smallPortraitPath: string
       }
     }
     type Preference = {

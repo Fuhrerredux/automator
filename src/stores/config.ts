@@ -17,7 +17,9 @@ const defaultConfiguration: Automator.Configuration = {
   ideologies: defaultIdeologies,
   positions: defaultPositions,
   character: {
-    defaultCost: 150
+    defaultCost: 150,
+    largePortraitPath: 'gfx/leaders',
+    smallPortraitPath: 'gfx/interface/ministers'
   }
 }
 
@@ -29,7 +31,9 @@ const useConfiguration = defineStore({
         ideologies: defaultIdeologies,
         positions: defaultPositions,
         character: {
-          defaultCost: 150
+          defaultCost: 150,
+          largePortraitPath: 'gfx/leaders',
+          smallPortraitPath: 'gfx/interface/ministers'
         }
       }
     }

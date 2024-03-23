@@ -21,6 +21,8 @@ export default {
     theorist: { name: 'Theorist', short: 'theo' }
   },
   character: {
-    defaultCost: 150
+    defaultCost: 150,
+    largePortraitPath: 'gfx/leaders',
+    smallPortraitPath: 'gfx/interface/advisors'
   }
 }

@@ -37,7 +37,6 @@ async function generate(files: File[]) {
     }
   } catch (error) {
     $toast.error(String(error))
-    console.log(error)
     throw error
   } finally {
     loading.value = false

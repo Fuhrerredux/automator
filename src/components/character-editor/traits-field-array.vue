@@ -26,11 +26,8 @@ const { defineField, resetForm, errors, handleSubmit } = useForm<{ value: string
   validationSchema: schema
 })
 const [value, valueAttr] = defineField('value')
-console.log(errors.value)
 
 const onSubmit = handleSubmit(({ value }: { value: string }) => {
-  console.log(errors.value)
-  console.log(value)
   emit('push', value)
   resetForm()
 })

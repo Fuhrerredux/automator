@@ -26,7 +26,7 @@ const { query } = useRoute()
 const { config, ideologiesArray } = useConfiguration()
 const { create, update, findOne } = useCharacterStore()
 const { characterId } = query
-const { defineField, resetForm, handleSubmit, errors } = useForm<CharacterForm>({
+const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
   initialValues: {
     name: '',
     tag: '',
@@ -36,7 +36,6 @@ const { defineField, resetForm, handleSubmit, errors } = useForm<CharacterForm>(
     commanderRole: null
   }
 })
-console.log(errors.value)
 
 const [name, nameAttrs] = defineField('name')
 const [tag, tagAttrs] = defineField('tag')
@@ -68,8 +67,6 @@ const onTagInput = (event: InputEvent) => {
 
 
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
-  console.log(data)
-  console.log(errors.value)
   const id = typeof characterId === 'string' ? characterId : nanoid()
 
   const character: CharacterWithId = {
@@ -83,7 +80,6 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     $toast.success(t(status.message))
     router.back()
   } else {
-    console.log(character)
     const status = await create(character)
     $toast.success(t(status.message))
     router.back()
@@ -94,7 +90,6 @@ onMounted(async () => {
   if (characterId && typeof characterId === 'string') {
     const characterRaw = await findOne(characterId)
     const formData = toFormData(characterRaw, config)
-    console.log(errors.value)
     resetForm({
       values: {
         ...formData,

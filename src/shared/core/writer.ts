@@ -5,16 +5,29 @@ import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
+import useConfiguration from '@/stores/config'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
+
+function waitForTenSeconds(callback: () => void) {
+  setTimeout(callback, 500)
+}
+
+let largePortraitPath: string;
+let smallPortraitPath: string;
+
+waitForTenSeconds(() => {
+  largePortraitPath = useConfiguration().config.character.largePortraitPath
+  smallPortraitPath = useConfiguration().config.character.smallPortraitPath
+})
 function buildLargePortaitPath(name: string, tag: string) {
-  return `gfx/leaders/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+  return `${largePortraitPath}/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 function buildSmallPortraitPath(name: string, tag: string) {
-  return `gfx/interface/ministers/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+  return `${smallPortraitPath}/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 
 function definePortraits(character: CharacterWithId): {
@@ -100,7 +113,6 @@ function defineAdvisorRole(
 
   if (advisorRoles) {
     advisorRoles.forEach((advisor: Advisor, index) => {
-      console.log(advisor)
       const position = advisor.slot as unknown as Automator.Position
       const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
       const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
@@ -128,7 +140,6 @@ function defineAdvisorRole(
 
 export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
   let content: string = ''
-  console.log(characters, config)
   for (const character of characters) {
     const portraitsData = definePortraits(character)
     let portraitsBlock = ''
@@ -151,17 +162,13 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         isFirstBlock = false
       }
     }
-    console.log(character.roles )
     const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
       .filter((role) => character.roles
         .includes(role as CommandingRole
       )) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
-    console.log(character, generalRoles)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
-    console.log(character)
     const minister = defineAdvisorRole(character, config)
-    console.log(minister)
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
@@ -190,7 +197,6 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
   
     minister.advisors.forEach((advisor) => {
       let available = '';
-      console.log(advisor.positionPrevention)
       if (!advisor.hirable) {
           available += `
                 ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
@@ -422,8 +428,6 @@ export async function appendCharacterLocalisation(
     const commonDir = useModStore().getCommonDirectory
     for (const [_, value] of Object.entries(group)) {
       for (const character of value) {
-        console.log(useModStore().getCommonDirectory)
-        console.log(character.tag)
         const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
         const token = buildCharacterToken(character)
         if (!content.includes(`${token}: "${character.name}"`)) {
@@ -473,7 +477,6 @@ export async function fixSprites(path: string, content: string): Promise<void> {
 
   try {
     await writeTextFile(path, spriteTypesBlock)
-    console.log('Sprites have been fixed and written to file successfully.')
   } catch (error) {
     console.error('Error occurred while writing sprites to file:', error)
   }
@@ -536,9 +539,7 @@ ${sprites.join('\n')}
 }
 
 export async function localiseFocuses(outputPath: string, content: string): Promise<void> {
-  console.log(content)
   let focuses: Focus[] = []
-  let locEntries: FocusLocEntry[] = []
   let prevLine: string = ''
   const addedKeys = new Set<string>()
   content.split('\n').forEach((line, _) => {
