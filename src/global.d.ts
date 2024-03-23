@@ -15,7 +15,7 @@ declare global {
     }
   }
   namespace UserInterface {
-    type Theme = 'light' | 'dark'
+    type Theme = 'light' | 'dark' | 'auto'
     type TabData = {
       panel: Component
       label: string
@@ -25,7 +25,7 @@ declare global {
   namespace Automator {
     type Definition = { key: string; name: string; short?: string }
     type Ideology = Definition
-    type Position = Definition & { 
+    type Position = Definition & {
       hirable?: boolean
       removable?: boolean
     }
@@ -44,14 +44,14 @@ declare global {
       predefinedConfiguration: string | null
       usesIdeologySuffixOnToken: boolean
       useInputForAdvisorTraitBox: boolean
-      // traitFiles: boolean
+      // traitSource: boolean
     }
-    // namespace CharacterDefinitions {
-    //   type CharacterPositions = {
-    //     config: Automator.Configuration
-    //     positions: Automator.Position[]
-    //   }
-    // } for future trait rework
+    namespace CharacterDefinitions {
+      type CharacterPositions = {
+        config: Automator.Configuration
+        positions: Automator.Position[]
+      }
+    } //for future trait rework
   }
 
   type KeyOfType<T, V> = keyof {
@@ -103,8 +103,7 @@ declare global {
     type: CommandingRole
     trait: string
   }
-  type GeneralForm = Omit<Characters.General, 'type'> &
-    { type: DropdownOption<Characters.General> }
+  type GeneralForm = Omit<Characters.General, 'type'> & { type: DropdownOption<Characters.General> }
   type Advisor = {
     slot: string
     hirable: boolean
@@ -118,13 +117,13 @@ declare global {
       large?: string
     }
     type Officer = Advisor
-    type ArmyPortrait = Portrait;
-    type CivilianPortrait = Portrait;
-    type NavyPortrait = Portrait;
-    type GeneralRole = Exclude<CommandingRole, "officer">;
+    type ArmyPortrait = Portrait
+    type CivilianPortrait = Portrait
+    type NavyPortrait = Portrait
+    type GeneralRole = Exclude<CommandingRole, 'officer'>
     type General = {
-      type: GeneralRole;
-      trait: string;
+      type: GeneralRole
+      trait: string
     }
     type CharacterRoles = {
       leaderRoles?: CountryLeader[]
@@ -135,7 +134,7 @@ declare global {
     type AdvisorWithToken = Advisor & { ideaToken: string }
     type AdvisorWithPositionPrevention = AdvisorWithToken & { positionPrevention: string }
     type Commanding = {
-      [key in Characters.GeneralRole]?: Characters.General;
+      [key in Characters.GeneralRole]?: Characters.General
     }
     type GeneralPartial = Partial<Record<Characters.GeneralRole, Characters.General>>
   }

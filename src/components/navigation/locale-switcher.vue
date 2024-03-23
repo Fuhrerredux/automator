@@ -1,11 +1,11 @@
 <script lang="ts">
 import useSettingsStore from '@/stores/settings'
-import LegacyDropdown from '@components/legacy-dropdown.vue'
+import Dropdown from '@components/dropdown.vue'
 import getLanguageName from '@shared/core/locale'
 
 export default {
   name: 'LocaleSwitcher',
-  components: { LegacyDropdown },
+  components: { Dropdown },
   methods: {
     getDefaultLanguage() {
       const savedLang = useSettingsStore().getLanguage()
@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     localeOptions() {
-      return this.$i18n.availableLocales.map(locale => ({
+      return this.$i18n.availableLocales.map((locale) => ({
         value: locale,
         label: getLanguageName(locale)
       }))
@@ -32,11 +32,12 @@ export default {
 
 <template>
   <div class="locale-changer w-32">
-    <legacy-dropdown
+    <dropdown
+      localise
       :options="localeOptions"
-      :model-value="currentLanguage"
+      :model-value="currentLanguage?.value"
       display-key="label"
       value-key="value"
-      @update:model-value="updateLanguage($event.value)" />
+      @update:model-value="updateLanguage($event)" />
   </div>
 </template>

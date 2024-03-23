@@ -9,6 +9,11 @@
   },
   "settings": {
     "header": "Settings",
+    "theme": {
+      "auto": "Sync with System",
+      "dark": "Dark",
+      "light": "Light"
+    },
     "character": {
       "name": "Character",
       "position-prevention": "Prevent an officer from having more than 1 role at a time.",
