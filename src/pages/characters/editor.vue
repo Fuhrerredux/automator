@@ -61,10 +61,11 @@ const {
 } = useFieldArray<Advisor>('advisorRoles')
 
 const onTagInput = (event: InputEvent) => {
-  const inputValue = (event.target as HTMLInputElement).value.replace(/[^A-Za-z]/g, '').toUpperCase()
+  const inputValue = (event.target as HTMLInputElement).value
+    .replace(/[^A-Za-z]/g, '')
+    .toUpperCase()
   tag.value = inputValue
 }
-
 
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
   const id = typeof characterId === 'string' ? characterId : nanoid()

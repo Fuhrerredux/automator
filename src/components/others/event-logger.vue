@@ -35,8 +35,6 @@ async function generate(files: File[]) {
       $toast.error(t('error.select-destination-folder'))
     }
   } catch (error) {
-    console.error(error)
-    console.error(error)
     $toast.error(String(error))
     throw error
   } finally {

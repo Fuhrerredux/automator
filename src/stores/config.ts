@@ -67,7 +67,7 @@ const useConfiguration = defineStore({
      */
     async import(source: string = CONFIG_SOURCE) {
       const json = await readTextFile(source, { dir: BaseDirectory.Home })
-      this.$state = { ...this.$state, ...JSON.parse(json) }
+      this.$state.config = { ...this.$state.config, ...JSON.parse(json) }
     },
     /**
      * Function to change the current values of the configuration
@@ -77,7 +77,9 @@ const useConfiguration = defineStore({
      */
     async replace(config: Automator.Configuration) {
       this.$state = { config }
-      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config, null, 4), { dir: BaseDirectory.Home })
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config, null, 4), {
+        dir: BaseDirectory.Home
+      })
     },
     /**
      * Function used to change the current configuration
