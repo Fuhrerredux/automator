@@ -1,36 +1,22 @@
-import useModStore from '@/stores/mod'
-import useSettingsStore from '@/stores/settings'
 import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
-import useConfiguration from '@/stores/config'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
 import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
 
-function waitForTenSeconds(callback: () => void) {
-  setTimeout(callback, 500)
+function buildLargePortaitPath(name: string, tag: string, config: Automator.Configuration) {
+  return `${config.character.largePortraitPath}/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+}
+function buildSmallPortraitPath(name: string, tag: string, config: Automator.Configuration) {
+  return `${config.character.smallPortraitPath}/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 
-let largePortraitPath: string;
-let smallPortraitPath: string;
-
-waitForTenSeconds(() => {
-  largePortraitPath = useConfiguration().config.character.largePortraitPath
-  smallPortraitPath = useConfiguration().config.character.smallPortraitPath
-})
-function buildLargePortaitPath(name: string, tag: string) {
-  return `${largePortraitPath}/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
-}
-function buildSmallPortraitPath(name: string, tag: string) {
-  return `${smallPortraitPath}/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
-}
-
-function definePortraits(character: CharacterWithId): {
+function definePortraits(character: CharacterWithId, config: Automator.Configuration): {
   civilian?: Characters.CivilianPortrait
   army?: Characters.ArmyPortrait
   navy?: Characters.NavyPortrait
@@ -52,19 +38,19 @@ function definePortraits(character: CharacterWithId): {
     const portrait: Characters.CivilianPortrait = {}
 
     if (slots?.length === 0 || slots?.includes('leader'))
-      portrait.large = buildLargePortaitPath(name, tag)
-    if (slots?.includes('advisor')) portrait.small = buildSmallPortraitPath(name, tag)
+      portrait.large = buildLargePortaitPath(name, tag, config)
+    if (slots?.includes('advisor')) portrait.small = buildSmallPortraitPath(name, tag, config)
     portraits.civilian = portrait
   }
   if (hasArmyWithOfficer) {
     const portrait: Characters.ArmyPortrait = {}
-    if (hasArmy) portrait.large = buildLargePortaitPath(name, tag)
-    if (slots.includes('officer')) portrait.small = buildLargePortaitPath(name, tag)
+    if (hasArmy) portrait.large = buildLargePortaitPath(name, tag, config)
+    if (slots.includes('officer')) portrait.small = buildLargePortaitPath(name, tag, config)
     portraits.army = portrait
   }
   if (hasNavy) {
     const portrait: Characters.NavyPortrait = {}
-    portrait.large = buildLargePortaitPath(name, tag)
+    portrait.large = buildLargePortaitPath(name, tag, config)
     portraits.navy = portrait
   }
 
@@ -106,17 +92,18 @@ function defineCommandingRole(
 
 function defineAdvisorRole(
   character: CharacterWithId,
-  config: Automator.Configuration
+  config: Automator.Configuration,
+  settings: Automator.Preference
 ): { advisors: Characters.AdvisorWithPositionPrevention[] } {
   const { advisorRoles, ideology } = character
   const token = buildCharacterToken(character)
   const advisors: Characters.AdvisorWithPositionPrevention[] = []
-  const positionPrevention = useSettingsStore().getPreference('positionPrevention') === false
+  const positionPrevention = settings.positionPrevention === false
 
   if (advisorRoles) {
     advisorRoles.forEach((advisor: Advisor, index) => {
       const position = advisor.slot as unknown as Automator.Position
-      const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
+      const usesIdeologySuffix = settings.usesIdeologySuffixOnToken
       const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
       const ideaToken =
         usesIdeologySuffix && suffix != ''
@@ -141,10 +128,10 @@ function defineAdvisorRole(
   return { advisors }
 }
 
-export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
+export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration, settings: Automator.Preference) {
   let content: string = ''
   for (const character of characters) {
-    const portraitsData = definePortraits(character)
+    const portraitsData = definePortraits(character, config)
     let portraitsBlock = ''
     let isFirstBlock = true
     for (const [type, portrait] of Object.entries(portraitsData)) {
@@ -171,7 +158,7 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
       )) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
-    const minister = defineAdvisorRole(character, config)
+    const minister = defineAdvisorRole(character, config, settings)
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
@@ -261,12 +248,13 @@ ${rolesBlock}
 export async function exportCharacters(
   characters: CharacterWithId[],
   destination: string,
-  config: Automator.Configuration
+  config: Automator.Configuration,
+  settings: Automator.Preference
 ) {
   if (Array.isArray(characters)) {
     const grouped = groupBy(characters, 'tag')
     for (const [key, value] of Object.entries(grouped)) {
-      const content = writeCharacter(value, config)
+      const content = writeCharacter(value, config, settings)
       const template = ` # Characters for ${key}
 characters = {
 ${content}
@@ -352,10 +340,10 @@ export async function removeLogging(content: string, path: string): Promise<void
   }
 }
 
-export async function eventLogging(content: string, path: string): Promise<void> {
+export async function eventLogging(content: string, path: string, settings: Automator.Preference): Promise<void> {
   const newContent: string[] = []
   const lines = content.split('\n') //split lines
-  const optionLogging: boolean = useSettingsStore().$state.optionLogging //if we log or not log options
+  const optionLogging: boolean = settings.optionLogging === true //if we log or not log options
   let eventId: string
   lines.forEach((line, _) => {
     //iterate through each line
@@ -434,15 +422,15 @@ export async function appendToHistory(characters: CharacterWithId[], destination
 export async function appendCharacterLocalisation(
   characters: CharacterWithId[],
   path: string,
-  content: string
+  content: string,
+  commonDir: string
 ): Promise<void> {
   if (Array.isArray(characters)) {
     const group = groupBy(characters, 'tag')
     let data: string = ''
-    const commonDir = useModStore().getCommonDirectory
     for (const [_, value] of Object.entries(group)) {
       for (const character of value) {
-        const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
+        const characterPath = `${commonDir}/characters/${character.tag}.txt`
         const token = buildCharacterToken(character)
         if (!content.includes(`${token}: "${character.name}"`)) {
           data = data.concat(`  ${token}: "${character.name}"\n`)
@@ -479,8 +467,8 @@ export async function appendCharacterLocalisation(
   }
 }
 
-export async function fixSprites(path: string, content: string): Promise<void> {
-  await loadCountryTags(`${useModStore().getCommonDirectory?.path}/country_tags/00_countries.txt`)
+export async function fixSprites(path: string, content: string, commonDir: string): Promise<void> {
+  await loadCountryTags(`${commonDir}/country_tags/00_countries.txt`)
   const spriteTypes: SpriteEntryWithTag[] = extractSpriteTypes(content)
 
   assignTagIndexes(spriteTypes)

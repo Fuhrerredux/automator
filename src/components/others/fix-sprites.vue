@@ -8,6 +8,8 @@ import FileSelectModal from '@components/modal/file-select-modal.vue'
 import { SparklesIcon } from '@heroicons/vue/24/outline'
 import { fixSprites } from '@shared/core/writer'
 import { save } from '@tauri-apps/api/dialog'
+import useModStore from '@/stores/mod'
+import { FileEntry } from '@tauri-apps/api/fs'
 
 const loading = ref(false)
 const finished = ref(false)
@@ -29,7 +31,7 @@ async function generate(files: File[]) {
     })
 
     if (filePath) {
-      await fixSprites(filePath, content)
+      await fixSprites(filePath, content, useModStore().getCommonDirectory?.path as string)    
       $toast.success(t('status.sprites-fixed'))
     } else {
       $toast.error(t('error.select-destination-folder'))

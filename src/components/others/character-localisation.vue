@@ -8,6 +8,7 @@ import { Bars3BottomRightIcon } from '@heroicons/vue/24/outline'
 import { appendCharacterLocalisation } from '@shared/core/writer'
 import { readFileObject } from '@shared/utils/reader'
 import useCharacterStore from '@stores/characters'
+import useModStore from '@/stores/mod'
 import { save } from '@tauri-apps/api/dialog'
 
 const { t } = useI18n()
@@ -15,6 +16,7 @@ const $toast = useToast()
 const loading = ref(false)
 const finished = ref(false)
 const characterStore = useCharacterStore()
+const modStore = useModStore()
 const open = ref(false)
 
 async function generate(files: File[]) {
@@ -30,7 +32,7 @@ async function generate(files: File[]) {
     })
 
     if (filePath) {
-      await appendCharacterLocalisation(characterStore.characters, filePath, content)
+      await appendCharacterLocalisation(characterStore.characters, filePath, content, modStore.getCommonDirectory?.path as string)
       $toast.success(t('status.characters-localised'))
     } else {
       $toast.error(t('error.select-destination-folder'))

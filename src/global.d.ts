@@ -1,4 +1,5 @@
 import type { Component } from 'vue'
+import type { FileEntry } from '@tauri-apps/api/fs'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
 
 declare global {
@@ -48,7 +49,20 @@ declare global {
       useInputForAdvisorTraitBox: boolean
       // traitSource: boolean
     }
-    namespace CharacterDefinitions {
+    type ModStore = {
+      directory: string
+      entries: FileEntry[]
+    }
+    type TraitsStore = {
+      traits: Record<Position, string[]>
+      files: FileEntry[]
+      trait: string | null
+    }
+    type ConfigurationStore = {
+      config: Automator.Configuration
+    }
+    
+    namespace CharacterDefinitions  {
       type CharacterPositions = {
         config: Automator.Configuration
         positions: Automator.Position[]

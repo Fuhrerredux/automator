@@ -4,10 +4,6 @@ import defaultPositions from '@shared/const/positions'
 import kaiserreichConfiguration from '@shared/definitions/kaiserreich'
 import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/api/fs'
 
-type ConfigurationStore = {
-  config: Automator.Configuration
-}
-
 const CONFIG_SOURCE = '.automator/data/config.json'
 const configuration: { key: string; definition: Automator.Configuration }[] = [
   { key: 'kr', definition: kaiserreichConfiguration }
@@ -25,7 +21,7 @@ const defaultConfiguration: Automator.Configuration = {
 
 const useConfiguration = defineStore({
   id: 'customConfig',
-  state: (): ConfigurationStore => {
+  state: (): Automator.ConfigurationStore => {
     return {
       config: {
         ideologies: defaultIdeologies,

@@ -1,6 +1,6 @@
 export function getPositionSuffix(position: Automator.Position, config: Automator.Configuration) {
   const positions = config.positions
-  const short = positions[`${position}`].short
+  const short = positions[`${position}`].short || ''
   if (short) return short
 
   return ''
