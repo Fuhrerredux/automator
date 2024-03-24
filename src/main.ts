@@ -28,9 +28,18 @@ app.use(router)
 app.use(i18n)
 app.use(VueTippy, { directive: 'tippy', component: 'tippy' })
 app.mount('#app')
-const update = await checkUpdate();
 
-if (update.shouldUpdate) {
-  console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
-  await installUpdate();
+const isDevVersion = true
+
+async function checkAndUpdate() {
+  const update = await checkUpdate();
+
+  if (update.shouldUpdate && !isDevVersion) {
+    //console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
+    await installUpdate();
+  } else {
+    //console.log('No updates.', update);
+  }
 }
+
+checkAndUpdate();

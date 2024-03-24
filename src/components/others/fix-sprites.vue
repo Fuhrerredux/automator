@@ -9,7 +9,6 @@ import { SparklesIcon } from '@heroicons/vue/24/outline'
 import { fixSprites } from '@shared/core/writer'
 import { save } from '@tauri-apps/api/dialog'
 import useModStore from '@/stores/mod'
-import { FileEntry } from '@tauri-apps/api/fs'
 
 const loading = ref(false)
 const finished = ref(false)

@@ -54,8 +54,10 @@ const slotOptions = computed(() => {
     .filter((e) => !slots.includes(e.value))
 })
 const traitOptions = computed(() =>
-  traits[characterSlot.value as Position].map((e) => ({ label: e, value: e }))
+  (traits as Record<Position, string[]>)[characterSlot.value as Position].map((e) => ({ label: e, value: e }))
 )
+
+
 
 watch(characterSlot, () => {
   const key = characterSlot.value
