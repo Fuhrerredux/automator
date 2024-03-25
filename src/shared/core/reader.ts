@@ -143,7 +143,7 @@ export function readCharacterFile(
       parsed.leaderTraits = []
       parsed.leaderIdeologies = []
       parsed.commanderTraits = []
-      parsed.ministerTraits = {
+      parsed.advisorRoles = {
         head_of_government: '',
         foreign_minister: '',
         economy_minister: '',

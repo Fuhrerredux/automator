@@ -6,6 +6,7 @@ import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
 import OptimizePage from '@pages/others/optimize.vue'
 import SettingsPage from '@pages/settings.vue'
+import InfoPage from '@pages/info.vue'
 
 const routes = [
   {
@@ -33,6 +34,11 @@ const routes = [
     name: 'Optimize',
     component: OptimizePage
   },
+  // {
+  //   path: '/info',
+  //   name: 'Info',
+  //   component: InfoPage
+  // },
   {
     path: '/settings',
     name: 'Settings',
