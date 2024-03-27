@@ -168,6 +168,10 @@
 		"fix-sprites": {
 			"heading": "Arreglar Definiciones de Sprites",
 			"summary": "Elimina automáticamente las definiciones de sprites duplicadas y las ordena alfabéticamente según las etiquetas en common/country_tags/00_countries.txt."
+		},
+		"localise-focuses": {
+			"heading": "Localizar Enfoques",
+			"summary": "Localizará los enfoques del archivo de enfoque ingresado en el archivo de localización ingresado."
 		}
 	},
 	"tab": {
@@ -177,6 +181,7 @@
 	"sections": {
 		"gfx-optimization": "Optimización de GFX",
 		"character-management": "Gestión de Personajes",
-		"event-handling": "Manejo de Eventos"
+		"event-handling": "Manejo de Eventos",
+		"localisation": "Localización"
 	}
 }

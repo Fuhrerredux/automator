@@ -6,6 +6,7 @@
   "license": "AGPL-3.0-only",
   "description": "Automator, an easy-to-use character creation tool",
   "author": "dax0102",
+  "contributors": ["thanasislanaras"],
   "scripts": {
     "vite:dev": "vite",
     "vite:build": "vue-tsc --noEmit && vite build",

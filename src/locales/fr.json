@@ -168,15 +168,20 @@
 		"fix-sprites": {
 			"heading": "Corriger les Définitions de Sprite",
 			"summary": "Supprime automatiquement les définitions de sprite en double et les trie alphabétiquement en fonction des tags sur common/country_tags/00_countries.txt."
-		}
+		},
+		"localise-focuses": {
+			"heading": "Localiser les Focus",
+			"summary": "Localisera les points d'intérêt du fichier de focus entré dans le fichier de localisation entré."
+		}		  
 	},
 	"tab": {
 		"orphaned": "Orphelin",
 		"duplicate": "Dupliqué"
 	},
 	"sections": {
-    "gfx-optimization": "Optimisation des GFX",
-    "character-management": "Gestion des Personnages",
-    "event-handling": "Gestion des Événements"
-  }
+		"gfx-optimization": "Optimisation des GFX",
+		"character-management": "Gestion des Personnages",
+		"event-handling": "Gestion des Événements",
+		"localisation": "Localisation"
+	}
 }
