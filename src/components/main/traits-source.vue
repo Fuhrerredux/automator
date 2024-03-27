@@ -1,20 +1,35 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dropdown from '@components/dropdown.vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import useConfiguration from '@stores/config'
 import useModStore from '@stores/mod'
 import useTraitsStore from '@stores/traits'
+import { useToast } from 'vue-toast-notification'
 
 const { t } = useI18n()
 const modStore = useModStore()
 const traitStore = useTraitsStore()
-const { files, trait } = storeToRefs(traitStore)
+const { config } = useConfiguration()
+const { files } = storeToRefs(traitStore)
+const $t = useToast()
 
-function handleChange(event: string | null) {
+const traitSource = ref<string | null>(null)
+const fileOptions = computed(() =>
+  files.value.map((e) => ({ value: e.path, label: e.name ?? e.path }))
+)
+
+const onSaveTraits = () => {
+  traitStore.readTraits(config)
+}
+const onChangeTraitSource = (event: string) => {
   if (event) {
     traitStore.$patch({ trait: event })
     localStorage.setItem('trait', event)
+    traitSource.value = event
+    $t.success('Success')
   }
 }
 </script>
@@ -25,19 +40,18 @@ function handleChange(event: string | null) {
     <div class="flex items-center gap-4">
       <div class="w-full">
         <dropdown
-          :options="files"
-          :model-value="trait"
+          :options="fileOptions"
+          :model-value="traitSource"
+          @update:model-value="onChangeTraitSource"
           :disabled="modStore.directory.length <= 0"
-          display-key="name"
-          value-key="path"
-          @update:model-value="handleChange" />
+        />
       </div>
       <button
         type="button"
-        class="button-primary flex items-center shrink-0"
+        class="flex items-center button-primary shrink-0"
         :disabled="modStore.directory.length <= 0"
-        @click="traitStore.readTraits">
-        <arrow-path-icon class="h-5 w-5 mr-2" />
+        @click="onSaveTraits">
+        <arrow-path-icon class="w-5 h-5 mr-2" />
         <span>{{ t('action.load') }}</span>
       </button>
     </div>

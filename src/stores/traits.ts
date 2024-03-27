@@ -19,12 +19,12 @@ const useTraitsStore = defineStore({
       },
       files: [],
       trait: null
-    } as TraitsStore
+    } as Automator.TraitsStore
   },
   actions: {
-    async fetchFromLocalStorage() {
+    async fetchFromLocalStorage(config: Automator.Configuration) {
       this.trait = localStorage.getItem('trait')
-      await this.readTraits()
+      await this.readTraits(config)
     },
     async readDir(path: string) {
       const target = `${path}/country_leader`
@@ -32,11 +32,10 @@ const useTraitsStore = defineStore({
         this.files = await readDir(target)
       } catch {}
     },
-    async readTraits() {
+    async readTraits(config: Automator.Configuration) {
       if (!this.trait) return Promise.resolve()
-
       const content = await readTextFile(this.trait)
-      this.traits = extractTraits(content)
+      this.traits = extractTraits(content, config)
     }
   }
 })

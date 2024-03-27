@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import CharactersPage from '@pages/characters.vue'
+import CharacterEditor from '@pages/characters/editor.vue'
 import ImportCharacters from '@pages/characters/import.vue'
 import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
 import OptimizePage from '@pages/others/optimize.vue'
 import SettingsPage from '@pages/settings.vue'
-
 const routes = [
   {
     path: '/',
@@ -36,6 +36,11 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: SettingsPage
+  },
+  {
+    path: '/edit',
+    name: 'Character Editor',
+    component: CharacterEditor
   }
 ]
 

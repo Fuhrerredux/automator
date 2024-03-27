@@ -8,6 +8,7 @@ import Automator from './app.vue'
 import './assets/app.css'
 import locales from './locales'
 import router from './router'
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
 
 const locale = 'en'
 const i18n = createI18n({
@@ -27,3 +28,18 @@ app.use(router)
 app.use(i18n)
 app.use(VueTippy, { directive: 'tippy', component: 'tippy' })
 app.mount('#app')
+
+const isDevVersion = true
+
+async function checkAndUpdate() {
+  const update = await checkUpdate();
+
+  if (update.shouldUpdate && !isDevVersion) {
+    //console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
+    await installUpdate();
+  } else {
+    //console.log('No updates.', update);
+  }
+}
+
+checkAndUpdate();

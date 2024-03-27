@@ -7,15 +7,31 @@
     "character-import": "Character Importer",
     "analyze-gfx": "Analyze GFX"
   },
-  "theme": {
-    "auto": "System",
-    "dark": "Dark",
-    "light": "Light"
-  },
   "settings": {
     "header": "Settings",
-    "positionPrevention": "Prevent an officer from having more than 1 role at a time.",
-    "optionLogging": "Add log statements on options as well as events."
+    "theme": {
+      "auto": "Sync with System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "character": {
+      "name": "Character",
+      "position-prevention": "Prevent an officer from having more than 1 role at a time.",
+      "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens"
+    },
+    "logging": {
+      "name": "Logging",
+      "option-logging": "Add log statements on options as well as events."
+    },
+    "configuration": {
+      "name": "Configuration",
+      "custom-config": "Use custom configuration",
+      "predefined-configs": "Available Presets"
+    },
+    "interface": {
+      "name": "Interface",
+      "advisor-trait-input": "Make advisor trait box be an input"
+    }
   },
   "field": {
     "tag": "Country Tag",
@@ -23,8 +39,7 @@
     "ideology": "Ideology",
     "leader-role": "Add Leader Role",
     "commanding-role": "Add Commanding Role",
-    "minister-role": "Add Minister Role",
-    "officer-role": "Add Officer Role",
+    "advisor-role": "Add Advisor Role",
     "role": "Role",
     "roles": "Roles",
     "traits": "Traits",
@@ -33,7 +48,11 @@
     "traits-def": "Traits Definitions",
     "leader-roles": "Leader Roles",
     "dropzone": "Drag and drop file here, or click to browse a file",
-    "dropzone-active": "Drop the file here"
+    "dropzone-active": "Drop the file here",
+    "cost": "Cost",
+    "hirable": "Hirable",
+    "removeable": "Removable",
+    "trait": "Trait"
   },
   "placeholder": {
     "tag": "USA",
@@ -66,32 +85,10 @@
     "exporting": "Exporting",
     "purging": "Purging"
   },
-  "ideology": {
-    "vanguardist": "National Collectivist",
-    "collectivist": "Socialist",
-    "libertarian_socialist": "Libertarian Socialist",
-    "social_democrat": "Social Democrat",
-    "social_liberal": "Social Liberal",
-    "market_liberal": "Market Liberal",
-    "social_conservative": "Social Conservative",
-    "authoritarian_democrat": "Authoritarian Democrat",
-    "paternal_autocrat": "Paternal Autocrat",
-    "national_populist": "National Populist",
-    "valkist": "Valkist"
-  },
   "roles": {
     "marshal": "Field Marshal",
     "general": "Corps Commander",
-    "admiral": "Admiral",
-    "head_of_government": "Head of Government",
-    "foreign_minister": "Foreign Minister",
-    "economy_minister": "Economy Minister",
-    "security_minister": "Security Minister",
-    "high_command": "Chief of Staff",
-    "army_chief": "Chief of Army",
-    "air_chief": "Chief of Air Force",
-    "navy_chief": "Chief of Navy",
-    "theorist": "Theorist"
+    "admiral": "Admiral"
   },
   "modal": {
     "character-editor": {
@@ -130,9 +127,13 @@
     "characters-exported": "Characters exported",
     "characters-imported": "Characters imported",
     "character-removed": "Character removed",
+    "characters-localised": "Characters Localised",
     "shines-generated": "Shines generated",
     "event-logged": "Event Logging Added",
-    "log-removed": "Logging Removed"
+    "log-removed": "Logging Removed",
+    "sprites-fixed": "Sprite Entries Fixed",
+    "config-removed": "Configuration removed",
+    "config-updated": "Configuration updated"
   },
   "info": {
     "import-ext": "You can use characters file or the localization file which has definitions for the ministers that will be imported. {end}"
@@ -142,7 +143,8 @@
     "no-dir": "No mod directory selected. You need to browse the root of your mod directory to get started.",
     "no-dir-short": "No mod directory selected",
     "no-characters-to-export": "There are no characters to export",
-    "file-not-found": "File not found"
+    "file-not-found": "File not found",
+    "no-file-selected-config": "You haven't selected any file to import. Custom configuration setting will be disabled."
   },
   "others": {
     "shine": {
@@ -161,13 +163,31 @@
       "heading": "Append Characters to History Files",
       "summary": "Adds 'recruit_character' effects to the end of the history files"
     },
+    "character-localisation": {
+      "heading": "Localise Characters",
+      "summary": "Localises Characters by adding their names on selected localisation file. WARNING: Characters must be imported for this to localise them correctly."
+    },
     "optimize-gfx": {
       "heading": "Optimize Sprite Definitions",
       "summary": "Check whether sprite definitions does not have missing file paths."
+    },
+    "fix-sprites": {
+      "heading": "Fix Sprite Definitions",
+      "summary": "Automatically removes duplicate sprite definitions as well as sorts them alphabetically based on the tags on common/country_tags/00_countries.txt."
+    },
+    "localise-focuses": {
+      "heading": "Localise Focuses",
+      "summary": "Will localise focuses of entered focus file into entered localisation file."
     }
   },
   "tab": {
     "orphaned": "Ophaned",
     "duplicate": "Duplicate"
+  },
+  "sections": {
+    "gfx-optimization": "GFX Optimization",
+    "character-management": "Character Management",
+    "event-handling": "Event Handling",
+    "localisation": "Localisation"
   }
 }

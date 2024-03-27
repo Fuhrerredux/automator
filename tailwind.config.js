@@ -6,8 +6,10 @@ export default {
     extend: {
       fontFamily: {
         primary: ['Inter', 'sans-serif']
-      }
-    }
+      },
+    },
   },
-  plugins: []
+  plugins: [
+    require('@headlessui/tailwindcss')({ prefix: 'ui' }),
+  ],
 }

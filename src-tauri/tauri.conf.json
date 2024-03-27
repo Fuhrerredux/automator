@@ -1,14 +1,14 @@
 {
   "build": {
-    "beforeDevCommand": "yarn dev",
-    "beforeBuildCommand": "yarn build",
+    "beforeDevCommand": "yarn vite:dev",
+    "beforeBuildCommand": "yarn vite:build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist",
     "withGlobalTauri": false
   },
   "package": {
     "productName": "automator",
-    "version": "0.0.6"
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -19,12 +19,28 @@
       },
       "dialog": {
         "open": true,
-        "save": true
+        "save": true,
+        "message": true
       },
       "fs": {
         "all": true,
         "scope": ["$HOME/*/**", "$LOCALDATA/*/**", "$DOCUMENT/*/**"]
+      },
+      "path": {
+        "all": true
       }
+    },
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ0MkIwNzMwRDgwNDBENgpSV1RXUUlBTmM3QkNCRWl6eFJOalVXZUZndDMwM24wTElSNnR6K29YclRRSlE1cU5jSk1LL1MxMwo=",
+      "windows": {
+        "installMode": "passive",
+        "installerArgs": []
+      },
+      "endpoints": [
+        "https://github.com/Fuhrerredux/automator/releases/latest/download/latest.json"
+      ]
     },
     "bundle": {
       "active": true,
@@ -45,7 +61,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "automator",
+        "title": "Automator",
         "width": 1280,
         "height": 720,
         "fileDropEnabled": false

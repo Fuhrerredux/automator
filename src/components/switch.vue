@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-  import { Switch } from '@headlessui/vue';
-  defineProps({ checked: Boolean, label: String, labelClass: String });
-  defineEmits(['update:modelValue']);
+import { Switch } from '@headlessui/vue'
+
+defineProps({ checked: Boolean, label: String, labelClass: String })
+defineEmits(['update:modelValue'])
 </script>

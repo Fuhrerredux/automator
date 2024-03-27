@@ -3,18 +3,22 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
+import useConfiguration from '@/stores/config'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { exportCharacters } from '@shared/core/writer'
 import useCharacterStore from '@stores/characters'
 import useModStore from '@stores/mod'
+import useSettingsStore from '@/stores/settings'
 
 const { t } = useI18n()
 const $toast = useToast()
 const loading = ref(false)
 const modStore = useModStore()
+const { config } = useConfiguration()
 const characterStore = useCharacterStore()
+const settingsStore = useSettingsStore()
 const { characters } = storeToRefs(characterStore)
 
 defineProps<{
@@ -33,7 +37,7 @@ async function triggerExports() {
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
-    await exportCharacters(data, common.path)
+    await exportCharacters(data, common.path, config, settingsStore)
 
     loading.value = false
     $toast.success(t('status.characters-exported'))
@@ -51,8 +55,8 @@ async function triggerExports() {
       {{ t('modal.character-export.summary') }}
     </template>
     <template #body>
-      <div v-if="characters.length <= 0" class="banner-warning mx-auto w-2/3 text-center">
-        <exclamation-triangle-icon class="inline-block h-6 w-6" />
+      <div v-if="characters.length <= 0" class="w-2/3 mx-auto text-center banner-warning">
+        <exclamation-triangle-icon class="inline-block w-6 h-6" />
         <p>{{ t('error.no-characters-to-export') }}</p>
       </div>
       <div>

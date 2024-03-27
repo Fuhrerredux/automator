@@ -9,11 +9,11 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 
-defineProps({
-  open: Boolean,
-  hideable: Boolean,
-  size: String
-})
+defineProps<{
+  open: boolean
+  hideable: boolean
+  size: string
+}>()
 defineEmits(['hide'])
 </script>
 

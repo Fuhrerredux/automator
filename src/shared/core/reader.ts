@@ -1,12 +1,22 @@
-import { isIdeologyToken, parseIdeology } from '@shared/utils/ideology'
-import {
-  getPositionSuffix,
-  isCivilianPosition,
-  isMilitaryPosition,
-  parsePosition
-} from '@shared/utils/position'
+import { validateConfiguration } from '@shared/utils/configuration'
+import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology'
+import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
+
+export let countryTags: string[] = []
+
+export async function readConfigurationFile(filePath: string): Promise<Automator.Configuration> {
+  try {
+    const raw = await readTextFile(filePath)
+    const json = JSON.parse(raw)
+    if (validateConfiguration(json)) {
+      return json as Automator.Configuration
+    } else throw Error('Invalid Configuration')
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
 
 export async function readSpriteUsage(sprite: SpriteType, base: string) {
   const dir = `${base}/${sprite.directory}`
@@ -58,7 +68,10 @@ const positions: Position[] = [
   'theorist'
 ]
 
-export function extractTraits(content: string): Record<Position, string[]> {
+export function extractTraits(
+  content: string,
+  config: Automator.Configuration
+): Record<Position, string[]> {
   const traits: Record<Position, string[]> = {
     head_of_government: [],
     foreign_minister: [],
@@ -79,7 +92,7 @@ export function extractTraits(content: string): Record<Position, string[]> {
 
   content.split('\n').forEach((e) => {
     for (const key of Object.keys(traits)) {
-      const prefix = getPositionSuffix(key as Position)
+      const prefix = getPositionSuffix(key as unknown as Automator.Position, config)
       const data = e.trim()
       if (data.startsWith(prefix)) {
         const arr = traits[key as Position]
@@ -92,7 +105,10 @@ export function extractTraits(content: string): Record<Position, string[]> {
   return traits
 }
 
-export function readCharacterFile(content: string): Record<string, any>[] {
+export function readCharacterFile(
+  content: string,
+  config: Automator.Configuration
+): Record<string, any>[] {
   if (content.length <= 0) return []
 
   let lines = content.split('\n')
@@ -127,7 +143,7 @@ export function readCharacterFile(content: string): Record<string, any>[] {
       parsed.leaderTraits = []
       parsed.leaderIdeologies = []
       parsed.commanderTraits = []
-      parsed.ministerTraits = {
+      parsed.advisorRoles = {
         head_of_government: '',
         foreign_minister: '',
         economy_minister: '',
@@ -147,13 +163,9 @@ export function readCharacterFile(content: string): Record<string, any>[] {
         content.split('\n').forEach((e) => {
           const trimmed = e.trim()
           positions.forEach((position) => {
-            const prefix = getPositionSuffix(position)
-            if (trimmed.startsWith(`${prefix}_`)) {
-              if (isCivilianPosition(position)) {
-                parsed.ministerTraits[`${position}`] = trimmed
-              } else if (isMilitaryPosition(position)) {
-                parsed.officerTraits[`${position}`] = trimmed
-              }
+            const prefix = getPositionSuffix(position as unknown as Automator.Position, config)
+            if (trimmed.startsWith(`${prefix}_`) && isAdvisorPosition(position, config)) {
+              parsed.advisorRoles[`${position}`] = trimmed
             }
           })
         })
@@ -187,7 +199,7 @@ export function readCharacterFile(content: string): Record<string, any>[] {
         }
         if (!contents.includes('ideology') && content.includes('traits')) {
           const target = contents[index + 1]
-          if (isIdeologyToken(target)) {
+          if (isIdeologyToken(target, config)) {
             parsed.ideology = target.trim()
           }
         }
@@ -195,11 +207,8 @@ export function readCharacterFile(content: string): Record<string, any>[] {
           const position = extractValue(content).trim()
           parsed.positions = [...parsed.positions, position]
 
-          if (isCivilianPosition(position as Position) && !parsed.roles.includes('minister')) {
-            parsed.roles = [...parsed.roles, 'minister']
-          }
-          if (isMilitaryPosition(position as Position) && !parsed.roles.includes('officer')) {
-            parsed.roles = [...parsed.roles, 'officer']
+          if (isAdvisorPosition(position, config) && !parsed.roles.includes('advisor')) {
+            parsed.roles = [...parsed.roles, 'advisor']
           }
         }
       })
@@ -240,7 +249,7 @@ function extractAdvisorRoles(content: string): string[] {
   return roles
 }
 
-export function readLocalisationFile(content: string) {
+export function readLocalisationFile(content: string, config: Automator.Configuration) {
   if (content.length <= 0) return []
 
   function extractPosition(token: string) {
@@ -260,61 +269,60 @@ export function readLocalisationFile(content: string) {
 
     const token = trimmed.substring(0, trimmed.indexOf(':'))
     const tag = token.substring(0, 3)
-    const position = parsePosition(extractPosition(token))
+    const position = parsePosition(extractPosition(token), config)
     const ideology = extractIdeology(token)
 
-    const start = trimmed.indexOf('"')
-    const name = trimmed.substring(start, trimmed.length)
+    const parts = trimmed.split('"')
+    if (parts.length < 3) continue // If there are not enough quotes, skip this line
+    const name = parts[1]
 
     const record: Character = {
       name,
       tag,
-      cost: 150,
-      ideology: parseIdeology(ideology) ?? 'vanguardist',
+      ideology: getIdeologyKeyFromShort(ideology, config) ?? 'vanguardist',
       roles: [],
-      leaderTraits: [],
-      leaderIdeologies: [],
+      leaderRoles: [],
       commanderTraits: [],
-      positions: [],
-      ministerTraits: {
-        head_of_government: '',
-        foreign_minister: '',
-        economy_minister: '',
-        security_minister: ''
-      },
-      officerTraits: {
-        high_command: '',
-        army_chief: '',
-        air_chief: '',
-        navy_chief: '',
-        theorist: ''
-      }
+      advisorRoles: []
     }
 
     const index = records.findIndex((e) => e.name === name)
     if (index >= 0) {
       const curr = records[index]
-      if (position) {
-        curr.positions = [...curr.positions, position]
-        if (isCivilianPosition(position) && !curr.roles.includes('minister')) {
-          curr.roles = [...curr.roles, 'minister']
-        } else if (isMilitaryPosition(position) && !curr.roles.includes('officer')) {
-          curr.roles = [...curr.roles, 'officer']
-        }
+      if (
+        position &&
+        isAdvisorPosition(String(position), config) &&
+        !curr.roles.includes('advisor')
+      ) {
+        curr.roles = [...curr.roles, 'advisor']
       }
       records[index] = curr
     } else {
-      if (position) {
-        record.positions = [...record.positions, position]
-        if (isCivilianPosition(position) && !record.roles.includes('minister')) {
-          record.roles = [...record.roles, 'minister']
-        } else if (isMilitaryPosition(position) && !record.roles.includes('officer')) {
-          record.roles = [...record.roles, 'officer']
-        }
+      if (
+        position &&
+        isAdvisorPosition(String(position), config) &&
+        !record.roles.includes('advisor')
+      ) {
+        record.roles = [...record.roles, 'advisor']
       }
       records.push(record)
     }
   }
 
   return records
+}
+
+export async function loadCountryTags(filePath: string): Promise<void> {
+  const content = await readTextFile(filePath)
+  const lines = content.split('\n')
+
+  for (const line of lines) {
+    const tag = line.split('=')[0].trim()
+    if (tag && !tag.startsWith('#')) {
+      countryTags.push(tag)
+    }
+  }
+
+  // Sort country tags alphabetically
+  countryTags.sort()
 }

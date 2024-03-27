@@ -19,7 +19,7 @@ const { t } = useI18n()
     <td>{{ character.tag }}</td>
     <td>{{ character.name }}</td>
     <td>
-      <roles-viewer :positions="character.positions" />
+      <roles-viewer :positions="character.advisorRoles ?? []" />
     </td>
     <td>
       <menu-dropdown>

@@ -1,46 +1,45 @@
-<script
-  setup
-  lang="ts"
-  generic="
-    V extends string | number | boolean | object | null | undefined,
-    I extends object | string
-  ">
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useKeys from '@composables/use-keys'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const { t } = useI18n()
 const props = defineProps<{
-  options: I[]
-  valueKey: KeyOfType<I, V> | ((item: I) => V)
-  displayKey: keyof I | ((item: I) => string)
-  modelValue: V
+  options: UserInterface.DataOption[]
+  modelValue: string | undefined | null
   disabled?: boolean
   localise?: boolean
   multiple?: boolean
 }>()
-defineEmits<{
-  (e: 'update:modelValue', value: V): void
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: string): void
 }>()
-const { valueFunc, displayFunc } = useKeys<V, I>(props)
 
-const item = computed(() => props.options.find((i) => valueFunc(i) === props.modelValue))
+const item = computed(() => props.options.find((e) => e.value === props.modelValue))
+const keys = computed(() => props.options.map((e) => e.value))
+
+const onChange = (item: UserInterface.DataOption) => {
+  emits('update:modelValue', item.value)
+}
 </script>
 
 <template>
   <listbox
     :model-value="item"
     :disabled="disabled"
-    @update:model-value="$emit('update:modelValue', valueFunc($event))"
+    @update:model-value="onChange"
     as="div"
     class="relative">
-    <listbox-button class="dropdown-button w-full">
+    <listbox-button class="w-full dropdown-button">
       <span class="flex-1 text-left truncate">
-        {{ item ? t(displayFunc(item)) : t('placeholder.dropdown') }}
+        {{ 
+          item && keys.includes(item.value) 
+          ? localise ? t(item?.label) : item?.value
+          : t('placeholder.dropdown') 
+        }}
       </span>
-      <chevron-down-icon class="ml-2 h-4 w-4" />
+      <chevron-down-icon class="w-4 h-4 ml-2" />
     </listbox-button>
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -51,18 +50,18 @@ const item = computed(() => props.options.find((i) => valueFunc(i) === props.mod
       leave-to-class="transform scale-95 opacity-0">
       <listbox-options as="ul" class="dropdown-panel">
         <listbox-option
+          as="template"
           v-for="option in options"
           v-slot="{ selected }"
-          :value="option"
-          as="template">
-          <li :key="String(valueFunc(option))" class="dropdown-option truncate">
+          :value="option">
+          <li :key="option.value" class="truncate dropdown-option">
             <span>
-              {{ localise ? t(displayFunc(option)) : displayFunc(option) }}
+              {{ localise ? t(option.label) : option.label }}
             </span>
             <span
               v-if="selected"
               class="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-600">
-              <check-icon class="h-4 w-4" aria-hidden="true" />
+              <check-icon class="w-4 h-4" aria-hidden="true" />
             </span>
           </li>
         </listbox-option>

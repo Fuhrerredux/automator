@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import router from '@/router'
+import useConfiguration from '@/stores/config'
 import DropZone from '@components/drop-zone.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
@@ -18,24 +19,32 @@ const files = ref<File[]>([])
 const loading = ref(false)
 const characters = ref<Record<string, any>[]>([])
 const { importData } = useImportStore()
+const { config } = useConfiguration()
 
 defineProps<{
   open: boolean
 }>()
 const emits = defineEmits(['hide'])
 
-async function onFileSelected(dropped: File) {
+const onFileDropped = async (dropped: File) => {
   files.value = [dropped]
   const content = await readFileObject(dropped)
 
-  if (dropped.type === 'application/x-yaml') {
-    characters.value = readLocalisationFile(content)
+  const fileExtension = dropped.name.split('.').pop()?.toLowerCase()
+
+  if (fileExtension === 'yml' || fileExtension === 'yaml') {
+    characters.value = readLocalisationFile(content, config)
   } else if (dropped.type === 'text/plain') {
-    characters.value = readCharacterFile(content)
+    characters.value = readCharacterFile(content, config)
   }
 }
 
-async function triggerImport() {
+const onFileRemoved = () => {
+  files.value = []
+  characters.value = []
+}
+
+const onImportCharacters = async () => {
   loading.value = true
   if (characters.value.length <= 0) {
     $toast.error(t('error.no-dir-selected'))
@@ -66,7 +75,7 @@ const handleClick = () =>
     <template #body>
       <div class="space-y-4">
         <div>
-          <drop-zone :files="files" @dropped="onFileSelected" @reset="files = []" />
+          <drop-zone :files="files" @dropped="onFileDropped" @reset="onFileRemoved" />
           <p v-if="characters.length > 0" class="text-sm text-center text-zinc-500">
             {{ t('placeholder.character-parsed', { num: characters.length }) }}
           </p>
@@ -93,7 +102,7 @@ const handleClick = () =>
             class="button-primary"
             :loading="loading"
             :disabled="characters.length <= 0 || loading"
-            @click="triggerImport">
+            @click="onImportCharacters">
             <template #content>
               {{ t('action.import') }}
             </template>

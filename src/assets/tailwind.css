@@ -54,6 +54,9 @@
   .form-file {
     @apply cursor-pointer truncate text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-400;
   }
+  .form-helper-error {
+    @apply mt-1 text-xs font-medium text-rose-600;
+  }
   .dialog-actions {
     @apply mb-4 mt-6 flex items-center justify-end space-x-2;
   }
@@ -89,5 +92,8 @@
   }
   .chip-error {
     @apply rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-medium text-rose-800 dark:bg-rose-900 dark:text-rose-300;
+  }
+  .section-header {
+    @apply mb-2 text-sm font-medium text-zinc-400;
   }
 }

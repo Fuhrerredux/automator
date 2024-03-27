@@ -11,7 +11,7 @@ const themeStore = useThemeStore()
 const { theme } = storeToRefs(themeStore)
 const { change } = themeStore
 
-const themes: Theme[] = ['light', 'dark', 'auto']
+const themes: UserInterface.Theme[] = ['light', 'dark', 'auto']
 </script>
 
 <template>
@@ -40,7 +40,7 @@ const themes: Theme[] = ['light', 'dark', 'auto']
           as="template">
           <li
             class="relative cursor-pointer py-2 pl-10 pr-4 font-medium hover:bg-zinc-200 dark:hover:bg-zinc-600">
-            {{ t(`theme.${theme}`) }}
+            {{ t(`settings.theme.${theme}`) }}
             <span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3">
               <check-icon class="h-4 w-4" aria-hidden="true" />
             </span>
