@@ -27,8 +27,14 @@ async function purge() {
 }
 
 async function findAll(): Promise<CharacterWithId[]> {
+  const characters = await invoke<CharacterWithId[]>('list_all_characters')
+  return characters.map((char) => deserializeObject(char, keys)) as CharacterWithId[]
+}
+
+async function list(page: number = 1, limit: number = 10): Promise<CharacterWithId[]> {
   const characters = await invoke<CharacterWithId[]>('list_characters', {
-    params: { page: 1, charactersPerPage: 100 }
+    page,
+    limit
   })
   return characters.map((char) => deserializeObject(char, keys)) as CharacterWithId[]
 }
@@ -46,6 +52,7 @@ const characterRepository = {
   remove,
   purge,
   findAll,
-  findById
+  findById,
+  list
 }
 export default characterRepository

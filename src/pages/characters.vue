@@ -86,7 +86,7 @@ const onRemoveCharacter = (character: CharacterWithId) => {
         </menu-dropdown>
       </div>
     </div>
-    <div class="mt-4">
+    <div class="mt-4 flex-1 flex flex-col">
       <character-table
         :characters="characters"
         @update="onUpdateCharacter"
