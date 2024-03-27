@@ -12,7 +12,7 @@ const { t } = useI18n()
 const props = defineProps<{
 	title: string
 	desc: string
-	localise?: boolean
+	localise?: boolean // will use i18n for desc and title
 }>()
 
 </script>

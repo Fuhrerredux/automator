@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useRoute } from 'vue-router'
 import localeSwitcher from '@components/navigation/locale-switcher.vue'
 import ThemeSwitcher from '@components/navigation/theme-switcher.vue'
-import { Cog6ToothIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { Cog6ToothIcon } from '@heroicons/vue/24/outline'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -34,12 +34,6 @@ function isActiveIcon(link: string): string {
         </router-link>
       </div>
       <div class="flex items-center gap-4">
-        <!-- <router-link
-          to="/info"
-          class="link rounded-md p-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50 dark:hover:bg-zinc-700"
-          :class="isActiveIcon('/info')">
-          <InformationCircleIcon class="h-6 w-6" />
-        </router-link> -->
         <router-link
           to="/settings"
           class="link rounded-md p-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50 dark:hover:bg-zinc-700"
