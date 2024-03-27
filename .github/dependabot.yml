@@ -9,13 +9,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "staging"
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-
+    target-branch: "staging"
+    
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "staging"
