@@ -11,23 +11,23 @@ const { t } = useI18n()
 
 <template>
   <div>
-    <div class="space-x-2">
+    <div class="space-x-2 flex items-center justify-end">
       <button
         type="button"
-        class="button-secondary"
+        class="button-secondary flex items-center"
         :disabled="!definition.getCanPreviousPage()"
         @click="definition.previousPage()">
-        <span class="sr-only">{{ t('action.previous') }}</span>
-        <chevron-left-icon class="h-5 w-5" />
+        <chevron-left-icon class="h-5 w-5 mr-2" />
+        <span>{{ t('action.previous') }}</span>
       </button>
 
       <button
         type="button"
-        class="button-secondary"
+        class="button-secondary flex items-center"
         :disabled="!definition.getCanNextPage()"
         @click="definition.nextPage()">
-        <span class="sr-only">{{ t('action.next') }}</span>
-        <chevron-right-icon class="h-5 w-5" />
+        <span>{{ t('action.next') }}</span>
+        <chevron-right-icon class="h-5 w-5 ml-2" />
       </button>
     </div>
   </div>

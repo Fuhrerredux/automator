@@ -2,6 +2,7 @@
 import { h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from '@/components/data-table.vue'
+import useConfiguration from '@/stores/config'
 import RolesViewer from '@components/roles-viewer.vue'
 import {
   type ColumnDef,
@@ -12,6 +13,9 @@ import {
 import Actions from './actions.vue'
 
 const { t } = useI18n()
+const {
+  config: { ideologies }
+} = useConfiguration()
 type CharacterTableProps = {
   characters: CharacterWithId[]
 }
@@ -35,6 +39,11 @@ const defineColumns = (): ColumnDef<CharacterWithId>[] => {
     {
       header: () => t('field.name'),
       accessorKey: 'name'
+    },
+    {
+      id: 'Ideology',
+      header: () => t('field.ideology'),
+      accessorFn: (row) => (row.ideology ? ideologies[row.ideology].name : '')
     },
     {
       id: 'Roles',

@@ -77,7 +77,9 @@
     "purge": "Purge",
     "learn-more": "Learn more",
     "select": "Select",
-    "save": "Save"
+    "save": "Save",
+    "previous": "Previous",
+    "next": "Next"
   },
   "loading": {
     "saving": "Saving",
