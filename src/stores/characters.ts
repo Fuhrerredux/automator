@@ -9,6 +9,9 @@ const useCharacterStore = defineStore({
     }
   },
   actions: {
+    async findAll(): Promise<CharacterWithId[]> {
+      return CharacterRepository.findAll()
+    },
     async findOne(id: string): Promise<Character> {
       return CharacterRepository.findById(id)
     },

@@ -4,7 +4,7 @@ import Navigation from '@components/navigation.vue'
 
 <template>
   <navigation />
-  <main class="content px-8 page">
+  <main class="content px-8 page flex-1 flex flex-col w-full">
     <slot />
   </main>
 </template>

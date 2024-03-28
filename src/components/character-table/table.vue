@@ -1,34 +1,67 @@
 <script setup lang="ts">
+import { h } from 'vue'
 import { useI18n } from 'vue-i18n'
-import CharacterRow from '@components/character-table/row.vue'
+import DataTable from '@/components/data-table.vue'
+import RolesViewer from '@components/roles-viewer.vue'
+import {
+  type ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useVueTable
+} from '@tanstack/vue-table'
+import Actions from './actions.vue'
 
 const { t } = useI18n()
-defineProps<{ characters: CharacterWithId[] }>()
-defineEmits<{
+type CharacterTableProps = {
+  characters: CharacterWithId[]
+}
+type CharacterTableEmits = {
   (e: 'update', value: CharacterWithId): void
   (e: 'remove', value: CharacterWithId): void
-}>()
+}
+
+const props = defineProps<CharacterTableProps>()
+const emits = defineEmits<CharacterTableEmits>()
+
+const defineColumns = (): ColumnDef<CharacterWithId>[] => {
+  const updateFn = (c: CharacterWithId) => emits('update', c)
+  const removeFn = (c: CharacterWithId) => emits('remove', c)
+
+  return [
+    {
+      header: () => t('field.tag'),
+      accessorKey: 'tag'
+    },
+    {
+      header: () => t('field.name'),
+      accessorKey: 'name'
+    },
+    {
+      id: 'Roles',
+      header: () => t('field.roles'),
+      cell: ({ row }) => {
+        const character = row.original
+        return h(RolesViewer, { positions: character.advisorRoles })
+      }
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const character = row.original
+        return h(Actions, { character, onUpdate: updateFn, onRemove: removeFn })
+      }
+    }
+  ]
+}
+
+const table = useVueTable({
+  data: props.characters,
+  columns: defineColumns(),
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: getPaginationRowModel()
+})
 </script>
 
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th scope="col" class="w-1/6">{{ t('field.tag') }}</th>
-        <th scope="col" class="w-2/6">{{ t('field.name') }}</th>
-        <th scope="col" class="w-3/6">{{ t('field.roles') }}</th>
-        <th scope="col" class="w-1/6">
-          <span class="sr-only">{{ t('field.actions') }}</span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <template v-for="character of characters" :key="character.id">
-        <character-row
-          :character="character"
-          @update="$emit('update', $event)"
-          @remove="$emit('remove', $event)" />
-      </template>
-    </tbody>
-  </table>
+  <DataTable :definition="table" />
 </template>
