@@ -20,7 +20,7 @@ impl Query {
    /// If ok, returns (post models, num pages).
   pub async fn find_characters_in_page(
     db: &DbConn,
-    page: 64,
+    page: u64,
     chars_per_page: u64,
   ) -> Result<(Vec<character::Model>, u64), DbErr> {
     // Setup paginator
