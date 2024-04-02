@@ -459,53 +459,53 @@ export async function appendCharLoc(content: string, locDir: string, config: Aut
   await writeTextFile(`${await join(commonDir, 'characters', filePath)}`, newLines.join('\n'))
 }
 
-export async function appendCharacterLocalisation(
-  characters: CharacterWithId[],
-  path: string,
-  content: string,
-  commonDir: string
-): Promise<void> {
-  if (Array.isArray(characters)) {
-    const group = groupBy(characters, 'tag')
-    let data: string = ''
-    for (const [_, value] of Object.entries(group)) {
-      for (const character of value) {
-        const characterPath = `${commonDir}/characters/${character.tag}.txt`
-        const token = buildCharacterToken(character)
-        if (!content.includes(`${token}: "${character.name}"`)) {
-          data = data.concat(`  ${token}: "${character.name}"\n`)
-        }
-        const charContent = await readTextFile(characterPath)
-        const lines = charContent.split('\n')
-        const newcharContent: string[] = []
-        lines.forEach((line, _) => {
-          let nLine = line
-          if (/\bname\b/.test(line)) {
-            nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
-          }
-          newcharContent.push(nLine)
-        })
-        const result = newcharContent.join('\n')
-        try {
-          await writeTextFile(characterPath, result)
-        } catch (error) {
-          console.error(`Error writing file ${characterPath}: ${error}`)
-          throw error
-        }
-      }
-    }
-    if (data !== '') {
-      const comment = '\n\n### Generated Character Names ###\n'
-      content = content.concat(`${comment}\n${data}`)
-      try {
-        await writeTextFile(path, content)
-      } catch (error) {
-        console.error(`Error writing file ${path}: ${error}`)
-        throw error
-      }
-    }
-  }
-}
+// export async function appendCharacterLocalisation(
+//   characters: CharacterWithId[],
+//   path: string,
+//   content: string,
+//   commonDir: string
+// ): Promise<void> {
+//   if (Array.isArray(characters)) {
+//     const group = groupBy(characters, 'tag')
+//     let data: string = ''
+//     for (const [_, value] of Object.entries(group)) {
+//       for (const character of value) {
+//         const characterPath = `${commonDir}/characters/${character.tag}.txt`
+//         const token = buildCharacterToken(character)
+//         if (!content.includes(`${token}: "${character.name}"`)) {
+//           data = data.concat(`  ${token}: "${character.name}"\n`)
+//         }
+//         const charContent = await readTextFile(characterPath)
+//         const lines = charContent.split('\n')
+//         const newcharContent: string[] = []
+//         lines.forEach((line, _) => {
+//           let nLine = line
+//           if (/\bname\b/.test(line)) {
+//             nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
+//           }
+//           newcharContent.push(nLine)
+//         })
+//         const result = newcharContent.join('\n')
+//         try {
+//           await writeTextFile(characterPath, result)
+//         } catch (error) {
+//           console.error(`Error writing file ${characterPath}: ${error}`)
+//           throw error
+//         }
+//       }
+//     }
+//     if (data !== '') {
+//       const comment = '\n\n### Generated Character Names ###\n'
+//       content = content.concat(`${comment}\n${data}`)
+//       try {
+//         await writeTextFile(path, content)
+//       } catch (error) {
+//         console.error(`Error writing file ${path}: ${error}`)
+//         throw error
+//       }
+//     }
+//   }
+// } for use within char editor
 
 export async function fixSprites(path: string, content: string, commonDir: string): Promise<void> {
   await loadCountryTags(`${commonDir}/country_tags/00_countries.txt`)

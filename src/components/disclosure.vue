@@ -18,7 +18,7 @@ const props = defineProps<{
 </script>
 
 <template>
-	<Disclosure v-slot="{ open }" as="div">
+	<Disclosure as="div">
 		<DisclosureButton 	
 		class="flex w-full justify-between rounded-lg 
 		bg-purple-100 px-4 py-2 text-left text-sm font-medium 
