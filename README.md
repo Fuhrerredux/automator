@@ -1,98 +1,92 @@
-# automator
+# Automator
 
-An automated component generation tool for total conversion mods such as Führerredux and Kaiserredux.
+An automated component generation tool for mods
 
 ## License
 
-This project is licensed under the GPL-3.0 - see the license file for more details
+This project was created under the AGPL-3.0 License by Dax0102 and thanasislanaras. See the relative license file for more details.
 
 ## Contributing
 
-This application is currently under development. Contributions are still welcome but may need more consideration from the maintainers.
+Even with the first non-beta version releasing, this tool is still heavily under development, with a lot of features being planned. For this reason, any contributions are welcome.
+
+## Accessibility
+
+This tool was created with accessibility in mind. It is properly resized for smaller/bigger screens, as long as they meet the minimum size. It furthermore has themes (dark, white, auto) and languages (English, German, French, Spanish, Italian and Greek. You can help us expanding this by making a PR with any new locale you'd like, if you know it, that is.
 
 ## Notes
 
-This build of Automator is specifically built for Führerredux (and maybe
-sibling mods such as Kaiserredux and the OG Führerreich. This tool aims
-to lift the workload of the modders in creating the characters for a
-specified country. However, the ideologies using by Führerredux are hard-coded
-in this tool, and there maybe plans to override this behavior. Do note that
-this tool does NOT currently that the data is not persistent; meaning closing
-this tool will result in loss of data inserted unto it. Also please be gentle
-as this tool is currently in BETA; and some bugs might exist through-out
-(Hopefully not).
+This tool supports a multitude of features. Most prominent of which is the character automation. However, there are still a lot of features, such as sprite ordering/fixing, shine generation, event logging/removing, character localisation and more.
 
 ---
 
-### What does Automator do?
 
-Currently, I built Automator to generate the character files used for the
-new NSB Patch for Hearts of Iron IV. Führerredux has hundreds-if not thousands
-of characters waiting to be refactored for the new patch. This tool aims to
-automate that. However, there are more features that are planned to be
-implemented in the future.
+## What does Automator do?
+Automator was originally built using Dart with Flutter as a tool for the Führerredux Team (and sibling mods such as original Fuhrerreich and Kaiserredux) to convert their pre-NSB characters to NSB characters. We later decided to redesign it completely, coding it in Tauri, a Rust toolkit, with Typescript, TailwindCSS and Vue.js used for the scripting, Styling, and UI respectively. This redesign got rid of the character conversion, as we thought it was unneeded, and there was no reason to try incorporating it again to our new version. Thus, we added a lot more stuff, which you'll easily find through exploring
 
 ---
 
 ### How do I automate creation of characters?
 
 While the aim of the creation of this tool is to automate the creation of the
-characters used in the mod; there are also manual work involved. Currently,
+characters used in the mod; there is also manual work involved. Currently,
 there are three ways in adding characters. One is adding a single character
 through the character editor clicking the "Create" button, this is ideal when
-adding or editing single characters, not ideal when creating batches.
-The other one is adding through the "Importer", by clicking the "Import" button,
-this either needs a character file from the mod itself to be reimported or a
-localization file that doesn't have any other stuff inside except for the
-localization for the idea-based ministers.
+adding or editing single characters, not ideal when creating batches. An import feature is planned and underway, but it may be a while till it appears.
 
-This will only work for idea-style ministers though, and will parse the names based
-on the prefixes of the positions of the ministers, (Head of Government is `hog`).
+### How can I add my mod's ideologies and positions to the mod?
+Automator was built with the goal of customisation. You can customise a lot of aspects, like ideologies, positions, default character cost, and portrait paths. To do that, you will need to:
+1. Go to your user directory,
+2. then open `.automator` folder
+3. Open/edit file config.json
+4. This is the file's format;
 
-Sample Idea-Style Minister Localization file:
-
-```yaml
-USA_Douglas_MacArthur_hog_pau:0 "Douglas MacArthur"
-USA_Herbert_Clark_Hoover_hog_mli:0 "Herbert Clark Hoover"
+```json
+{
+    "ideologies": {
+        "ideologyId": {
+            "name": "Localised Name",
+            "short": "short"
+        },
+    },
+    "positions": {
+        "positionId": {
+            "name": "Localised Name",
+            "short": "short",
+            "hirable": true,
+            "removable": true
+        }
+    },
+    "character": {
+        "defaultCost": 150,
+        "largePortraitPath": "gfx/leaders",
+        "smallPortraitPath": "gfx/interface/ministers"
+    },
+    "localisation": {
+        "countryDir": "folder where your mod has the country loc files"
+    }
+}
 ```
 
-A successfull import will direct you to a screen where you can tweak the details
-of the character such as their positions, ideology and current status.
+Now, you'll wonder. What is this 'short'? The short has the value used for position suffixes in advisor tokens. The ideological ones aren't required, and you can not add them, although there is an option inside the settings page to disable the ideological suffixes as well. To add more positions and ideologies, you simply use the JSON syntax to add more key-value pairs.
 
 ---
 
 ### I added the characters, now what?
 
 If you are done in tweaking the characters, you can export it by clicking the
-"Export" button. This prompts you to save the file; and wait for the task to
-finish. You can rename the file if you want and view the file for vertification.
-If you're done, put it in the 'common/characters/' folder.
-
----
-
-### What is the difference between the Characters and Ministers
-
-The Character tool is used to generate the new character system in the Barbarossa
-patch; while the minister tool is used to generate the old-style ministers from
-Kaiserreich and Kaiserredux using the idea system. It will generate not just the
-idea, but also the localization files and the GFX spriteType definitions.
+"Export" button. This will automatically export each character to their character file, creating one if it doesn't exist. This, however, does not add `recruit_character` statements inside your history file. To do that, head over to the others page, and find the recruit characters option. Suppose you want to additionally localise your characters, having a localisation key in the name value and a value in the localisation file. In that case, you can do that through the others page as well. However, this requires you to load and save manually, it doesn't do it automatically for each character you may have. Additionally, it doesn't detect duplicates, so you'd have to do them yourself.
 
 ---
 
 ### What are traits?
 
-Traits are for the minister traits of Führerredux. If it's not empty you will
-be presented to select one rather than manually inputting it when creating or
-importing characters.
+The traits boxes will be populated through combo boxes automatically if you:
+- have loaded the relative trait files
+- your traits have the relative position short, i.e, if you had entered in the config `hog` which is for the head of government position, then it will try to search the traits file for any traits beginning with `hog`, and add them as options. If you use a different naming convention, sadly you'd have to either enter them yourself on the trait input box, by adjusting the setting converting it into an input, or adding them manually after the export. For some positions additionally, it is required to have a trait, so you will have to either enter gibberish, or the traits yourself to bypass it. There are plans to override this behaviour though, through further customisation.
 
 ---
 
-### Why I can't add traits individually?
-
-You'll need to import them from file, commonly found in 'common/country_leaders/00_minister_traits.txt'.
-Select that file and you will be presented its contents; assuming it's correct.
-
----
 
 ### How about the leader and commander traits from Vanilla?
 
@@ -103,25 +97,10 @@ Those traits are not supported yet, so you'll need to enter them manually.
 ### I encountered an error
 
 If you encounted an error such as the tool crashed or the generated file is
-invalid, report it to me. Do note that I need to know what you are doing so
-that I could debug it.
+invalid, report it to us, by creating an issue here in GitHub. Note, that we need to know what exactly you were doing, as detailed as possible in order to assist you in the best of our ability.
 
 ---
 
-### I work on another mod; but this tool looks promising
-
-If you work on another mod which does not a sibling of the original Kaiserreich
-and Führreich mods; but wanted to use this tool for automating the creation of
-either your characters or ministers; you may take note that the `Ideologies`
-defined in the tool are hardcoded; which means if you have different ideologies
-in your mod, the tool may not work. However, you can either fork this tool, and
-modify the ideology definitions yourself; and compile it again, or manually
-`Find and Replace + Replace All` the ideologies in the generated file; which is
-kinda defeats the whole purpose of the tool. If you need to contact me, just
-join the Führerredux Server and DM or mention me there.
-
----
-
-### Where's the invite link tho?
+### Where's the Führerredux invite link tho?
 
 Here it is: [Führerredux Discord Server](https://discord.gg/dVT7bHNVgY)
