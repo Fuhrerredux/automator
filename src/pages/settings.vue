@@ -60,32 +60,26 @@ const handleConfigurationChange = async (value: string) => {
 
 <template>
   <page>
-    <div class="items-center justify-between flex-auto">
+    <div>
       <h1 class="header">{{ t('settings.header') }}</h1>
     </div>
     <div class="mt-4 space-y-4">
       <preference-group title="settings.character.name">
         <switch-preference
           label="settings.character.position-prevention"
-          preference-key="positionPrevention" 
-        />
+          preference-key="positionPrevention" />
         <switch-preference
           label="settings.character.uses-ideology-suffix"
-          preference-key="usesIdeologySuffixOnToken"
-        />
+          preference-key="usesIdeologySuffixOnToken" />
       </preference-group>
       <preference-group title="settings.logging.name">
-        <switch-preference 
-          label="settings.logging.option-logging" 
-          preference-key="optionLogging" 
-        />
+        <switch-preference label="settings.logging.option-logging" preference-key="optionLogging" />
       </preference-group>
       <preference-group title="settings.configuration.name">
         <switch-preference
           label="settings.configuration.custom-config"
           preference-key="customConfig"
-          @change="onCustomConfigurationChange" 
-        />
+          @change="onCustomConfigurationChange" />
         <div className="flex items-center gap-4" v-if="settingsStore.getPreference('customConfig')">
           <legend class="text-sm font-medium shrink-0">
             {{ t('settings.configuration.predefined-configs') }}
@@ -102,8 +96,7 @@ const handleConfigurationChange = async (value: string) => {
       <preference-group title="settings.interface.name">
         <switch-preference
           label="settings.interface.advisor-trait-input"
-          preference-key="useInputForAdvisorTraitBox"
-        />
+          preference-key="useInputForAdvisorTraitBox" />
       </preference-group>
     </div>
   </page>

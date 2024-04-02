@@ -24,5 +24,8 @@ export default {
     defaultCost: 150,
     largePortraitPath: 'gfx/leaders',
     smallPortraitPath: 'gfx/interface/advisors'
+  },
+  localisation: {
+    countryDir: 'KR_country_specific'
   }
 }

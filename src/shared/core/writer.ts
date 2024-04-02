@@ -4,7 +4,8 @@ import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
-import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
+import { join } from '@tauri-apps/api/path'
+import { countryTags, loadCountryTags, readCharacterNames, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
@@ -191,7 +192,6 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
 
     minister.advisors.forEach((advisor) => {
       let available = ''
-      console.log(advisor.positionPrevention)
       if (!advisor.hirable) {
         available += `
                 ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
@@ -417,6 +417,46 @@ export async function appendToHistory(characters: CharacterWithId[], destination
       await writeTextFile(path, content)
     }
   }
+}
+
+export async function appendCharLoc(content: string, locDir: string, config: Automator.Configuration, commonDir: string, filePath: string) {
+  const names: Characters.NameLoc[] = await readCharacterNames(content);
+  const lines = content.split('\n')
+  const tag = (lines.slice(1, -1))[0].trim().substring(0, 3)
+  const locs: string[] = []
+  locDir = await join(locDir, 'english', config.localisation.countryDir)
+  // Read directory and find matching files
+  const locFiles = await readDir(locDir);
+  for (const file of locFiles) {
+    if (file.name?.includes(tag)) {
+      let locContent = await readTextFile(file.path);
+      locContent += "\n\n# Characters\n\n"
+      await writeTextFile(file.path, locContent);
+
+      for (const nameLoc of names) {
+        const { name, scope } = nameLoc;
+        const format = `${scope.trim()}: ${name.trim()}`;
+        locs.push(format)
+      }
+
+      await writeTextFile(file.path, locContent + locs.join('\n'))
+    }
+  }
+
+  let curLoc: string = ''
+  const newLines: string[] = []
+  let newLine: string = ''
+  lines.forEach((line) => {
+    newLine = line
+    if (line.trim().startsWith(tag)) {
+      curLoc = line.trim().replace('{', '').replace('=', '').trim()
+    } else if (line.includes('name')) {
+      newLine = line.replace(line.substring(line.trim().indexOf('=') + 3, line.length), '')
+      newLine += ` ${curLoc.trim()}`
+    }
+    newLines.push(newLine)
+  })
+  await writeTextFile(`${await join(commonDir, 'characters', filePath)}`, newLines.join('\n'))
 }
 
 export async function appendCharacterLocalisation(
