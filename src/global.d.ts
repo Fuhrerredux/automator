@@ -37,6 +37,9 @@ declare global {
         defaultCost: number
         largePortraitPath: string
         smallPortraitPath: string
+      },
+      localisation: {
+        countryDir: string
       }
     }
     type Preference = {
@@ -146,7 +149,7 @@ declare global {
       commandingRoles?: General[]
       advisorRoles?: Advisor[]
     }
-
+    type NameLoc = { scope: string; name: string }
     type AdvisorWithToken = Advisor & { ideaToken: string }
     type AdvisorWithPositionPrevention = AdvisorWithToken & { positionPrevention: string }
     type Commanding = {

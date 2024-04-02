@@ -68,7 +68,7 @@ const onRemoveCharacter = (character: CharacterWithId) => {
                 </button>
               </menu-item>
               <menu-item as="div">
-                <button type="button" class="menu-item" @click="importCharacters = true">
+                <button type="button" class="menu-item hidden" @click="importCharacters = true">
                   <arrow-down-tray-icon class="h-5 w-5 mr-4" />
                   <span>{{ t('action.import') }}</span>
                 </button>

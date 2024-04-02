@@ -5,11 +5,12 @@ import { useToast } from 'vue-toast-notification'
 import ActionItem from '@components/action-item.vue'
 import FileSelectModal from '@components/modal/file-select-modal.vue'
 import { Bars3BottomRightIcon } from '@heroicons/vue/24/outline'
-import { appendCharacterLocalisation } from '@shared/core/writer'
+import { appendCharacterLocalisation, appendCharLoc } from '@shared/core/writer'
 import { readFileObject } from '@shared/utils/reader'
 import useCharacterStore from '@stores/characters'
 import useModStore from '@/stores/mod'
 import { save } from '@tauri-apps/api/dialog'
+import useConfiguration from '@/stores/config'
 
 const { t } = useI18n()
 const $toast = useToast()
@@ -32,7 +33,14 @@ async function generate(files: File[]) {
     })
 
     if (filePath) {
-      await appendCharacterLocalisation(characterStore.characters, filePath, content, modStore.getCommonDirectory?.path as string)
+      await appendCharLoc(
+        content, 
+        modStore.getLocalisationDirectory?.path as string, 
+        useConfiguration().config, 
+        modStore.getCommonDirectory?.path as string,  
+        fileName
+      )
+      // await appendCharacterLocalisation(characterStore.characters, filePath, content, modStore.getCommonDirectory?.path as string)
       $toast.success(t('status.characters-localised'))
     } else {
       $toast.error(t('error.select-destination-folder'))

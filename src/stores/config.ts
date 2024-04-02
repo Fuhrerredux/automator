@@ -16,6 +16,9 @@ const defaultConfiguration: Automator.Configuration = {
     defaultCost: 150,
     largePortraitPath: 'gfx/leaders',
     smallPortraitPath: 'gfx/interface/ministers'
+  },
+  localisation: {
+    countryDir: 'FX_country_specific'
   }
 }
 
@@ -30,6 +33,9 @@ const useConfiguration = defineStore({
           defaultCost: 150,
           largePortraitPath: 'gfx/leaders',
           smallPortraitPath: 'gfx/interface/ministers'
+        },
+        localisation: {
+          countryDir: 'FX_country_specific'
         }
       }
     }
