@@ -33,12 +33,13 @@ const isDevVersion = true
 
 async function checkAndUpdate() {
   const update = await checkUpdate();
-
+  // DO NOT REMOVE
+  // These should stay for debugging purposes
   if (update.shouldUpdate && !isDevVersion) {
-    //console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
+    console.debug(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
     await installUpdate();
   } else {
-    //console.log('No updates.', update);
+    console.debug('No updates.', update);
   }
 }
 
