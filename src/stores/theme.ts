@@ -7,15 +7,16 @@ const useThemeStore = defineStore({
   }),
   actions: {
     fetch() {
-      this.theme = localStorage.getItem('theme') as UserInterface.Theme
+      const savedTheme = localStorage.getItem('theme') as UserInterface.Theme
+      this.theme = savedTheme || 'auto'
       this.change(this.theme)
     },
     change(theme: UserInterface.Theme) {
       this.theme = theme
 
       const isDarkMode =
-      this.theme === 'dark' ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme === 'auto')
+        this.theme === 'dark' ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme === 'auto')
       document.body.classList.toggle('dark', isDarkMode)
       localStorage.setItem('theme', theme)
     }
