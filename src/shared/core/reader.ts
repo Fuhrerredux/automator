@@ -3,6 +3,9 @@ import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology
 import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
+import { Jomini } from 'jomini'
+
+const parser = await Jomini.initialize()
 
 export let countryTags: string[] = []
 
@@ -104,6 +107,226 @@ export function extractTraits(
 
   return traits
 }
+
+export function readCharFile(content: string, config: Automator.Configuration) {
+  if (content.length <= 0) return []
+  const data: Record<string, any> = parser.parseText(content)
+  const characters = data.characters
+  const parsedChars: Characters.ParsedChararacter[] = []
+
+  // Check if characters exist
+  if (characters && typeof characters === 'object') {
+    // Loop through each character in the group
+    Object.keys(characters).forEach(characterKey => {
+      const { name, country_leader, advisor } = characters[characterKey]
+      console.log(name, country_leader, advisor)
+      const commanderRoles: Characters.GeneralRole[] = []
+      let advisorRoles: Characters.AdvisorWithToken[] = []
+      let leaderRoles: CountryLeader[] = []
+      let ideology = '';
+      if (country_leader.ideology) ideology = country_leader.ideology
+
+      if (characters.country_leader && ideology) {
+        leaderRoles.push({
+          subideology: country_leader.ideology,
+          trait: country_leader.traits
+        })
+      }
+
+      if (characters.navy_leader) commanderRoles.push('admiral') 
+      else if (characters.corps_commander) commanderRoles.push('general')
+      else if (characters.field_marshal) commanderRoles.push('marshal')
+      const tag = (characterKey as string).trim().substring(0, 3)
+      const advisorIsHirable = advisor && advisor.available ? (advisor.available as string)
+        .includes(`has_country_flag = ${advisor.idea_token}_hired`) : false
+
+      if (advisor) {
+        advisorRoles.push({ 
+          slot: advisor.slot, 
+          cost: advisor.cost, 
+          trait: advisor.traits || [],
+          removeable: advisor.can_be_fired || false,
+          hirable: advisorIsHirable,
+          ideaToken: advisor.idea_token
+        });
+      }
+
+      parsedChars.push({
+        scope: characterKey,
+        name: name,
+        tag: tag,
+        ideology: country_leader.ideology,
+        leaderRoles: leaderRoles, 
+        advisorRoles: advisorRoles, 
+        commanderRoles: commanderRoles
+      })
+    });
+  } else {
+    console.log('No characters found.');
+  }
+  console.log(parsedChars)
+}
+
+// {
+//   "ALB_Enver_Hoxha": {
+//       "name": "Enver Hoxha",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Enver_Hoxha.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "collectivist_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Mehmet_Shehu": {
+//       "name": "Mehmet Shehu",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/Generic/European/Portrait_Europe_Generic_new_9.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "vanguardist_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Sejfulla_Maleshova": {
+//       "name": "Sejfulla Malëshova",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/Generic/European/Portrait_Europe_Generic_new_8.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "libertarian_socialist_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Nikolla_bey_Ivanaj": {
+//       "name": "Nikolla bey Ivanaj",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/Generic/European/Portrait_Europe_Generic_new_12.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "social_democrat_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Pandeli_Evangjeli": {
+//       "name": "Pandeli Evangjeli",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/Generic/European/Portrait_Europe_Generic_new_6.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "social_liberal_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Shefqet_Verlaci": {
+//       "name": "Shefqet Vërlaci",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Shefqet_Verlaci.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "market_liberal_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Idhomene_Kosturi": {
+//       "name": "Idhomene Kosturi",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/Generic/European/Portrait_Europe_Generic_new_8.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "social_conservative_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Zog_I": {
+//       "name": "Zog I",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Zog_I.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "authoritarian_democrat_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Ferdinand_I": {
+//       "name": "Ferdinand I",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Ferdinand_I.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "paternal_autocrat_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Midhat_Frasheri": {
+//       "name": "Midhat Frashëri",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Midhat_Frasheri.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "national_populist_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Fan_Stilian_Noli": {
+//       "name": "Fan Stilian Noli",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Fan_Stilian_Noli.png"
+//           }
+//       },
+//       "country_leader": {
+//           "ideology": "valkist_subtype",
+//           "traits": {}
+//       }
+//   },
+//   "ALB_Muharrem_Bajraktari": {
+//       "name": "Muharrem Bajraktari",
+//       "portraits": {
+//           "army": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Muharrem_Bajraktari.png"
+//           }
+//       },
+//       "corps_commander": {
+//           "traits": [
+//               "hill_fighter"
+//           ],
+//           "skill": 1,
+//           "attack_skill": 1,
+//           "defense_skill": 3,
+//           "planning_skill": 1,
+//           "logistics_skill": 1
+//       }
+//   },
+//   "ALB_Provisional_Government_of_Albania": {
+//       "name": "Provisional Government of Albania",
+//       "portraits": {
+//           "civilian": {
+//               "large": "gfx/leaders/ALB/Portrait_ALB_Provisional_Government_of_Albania.png"
+//           }
+//       }
+//   }
+// }
 
 export function readCharacterFile(
   content: string,

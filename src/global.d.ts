@@ -130,7 +130,16 @@ declare global {
       commandingRoles?: General[]
       advisorRoles?: Advisor[]
     }
-
+    type ParsedChararacter = {
+      scope: string
+      name: string
+      tag: string
+      ideology: string | null
+      leaderRoles: CountryLeader[]
+      advisorRoles: AdvisorWithToken[]
+      commanderRoles: GeneralRole[]
+    }
+    type NameLoc = { scope: string; name: string }
     type AdvisorWithToken = Advisor & { ideaToken: string }
     type AdvisorWithPositionPrevention = AdvisorWithToken & { positionPrevention: string }
     type Commanding = {
