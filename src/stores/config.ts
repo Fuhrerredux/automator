@@ -4,10 +4,6 @@ import defaultPositions from '@shared/const/positions'
 import kaiserreichConfiguration from '@shared/definitions/kaiserreich'
 import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/api/fs'
 
-type ConfigurationStore = {
-  config: Automator.Configuration
-}
-
 const CONFIG_SOURCE = '.automator/data/config.json'
 const configuration: { key: string; definition: Automator.Configuration }[] = [
   { key: 'kr', definition: kaiserreichConfiguration }
@@ -17,19 +13,29 @@ const defaultConfiguration: Automator.Configuration = {
   ideologies: defaultIdeologies,
   positions: defaultPositions,
   character: {
-    defaultCost: 150
+    defaultCost: 150,
+    largePortraitPath: 'gfx/leaders',
+    smallPortraitPath: 'gfx/interface/ministers'
+  },
+  localisation: {
+    countryDir: 'FX_country_specific'
   }
 }
 
 const useConfiguration = defineStore({
   id: 'customConfig',
-  state: (): ConfigurationStore => {
+  state: (): Automator.ConfigurationStore => {
     return {
       config: {
         ideologies: defaultIdeologies,
         positions: defaultPositions,
         character: {
-          defaultCost: 150
+          defaultCost: 150,
+          largePortraitPath: 'gfx/leaders',
+          smallPortraitPath: 'gfx/interface/ministers'
+        },
+        localisation: {
+          countryDir: 'FX_country_specific'
         }
       }
     }
@@ -63,7 +69,7 @@ const useConfiguration = defineStore({
      */
     async import(source: string = CONFIG_SOURCE) {
       const json = await readTextFile(source, { dir: BaseDirectory.Home })
-      this.$state = { ...this.$state, ...JSON.parse(json) }
+      this.$state.config = { ...this.$state.config, ...JSON.parse(json) }
     },
     /**
      * Function to change the current values of the configuration
@@ -73,7 +79,9 @@ const useConfiguration = defineStore({
      */
     async replace(config: Automator.Configuration) {
       this.$state = { config }
-      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config, null, 4), { dir: BaseDirectory.Home })
+      await writeTextFile(CONFIG_SOURCE, JSON.stringify(config, null, 4), {
+        dir: BaseDirectory.Home
+      })
     },
     /**
      * Function used to change the current configuration

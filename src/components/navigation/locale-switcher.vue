@@ -7,7 +7,6 @@ export default {
   name: 'LocaleSwitcher',
   components: { Dropdown },
   methods: {
-    getLanguageName,
     getDefaultLanguage() {
       const savedLang = useSettingsStore().getLanguage()
       return savedLang || 'en'
@@ -18,11 +17,14 @@ export default {
     }
   },
   computed: {
-    languageOptions() {
-      return this.$i18n.availableLocales.map((e) => ({ value: e, label: getLanguageName(e) }))
+    localeOptions() {
+      return this.$i18n.availableLocales.map((locale) => ({
+        value: locale,
+        label: getLanguageName(locale)
+      }))
     },
     currentLanguage() {
-      return this.languageOptions.find((e) => e.value === this.getDefaultLanguage())?.value
+      return this.localeOptions.find((e) => e.value === this.getDefaultLanguage())
     }
   }
 }
@@ -31,8 +33,11 @@ export default {
 <template>
   <div class="locale-changer w-32">
     <dropdown
-      :options="languageOptions"
-      :model-value="currentLanguage"
+      localise
+      :options="localeOptions"
+      :model-value="currentLanguage?.value"
+      display-key="label"
+      value-key="value"
       @update:model-value="updateLanguage($event)" />
   </div>
 </template>

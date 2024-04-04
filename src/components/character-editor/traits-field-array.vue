@@ -14,7 +14,8 @@ const emit = defineEmits<{
 
 const schema = toTypedSchema(
   yup.object().shape({
-    value: yup.string().required('Trait is required')
+    value: yup.string()
+    // .required('Trait is required') it shouldn't be required
   })
 )
 
@@ -25,11 +26,8 @@ const { defineField, resetForm, errors, handleSubmit } = useForm<{ value: string
   validationSchema: schema
 })
 const [value, valueAttr] = defineField('value')
-console.log(errors.value)
 
 const onSubmit = handleSubmit(({ value }: { value: string }) => {
-  console.log(errors.value)
-  console.log(value)
   emit('push', value)
   resetForm()
 })
@@ -48,13 +46,8 @@ const onSubmit = handleSubmit(({ value }: { value: string }) => {
     <form class="flex items-start gap-2" @submit="onSubmit">
       <div class="flex-1">
         <label for="new">
-          <input
-            required
-            type="text"
-            id="new"
-            class="form-input"
-            v-model="value"
-            v-bind="valueAttr" />
+          <!-- required not -->
+          <input type="text" id="new" class="form-input" v-model="value" v-bind="valueAttr" />
         </label>
         <p class="form-helper-error" v-if="errors.value">
           {{ errors.value }}

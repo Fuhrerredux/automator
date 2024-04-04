@@ -1,23 +1,23 @@
-import useModStore from '@/stores/mod'
-import useSettingsStore from '@/stores/settings'
 import { buildToken } from '@shared/core/data'
 import { buildCharacterToken } from '@shared/utils/character'
 import { groupBy } from '@shared/utils/core'
 import { getIdeologySuffix } from '@shared/utils/ideology'
 import { getPositionSuffix } from '@shared/utils/position'
 import { exists, readDir, readTextFile, writeFile, writeTextFile } from '@tauri-apps/api/fs'
-import { countryTags, loadCountryTags, readSpriteDefinitions } from './reader'
+import { join } from '@tauri-apps/api/path'
+import { countryTags, loadCountryTags, readCharacterNames, readSpriteDefinitions } from './reader'
 
 const PORTRAIT_LARGE_PREFIX = 'Portrait'
 const PORTRAIT_EXT = '.png'
-function buildLargePortaitPath(name: string, tag: string) {
-  return `gfx/leaders/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+
+function buildLargePortaitPath(name: string, tag: string, config: Automator.Configuration) {
+  return `${config.character.largePortraitPath}/${tag}/${PORTRAIT_LARGE_PREFIX}_${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
-function buildSmallPortraitPath(name: string, tag: string) {
-  return `gfx/interface/ministers/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
+function buildSmallPortraitPath(name: string, tag: string, config: Automator.Configuration) {
+  return `${config.character.smallPortraitPath}/${tag}/${tag}_${buildToken(name)}${PORTRAIT_EXT}`
 }
 
-function definePortraits(character: CharacterWithId): {
+function definePortraits(character: CharacterWithId, config: Automator.Configuration): {
   civilian?: Characters.CivilianPortrait
   army?: Characters.ArmyPortrait
   navy?: Characters.NavyPortrait
@@ -39,42 +39,44 @@ function definePortraits(character: CharacterWithId): {
     const portrait: Characters.CivilianPortrait = {}
 
     if (slots?.length === 0 || slots?.includes('leader'))
-      portrait.large = buildLargePortaitPath(name, tag)
-    if (slots?.includes('advisor')) portrait.small = buildSmallPortraitPath(name, tag)
+      portrait.large = buildLargePortaitPath(name, tag, config)
+    if (slots?.includes('advisor')) portrait.small = buildSmallPortraitPath(name, tag, config)
     portraits.civilian = portrait
   }
   if (hasArmyWithOfficer) {
     const portrait: Characters.ArmyPortrait = {}
-    if (hasArmy) portrait.large = buildLargePortaitPath(name, tag)
-    if (slots.includes('officer')) portrait.small = buildLargePortaitPath(name, tag)
+    if (hasArmy) portrait.large = buildLargePortaitPath(name, tag, config)
+    if (slots.includes('officer')) portrait.small = buildLargePortaitPath(name, tag, config)
     portraits.army = portrait
   }
   if (hasNavy) {
     const portrait: Characters.NavyPortrait = {}
-    portrait.large = buildLargePortaitPath(name, tag)
+    portrait.large = buildLargePortaitPath(name, tag, config)
     portraits.navy = portrait
   }
 
   return portraits
 }
 
-function defineCountryLeader(character: CharacterWithId): { countryLeader: { ideology: string; traits: string[] }[] } {
-  const countryLeaderObjects: { ideology: string; traits: string[] }[] = [];
+function defineCountryLeader(character: CharacterWithId): {
+  countryLeader: { ideology: string; traits: string[] }[]
+} {
+  const countryLeaderObjects: { ideology: string; traits: string[] }[] = []
   // set so no duplicates
   Array.from(new Set(character.leaderRoles)).forEach((e) => {
-    let ideologyKey = '';
+    let ideologyKey = ''
     if (typeof e.subideology === 'string') {
-      ideologyKey = e.subideology;
+      ideologyKey = e.subideology
     } else if (e.subideology && typeof e.subideology === 'object' && 'key' in e.subideology) {
-      ideologyKey = e.subideology.key; //ignore error
+      ideologyKey = e.subideology['key'] //ignore error
     }
     const countryLeader = {
       ideology: `${ideologyKey}_subtype`,
       traits: Array.isArray(e.trait) ? e.trait : [e.trait]
-    };
-    countryLeaderObjects.push(countryLeader);
-  });
-  return { countryLeader: countryLeaderObjects };
+    }
+    countryLeaderObjects.push(countryLeader)
+  })
+  return { countryLeader: countryLeaderObjects }
 }
 
 function defineCommandingRole(
@@ -91,22 +93,23 @@ function defineCommandingRole(
 
 function defineAdvisorRole(
   character: CharacterWithId,
-  config: Automator.Configuration
+  config: Automator.Configuration,
+  settings: Automator.Preference
 ): { advisors: Characters.AdvisorWithPositionPrevention[] } {
   const { advisorRoles, ideology } = character
   const token = buildCharacterToken(character)
   const advisors: Characters.AdvisorWithPositionPrevention[] = []
-  const positionPrevention = useSettingsStore().getPreference('positionPrevention') === false
+  const positionPrevention = settings.positionPrevention === false
 
   if (advisorRoles) {
     advisorRoles.forEach((advisor: Advisor, index) => {
-      console.log(advisor)
       const position = advisor.slot as unknown as Automator.Position
-      const usesIdeologySuffix = useSettingsStore().getPreference('usesIdeologySuffixOnToken')
+      const usesIdeologySuffix = settings.usesIdeologySuffixOnToken
       const suffix = ideology ? getIdeologySuffix(ideology, config) : ''
-      const ideaToken = usesIdeologySuffix && suffix != ''
-        ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
-        : `${token}_${getPositionSuffix(position, config)}`
+      const ideaToken =
+        usesIdeologySuffix && suffix != ''
+          ? `${token}_${getPositionSuffix(position, config)}_${suffix}`
+          : `${token}_${getPositionSuffix(position, config)}`
       const hasMoreThanOneRoles = advisorRoles.length > 1 && !positionPrevention
       const allOtherPositions = advisorRoles.filter((_, i) => i !== index)
       let advisorObject: Characters.AdvisorWithPositionPrevention = {
@@ -117,8 +120,8 @@ function defineAdvisorRole(
         cost: advisor.cost,
         ideaToken: ideaToken,
         positionPrevention: hasMoreThanOneRoles
-        ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
-        : '',  
+          ? `\n${allOtherPositions.map((otherPosition) => `                NOT = { is_character_slot = ${otherPosition.slot}`).join('\n')} }`
+          : ''
       }
       advisors.push(advisorObject)
     })
@@ -126,19 +129,18 @@ function defineAdvisorRole(
   return { advisors }
 }
 
-export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration) {
+export function writeCharacter(characters: CharacterWithId[], config: Automator.Configuration, settings: Automator.Preference) {
   let content: string = ''
-  console.log(characters, config)
   for (const character of characters) {
-    const portraitsData = definePortraits(character)
+    const portraitsData = definePortraits(character, config)
     let portraitsBlock = ''
-    let isFirstBlock = true;
+    let isFirstBlock = true
     for (const [type, portrait] of Object.entries(portraitsData)) {
       // Check if the current portrait type exists and if it has either small or large portrait path
       if (portrait && (portrait.small || portrait.large)) {
         // Construct the portrait block for the current type
         if (!isFirstBlock) {
-          portraitsBlock += '\n\t';
+          portraitsBlock += '\n\t'
         }
         portraitsBlock += `        ${type} = {\n`
         if (portrait.large) {
@@ -151,17 +153,13 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         isFirstBlock = false
       }
     }
-    console.log(character.roles )
     const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
       .filter((role) => character.roles
         .includes(role as CommandingRole
       )) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
-    console.log(character, generalRoles)
     const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
-    console.log(character)
-    const minister = defineAdvisorRole(character, config)
-    console.log(minister)
+    const minister = defineAdvisorRole(character, config, settings)
     let rolesBlock = ''
 
     if (leaders.countryLeader && leaders.countryLeader.length > 0) {
@@ -180,26 +178,29 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
             skill = 1
             attack_skill = 1
             defense_skill = 1
-            ${role === 'admiral' 
-              ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1` 
-              : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
+            ${
+              role === 'admiral'
+                ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1`
+                : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
             }
-          \n\t\t}`;
-      }
-    rolesBlock = rolesBlock.replace("marshal", "field_marshal").replace("general", "corps_commander").replace("admiral", "navy_leader")
-  
+          \n\t\t}`
+    }
+    rolesBlock = rolesBlock
+      .replace('marshal', 'field_marshal')
+      .replace('general', 'corps_commander')
+      .replace('admiral', 'navy_leader')
+
     minister.advisors.forEach((advisor) => {
-      let available = '';
-      console.log(advisor.positionPrevention)
+      let available = ''
       if (!advisor.hirable) {
-          available += `
+        available += `
                 ROOT = { has_country_flag = ${advisor.ideaToken}_hired }
-          `;
+          `
       }
       if (advisor.positionPrevention) {
-          available += `
+        available += `
               ${advisor.positionPrevention}
-          `;
+          `
       }
       rolesBlock += `
         advisor = {
@@ -209,21 +210,27 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
             available = {
               ${available}
             } 
-            ${!advisor.hirable ? `
+            ${
+              !advisor.hirable
+                ? `
             on_add = { ROOT = { set_country_flag = ${advisor.ideaToken}_hired } }
-            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }` 
-            : ''}
+            on_remove = { ROOT = { clr_country_flag = ${advisor.ideaToken}_hired } }`
+                : ''
+            }
             ${advisor.removeable ? `\n\t\t\tcan_be_fired = no` : ''}
             traits = { ${character.ideology ? character.ideology : ''} ${advisor.trait} }
         }
-      `;
-  });
+      `
+    })
 
-  const lines = rolesBlock.split('\n')
-  rolesBlock = lines[0] + '\n' + lines
-    .slice(1)
-    .filter((line) => line.trim() !== '')
-    .join('\n')
+    const lines = rolesBlock.split('\n')
+    rolesBlock =
+      lines[0] +
+      '\n' +
+      lines
+        .slice(1)
+        .filter((line) => line.trim() !== '')
+        .join('\n')
 
     let data = `\t${buildCharacterToken(character)} = {
         name = "${character.name}"
@@ -241,12 +248,13 @@ ${rolesBlock}
 export async function exportCharacters(
   characters: CharacterWithId[],
   destination: string,
-  config: Automator.Configuration
+  config: Automator.Configuration,
+  settings: Automator.Preference
 ) {
   if (Array.isArray(characters)) {
     const grouped = groupBy(characters, 'tag')
     for (const [key, value] of Object.entries(grouped)) {
-      const content = writeCharacter(value, config)
+      const content = writeCharacter(value, config, settings)
       const template = ` # Characters for ${key}
 characters = {
 ${content}
@@ -332,10 +340,10 @@ export async function removeLogging(content: string, path: string): Promise<void
   }
 }
 
-export async function eventLogging(content: string, path: string): Promise<void> {
+export async function eventLogging(content: string, path: string, settings: Automator.Preference): Promise<void> {
   const newContent: string[] = []
   const lines = content.split('\n') //split lines
-  const optionLogging: boolean = useSettingsStore().$state.optionLogging //if we log or not log options
+  const optionLogging: boolean = settings.optionLogging === true //if we log or not log options
   let eventId: string
   lines.forEach((line, _) => {
     //iterate through each line
@@ -411,58 +419,96 @@ export async function appendToHistory(characters: CharacterWithId[], destination
   }
 }
 
-export async function appendCharacterLocalisation(
-  characters: CharacterWithId[],
-  path: string,
-  content: string
-): Promise<void> {
-  if (Array.isArray(characters)) {
-    const group = groupBy(characters, 'tag')
-    let data: string = ''
-    const commonDir = useModStore().getCommonDirectory
-    for (const [_, value] of Object.entries(group)) {
-      for (const character of value) {
-        console.log(useModStore().getCommonDirectory)
-        console.log(character.tag)
-        const characterPath = `${commonDir?.path}/characters/${character.tag}.txt`
-        const token = buildCharacterToken(character)
-        if (!content.includes(`${token}: "${character.name}"`)) {
-          data = data.concat(`  ${token}: "${character.name}"\n`)
-        }
-        const charContent = await readTextFile(characterPath)
-        const lines = charContent.split('\n')
-        const newcharContent: string[] = []
-        lines.forEach((line, _) => {
-          let nLine = line
-          if (/\bname\b/.test(line)) {
-            nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
-          }
-          newcharContent.push(nLine)
-        })
-        const result = newcharContent.join('\n')
-        try {
-          await writeTextFile(characterPath, result)
-        } catch (error) {
-          console.error(`Error writing file ${characterPath}: ${error}`)
-          throw error
-        }
+export async function appendCharLoc(content: string, locDir: string, config: Automator.Configuration, commonDir: string, filePath: string) {
+  const names: Characters.NameLoc[] = await readCharacterNames(content);
+  const lines = content.split('\n')
+  const tag = (lines.slice(1, -1))[0].trim().substring(0, 3)
+  const locs: string[] = []
+  locDir = await join(locDir, 'english', config.localisation.countryDir)
+  // Read directory and find matching files
+  const locFiles = await readDir(locDir);
+  for (const file of locFiles) {
+    if (file.name?.includes(tag)) {
+      let locContent = await readTextFile(file.path);
+      locContent += "\n\n# Characters\n\n"
+      await writeTextFile(file.path, locContent);
+
+      for (const nameLoc of names) {
+        const { name, scope } = nameLoc;
+        const format = `${scope.trim()}: ${name.trim()}`;
+        locs.push(format)
       }
-    }
-    if (data !== '') {
-      const comment = '\n\n### Generated Character Names ###\n'
-      content = content.concat(`${comment}\n${data}`)
-      try {
-        await writeTextFile(path, content)
-      } catch (error) {
-        console.error(`Error writing file ${path}: ${error}`)
-        throw error
-      }
+
+      await writeTextFile(file.path, locContent + locs.join('\n'))
     }
   }
+
+  let curLoc: string = ''
+  const newLines: string[] = []
+  let newLine: string = ''
+  lines.forEach((line) => {
+    newLine = line
+    if (line.trim().startsWith(tag)) {
+      curLoc = line.trim().replace('{', '').replace('=', '').trim()
+    } else if (line.includes('name')) {
+      newLine = line.replace(line.substring(line.trim().indexOf('=') + 3, line.length), '')
+      newLine += ` ${curLoc.trim()}`
+    }
+    newLines.push(newLine)
+  })
+  await writeTextFile(`${await join(commonDir, 'characters', filePath)}`, newLines.join('\n'))
 }
 
-export async function fixSprites(path: string, content: string): Promise<void> {
-  await loadCountryTags(`${useModStore().getCommonDirectory?.path}/country_tags/00_countries.txt`)
+// export async function appendCharacterLocalisation(
+//   characters: CharacterWithId[],
+//   path: string,
+//   content: string,
+//   commonDir: string
+// ): Promise<void> {
+//   if (Array.isArray(characters)) {
+//     const group = groupBy(characters, 'tag')
+//     let data: string = ''
+//     for (const [_, value] of Object.entries(group)) {
+//       for (const character of value) {
+//         const characterPath = `${commonDir}/characters/${character.tag}.txt`
+//         const token = buildCharacterToken(character)
+//         if (!content.includes(`${token}: "${character.name}"`)) {
+//           data = data.concat(`  ${token}: "${character.name}"\n`)
+//         }
+//         const charContent = await readTextFile(characterPath)
+//         const lines = charContent.split('\n')
+//         const newcharContent: string[] = []
+//         lines.forEach((line, _) => {
+//           let nLine = line
+//           if (/\bname\b/.test(line)) {
+//             nLine = `        ${line.split('=')[0].trim()} = ${token}\n`
+//           }
+//           newcharContent.push(nLine)
+//         })
+//         const result = newcharContent.join('\n')
+//         try {
+//           await writeTextFile(characterPath, result)
+//         } catch (error) {
+//           console.error(`Error writing file ${characterPath}: ${error}`)
+//           throw error
+//         }
+//       }
+//     }
+//     if (data !== '') {
+//       const comment = '\n\n### Generated Character Names ###\n'
+//       content = content.concat(`${comment}\n${data}`)
+//       try {
+//         await writeTextFile(path, content)
+//       } catch (error) {
+//         console.error(`Error writing file ${path}: ${error}`)
+//         throw error
+//       }
+//     }
+//   }
+// } for use within char editor
+
+export async function fixSprites(path: string, content: string, commonDir: string): Promise<void> {
+  await loadCountryTags(`${commonDir}/country_tags/00_countries.txt`)
   const spriteTypes: SpriteEntryWithTag[] = extractSpriteTypes(content)
 
   assignTagIndexes(spriteTypes)
@@ -473,7 +519,6 @@ export async function fixSprites(path: string, content: string): Promise<void> {
 
   try {
     await writeTextFile(path, spriteTypesBlock)
-    console.log('Sprites have been fixed and written to file successfully.')
   } catch (error) {
     console.error('Error occurred while writing sprites to file:', error)
   }
@@ -536,9 +581,7 @@ ${sprites.join('\n')}
 }
 
 export async function localiseFocuses(outputPath: string, content: string): Promise<void> {
-  console.log(content)
   let focuses: Focus[] = []
-  let locEntries: FocusLocEntry[] = []
   let prevLine: string = ''
   const addedKeys = new Set<string>()
   content.split('\n').forEach((line, _) => {

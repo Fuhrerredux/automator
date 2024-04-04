@@ -10,6 +10,7 @@ import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { exportCharacters } from '@shared/core/writer'
 import useCharacterStore from '@stores/characters'
 import useModStore from '@stores/mod'
+import useSettingsStore from '@/stores/settings'
 
 const { t } = useI18n()
 const $toast = useToast()
@@ -17,6 +18,7 @@ const loading = ref(false)
 const modStore = useModStore()
 const { config } = useConfiguration()
 const characterStore = useCharacterStore()
+const settingsStore = useSettingsStore()
 const { characters } = storeToRefs(characterStore)
 
 defineProps<{
@@ -35,8 +37,7 @@ async function triggerExports() {
   const common = modStore.getCommonDirectory
 
   if (Array.isArray(data) && common) {
-    console.log(data)
-    await exportCharacters(data, common.path, config)
+    await exportCharacters(data, common.path, config, settingsStore)
 
     loading.value = false
     $toast.success(t('status.characters-exported'))

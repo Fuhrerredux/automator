@@ -5,7 +5,7 @@ import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import IdeologyFieldArray from '@components/character-editor/ideologies-field.array.vue'
+import IdeologyFieldArray from '@components/character-editor/ideologies-field-array.vue'
 import RolesFieldArray from '@components/character-editor/roles-field-array.vue'
 import TraitsFieldArray from '@components/character-editor/traits-field-array.vue'
 import Dropdown from '@components/dropdown.vue'
@@ -61,13 +61,13 @@ const {
 } = useFieldArray<Advisor>('advisorRoles')
 
 const onTagInput = (event: InputEvent) => {
-  const inputValue = (event.target as HTMLInputElement).value.replace(/[^A-Za-z]/g, '').toUpperCase()
+  const inputValue = (event.target as HTMLInputElement).value
+    .replace(/[^A-Za-z]/g, '')
+    .toUpperCase()
   tag.value = inputValue
 }
 
-
 const onSubmit = handleSubmit(async (data: CharacterForm) => {
-  console.log(data)
   const id = typeof characterId === 'string' ? characterId : nanoid()
 
   const character: CharacterWithId = {
@@ -81,7 +81,6 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     $toast.success(t(status.message))
     router.back()
   } else {
-    console.log(character)
     const status = await create(character)
     $toast.success(t(status.message))
     router.back()
@@ -92,7 +91,6 @@ onMounted(async () => {
   if (characterId && typeof characterId === 'string') {
     const characterRaw = await findOne(characterId)
     const formData = toFormData(characterRaw, config)
-
     resetForm({
       values: {
         ...formData,

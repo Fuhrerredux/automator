@@ -7,6 +7,7 @@ import ActionItem from '@components/action-item.vue'
 import FileSelectModal from '@components/modal/file-select-modal.vue'
 import { DocumentPlusIcon } from '@heroicons/vue/24/outline'
 import { eventLogging } from '@shared/core/writer'
+import useSettingsStore from '@/stores/settings'
 import { save } from '@tauri-apps/api/dialog'
 
 const loading = ref(false)
@@ -14,6 +15,7 @@ const finished = ref(false)
 const open = ref(false)
 const { t } = useI18n()
 const $toast = useToast()
+const settingsStore = useSettingsStore()
 
 async function generate(files: File[]) {
   open.value = false
@@ -29,14 +31,12 @@ async function generate(files: File[]) {
     })
 
     if (filePath) {
-      await eventLogging(content, filePath)
+      await eventLogging(content, filePath, settingsStore)
       $toast.success(t('status.event-logged'))
     } else {
       $toast.error(t('error.select-destination-folder'))
     }
   } catch (error) {
-    console.log(error)
-    console.log(error)
     $toast.error(String(error))
     throw error
   } finally {

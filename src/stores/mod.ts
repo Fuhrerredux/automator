@@ -1,11 +1,5 @@
 import { defineStore } from 'pinia'
 import { readDir } from '@tauri-apps/api/fs'
-import type { FileEntry } from '@tauri-apps/api/fs'
-
-type ModStore = {
-  directory: string
-  entries: FileEntry[]
-}
 
 const useModStore = defineStore({
   id: 'mod',
@@ -13,13 +7,13 @@ const useModStore = defineStore({
     return {
       directory: '',
       entries: []
-    } as ModStore
+    } as Automator.ModStore
   },
-  getters: {
-    getCommonDirectory(store: ModStore) {
+  getters: {    
+    getCommonDirectory(store: Automator.ModStore) {
       return store.entries.find((e) => e.name === 'common')
     },
-    getLocalisationDirectory(store: ModStore) {
+    getLocalisationDirectory(store: Automator.ModStore) {
       return store.entries.find((e) => e.name === 'localisation')
     }
   },

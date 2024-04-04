@@ -9,14 +9,29 @@
   },
   "settings": {
     "header": "Settings",
-    "character": "Character",
-    "logging": "Logging",
-    "configuration": "Configuration",
-    "position-prevention": "Prevent an officer from having more than 1 role at a time.",
-    "custom-config": "Use custom configuration",
-    "option-logging": "Add log statements on options as well as events.",
-    "predefined-configs": "Available Presets",
-    "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens"
+    "theme": {
+      "auto": "Sync with System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "character": {
+      "name": "Character",
+      "position-prevention": "Prevent an officer from having more than 1 role at a time.",
+      "uses-ideology-suffix": "Use ideology suffix on advisor idea tokens"
+    },
+    "logging": {
+      "name": "Logging",
+      "option-logging": "Add log statements on options as well as events."
+    },
+    "configuration": {
+      "name": "Configuration",
+      "custom-config": "Use custom configuration",
+      "predefined-configs": "Available Presets"
+    },
+    "interface": {
+      "name": "Interface",
+      "advisor-trait-input": "Make advisor trait box be an input"
+    }
   },
   "field": {
     "tag": "Country Tag",
@@ -36,7 +51,8 @@
     "dropzone-active": "Drop the file here",
     "cost": "Cost",
     "hirable": "Hirable",
-    "removeable": "Removable"
+    "removeable": "Removable",
+    "trait": "Trait"
   },
   "placeholder": {
     "tag": "USA",
@@ -61,7 +77,9 @@
     "purge": "Purge",
     "learn-more": "Learn more",
     "select": "Select",
-    "save": "Save"
+    "save": "Save",
+    "previous": "Previous",
+    "next": "Next"
   },
   "loading": {
     "saving": "Saving",
@@ -158,6 +176,10 @@
     "fix-sprites": {
       "heading": "Fix Sprite Definitions",
       "summary": "Automatically removes duplicate sprite definitions as well as sorts them alphabetically based on the tags on common/country_tags/00_countries.txt."
+    },
+    "localise-focuses": {
+      "heading": "Localise Focuses",
+      "summary": "Will localise focuses of entered focus file into entered localisation file."
     }
   },
   "tab": {
@@ -167,6 +189,7 @@
   "sections": {
     "gfx-optimization": "GFX Optimization",
     "character-management": "Character Management",
-    "event-handling": "Event Handling"
+    "event-handling": "Event Handling",
+    "localisation": "Localisation"
   }
 }

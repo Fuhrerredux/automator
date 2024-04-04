@@ -44,7 +44,7 @@ export function readSpriteDefinitions(content: string): Sprite[] {
   const sprites: Sprite[] = []
   const lines = content.split('\n')
   lines.forEach((str, index) => {
-    if (str.includes('spriteType')) {
+    if (str.toLowerCase().includes('spritetype')) {
       if (lines.length > index + 2) {
         let name = lines[index + 1]
         let dir = lines[index + 2]
@@ -338,10 +338,8 @@ export function readCharacterFile(
   lines = lines.slice(1, lines.length - 1)
   if (lines.length >= 3) {
     const tag = lines[0].trim().substring(0, 3)
-
     const characters: string[] = []
     let character = lines[0].trimStart()
-
     lines = lines.slice(1)
     lines.forEach((line, index, arr) => {
       if (line.trim().startsWith(tag)) {
@@ -350,7 +348,6 @@ export function readCharacterFile(
       } else {
         character = character.concat(`\n${line}`)
       }
-
       // when nearing the end of the lines
       // add to array
       if (index === arr.length - 1 && character.length > 0) characters.push(character)
@@ -360,25 +357,16 @@ export function readCharacterFile(
     for (const character of characters) {
       const parsed: Record<string, any> = {}
       parsed.tag = tag
-      parsed.cost = 150
+      parsed.cost = config.character.defaultCost
       parsed.positions = []
       parsed.roles = []
-      parsed.leaderTraits = []
-      parsed.leaderIdeologies = []
+      parsed.leaderRoles = {
+        // empty object, populated later
+      }
       parsed.commanderTraits = []
-      parsed.ministerTraits = {
-        head_of_government: '',
-        foreign_minister: '',
-        economy_minister: '',
-        security_minister: ''
-      }
-      parsed.officerTraits = {
-        high_command: '',
-        army_chief: '',
-        air_chief: '',
-        navy_chief: '',
-        theorist: ''
-      }
+      parsed.advisorRoles = Object.fromEntries(
+        Object.keys(config.positions).map(positionKey => [positionKey, ''])
+      )
 
       const advisor = extractAdvisorRoles(character)
       advisor.forEach((content) => {
@@ -417,7 +405,7 @@ export function readCharacterFile(
           const ideology = extractValue(content)
           if (ideology.includes('subtype')) {
             const target = ideology.indexOf('subtype') - 1
-            parsed.ideology = ideology.substring(0, target)
+            parsed.leaderRoles[ideology] = ideology.substring(0, target)
           }
         }
         if (!contents.includes('ideology') && content.includes('traits')) {
@@ -476,11 +464,13 @@ export function readLocalisationFile(content: string, config: Automator.Configur
   if (content.length <= 0) return []
 
   function extractPosition(token: string) {
-    const positions = ['hog', 'for', 'eco', 'sec', 'cos', 'carm', 'cnav', 'cair', 'theo']
+    const positions = Object.values(config.positions).map(position => position.short).filter(Boolean);
+    // const positions = ['hog', 'for', 'eco', 'sec', 'cos', 'carm', 'cnav', 'cair', 'theo']
     return positions.find((e) => token.includes(`_${e}`))
   }
   function extractIdeology(token: string) {
-    const ideologies = ['van', 'col', 'lib', 'sde', 'sli', 'mli', 'sco', 'ade', 'pau', 'npo', 'val']
+    const ideologies = Object.values(config.ideologies).map(ideology => ideology.short).filter(Boolean);
+    // const ideologies = ['van', 'col', 'lib', 'sde', 'sli', 'mli', 'sco', 'ade', 'pau', 'npo', 'val']
     return ideologies.find((e) => token.includes(`_${e}`))
   }
 
@@ -548,4 +538,23 @@ export async function loadCountryTags(filePath: string): Promise<void> {
 
   // Sort country tags alphabetically
   countryTags.sort()
+}
+
+export async function readCharacterNames(content: string): Promise<Characters.NameLoc[]> {
+  const lines = content.split('\n').slice(1, -1);
+  const tag = lines[0].trim().substring(0, 3);
+  let curLoc: string = ''
+  // Initialize locs array
+  const locs: Characters.NameLoc[] = [];
+
+  lines.forEach((line) => {
+    line = line.trim()
+    if (line.startsWith(tag)) {
+      curLoc = line.trim().replace('{', '').replace('=', '').trim()
+    } else if (line.includes('name')) {
+      locs.push({scope: curLoc, name: line.substring(line.indexOf('=') + 1, line.length)})
+    }
+  })
+
+  return locs;
 }
