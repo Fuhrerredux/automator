@@ -6,7 +6,9 @@
   "license": "AGPL-3.0-only",
   "description": "Automator, an easy-to-use character creation tool",
   "author": "dax0102",
-  "contributors": ["thanasislanaras"],
+  "contributors": [
+    "thanasislanaras"
+  ],
   "scripts": {
     "vite:dev": "vite",
     "vite:build": "vue-tsc --noEmit && vite build",
@@ -31,6 +33,7 @@
     "@tauri-apps/api": "1.5.3",
     "@vee-validate/yup": "^4.12.5",
     "add": "^2.0.6",
+    "eslint": "^8.57.0",
     "i": "^0.3.7",
     "nanoid": "5.0.6",
     "npm": "10.4.0",

@@ -41,7 +41,7 @@ export function readSpriteDefinitions(content: string): Sprite[] {
   const sprites: Sprite[] = []
   const lines = content.split('\n')
   lines.forEach((str, index) => {
-    if (str.includes('spriteType')) {
+    if (str.toLowerCase().includes('spritetype')) {
       if (lines.length > index + 2) {
         let name = lines[index + 1]
         let dir = lines[index + 2]
