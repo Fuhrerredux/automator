@@ -73,7 +73,8 @@
         "url": "../splashscreen.html",
         "label": "splashscreen",
         "decorations": false,
-        "center": true
+        "center": true,
+        "alwaysOnTop": true
       }
     ]
   }
