@@ -8,7 +8,8 @@ import Automator from './app.vue'
 import './assets/app.css'
 import locales from './locales'
 import router from './router'
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
+import { invoke } from '@tauri-apps/api/tauri'
 
 const locale = 'en'
 const i18n = createI18n({
@@ -44,3 +45,9 @@ async function checkAndUpdate() {
 }
 
 checkAndUpdate();
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    invoke('close_splashscreen')
+  }, 3000)
+})
