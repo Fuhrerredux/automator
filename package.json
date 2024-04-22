@@ -43,7 +43,7 @@
     "vee-validate": "^4.12.5",
     "vue": "3.4.21",
     "vue-i18n": "9.11.0",
-    "vue-router": "4.3.0",
+    "vue-router": "4.3.2",
     "vue-tippy": "^6.4.1",
     "vue-toast-notification": "3.1.2",
     "vue3-dropzone": "2.2.1",
