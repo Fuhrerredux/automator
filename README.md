@@ -1,10 +1,15 @@
 # Automator
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator?ref=badge_shield)
+
 
 An automated component generation tool for mods
 
 ## License
 
 This project was created under the AGPL-3.0 License by Dax0102 and thanasislanaras. See the relative license file for more details.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator?ref=badge_large)
 
 ## Contributing
 
