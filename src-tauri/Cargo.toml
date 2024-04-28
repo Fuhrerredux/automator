@@ -1,6 +1,6 @@
 [package]
 name = "automator"
-version = "1.0.0"
+version = "1.0.1"
 description = "Automator"
 authors = ["dax0102"]
 license = "AGPL-3.0-only"

@@ -30,18 +30,18 @@ app.use(i18n)
 app.use(VueTippy, { directive: 'tippy', component: 'tippy' })
 app.mount('#app')
 
-const isDevVersion = true
-
+let checkedForUpdate = false
 async function checkAndUpdate() {
   const update = await checkUpdate();
   // DO NOT REMOVE
   // These should stay for debugging purposes
-  if (update.shouldUpdate && !isDevVersion) {
+  if (update.shouldUpdate && !checkedForUpdate) {
     console.debug(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest?.body}`);
     await installUpdate();
   } else {
     console.debug('No updates.', update);
   }
+  checkedForUpdate = true
 }
 
 checkAndUpdate();
@@ -50,4 +50,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     invoke('close_splashscreen')
   }, 3000)
+  checkedForUpdate = true
 })
