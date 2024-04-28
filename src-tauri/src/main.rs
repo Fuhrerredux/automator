@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use tauri::{Window, Manager};
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt;
 
@@ -57,10 +58,17 @@ async fn main() {
       purge_characters,
       list_characters,
       list_all_characters,
-      get_character
+      get_character,
+      close_splashscreen
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
+}
+
+#[tauri::command]
+async fn close_splashscreen(window: Window) {
+  window.get_window("splashscreen").expect("no window labeled 'splashscreen' found").close().unwrap();
+  window.get_window("main").expect("no window labeled main found").show().unwrap();
 }
 
 #[tauri::command]

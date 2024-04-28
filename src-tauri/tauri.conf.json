@@ -64,7 +64,17 @@
         "title": "Automator",
         "width": 1280,
         "height": 720,
-        "fileDropEnabled": false
+        "fileDropEnabled": false,
+        "visible": false
+      },
+      {
+        "width": 640,
+        "height": 360,
+        "url": "../splashscreen.html",
+        "label": "splashscreen",
+        "decorations": false,
+        "center": true,
+        "alwaysOnTop": true
       }
     ]
   }
