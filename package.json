@@ -36,7 +36,7 @@
     "eslint": "^9.0.0",
     "i": "^0.3.7",
     "nanoid": "5.0.7",
-    "npm": "10.5.1",
+    "npm": "10.7.0",
     "pinia": "2.1.7",
     "tailwind-merge": "^2.2.1",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
