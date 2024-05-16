@@ -1,7 +1,7 @@
 {
   "name": "automator",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "license": "AGPL-3.0-only",
   "description": "Automator, an easy-to-use character creation tool",
@@ -33,17 +33,16 @@
     "@tauri-apps/api": "1.5.3",
     "@vee-validate/yup": "^4.12.5",
     "add": "^2.0.6",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "i": "^0.3.7",
-    "jomini": "^0.9.1",
-    "nanoid": "5.0.6",
-    "npm": "10.4.0",
+    "nanoid": "5.0.7",
+    "npm": "10.5.1",
     "pinia": "2.1.7",
     "tailwind-merge": "^2.2.1",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "vee-validate": "^4.12.5",
     "vue": "3.4.21",
-    "vue-i18n": "9.10.2",
+    "vue-i18n": "9.11.0",
     "vue-router": "4.3.0",
     "vue-tippy": "^6.4.1",
     "vue-toast-notification": "3.1.2",
@@ -66,6 +65,6 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-eslint": "^1.8.1",
-    "vue-tsc": "^1.8.27"
+    "vue-tsc": "^2.0.11"
   }
 }
