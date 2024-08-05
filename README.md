@@ -8,9 +8,6 @@ An automated component generation tool for mods
 
 This project was created under the AGPL-3.0 License by Dax0102 and thanasislanaras. See the relative license file for more details.
 
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator?ref=badge_large)
-
 ## Contributing
 
 Even with the first non-beta version releasing, this tool is still heavily under development, with a lot of features being planned. For this reason, any contributions are welcome.
