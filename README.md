@@ -1,6 +1,4 @@
 # Automator
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FFuhrerredux%2Fautomator?ref=badge_shield)
-
 
 An automated component generation tool for mods
 
