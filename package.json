@@ -41,7 +41,7 @@
     "tailwind-merge": "^2.2.1",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "vee-validate": "^4.12.5",
-    "vue": "3.4.21",
+    "vue": "3.4.35",
     "vue-i18n": "9.13.1",
     "vue-router": "4.3.0",
     "vue-tippy": "^6.4.1",
