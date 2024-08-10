@@ -13,10 +13,9 @@ export function toFormData(
     })
   )
 
-  return {
+  return { // ![here++]
     ...rest,
     ideology: ideologies.find((e) => e.key === ideology)?.key ?? null,
-    commanderRole: commanding.find((e) => roles.includes(e.value))?.value ?? null,
     addLeaderRole: roles.includes('leader'),
     addCommanderRole:
       roles.includes('marshal') || roles.includes('admiral') || roles.includes('general'),
@@ -28,7 +27,7 @@ export function toFormData(
  * Function to convert form data to a character object
  * that can be flushed to the database.
  *
- * @param character character form data
+ * @param {CharacterForm} character character form data
  * @returns converted character object
  */
 export function fromFormData(character: CharacterForm): Character {
@@ -37,23 +36,23 @@ export function fromFormData(character: CharacterForm): Character {
     tag,
     ideology,
     leaderRoles,
-    commanderTraits,
+    commanderRoles,
     addCommanderRole,
     addLeaderRole,
     addAdvisorRole,
     advisorRoles,
-    commanderRole
+    // commanderRole
   } = character
   const roles: CharacterRole[] = []
   if (addLeaderRole) roles.push('leader')
-  if (addCommanderRole && commanderRole) roles.push(commanderRole)
+  if (addCommanderRole && commanderRoles) roles.push(...commanderRoles.map(commander => commander.type))
   if (addAdvisorRole) roles.push('advisor')
 
   return {
     name,
     tag,
     leaderRoles,
-    commanderTraits,
+    commanderRoles,
     roles,
     advisorRoles,
     ideology: typeof ideology === 'object' && ideology ? ideology.key : ideology

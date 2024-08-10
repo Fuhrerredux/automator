@@ -3,6 +3,7 @@ import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology
 import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
+import { Jomini } from 'jomini'
 
 export let countryTags: string[] = []
 
@@ -210,6 +211,116 @@ export function readCharacterFile(
   return []
 }
 
+async function parseFile(content: string): Promise<Characters.ExtractedData> {
+  const parser = await Jomini.initialize()
+  const extractedData = parser.parseText(content, 
+    { encoding: "utf8" }, (query) => {
+      const characters = query.at('/characters');
+      const extractedData: Characters.ExtractedData = {};
+
+      for (const [tag, _] of Object.entries(characters)) {
+        const name = query.at(`/characters/${tag}/name`)
+        const tagPrefix = name.slice(0, 3)
+        const countryLeader = query.at(`/characters/${tag}/country_leader`);
+        const advisor = query.at(`/characters/${tag}/advisor`);
+
+        console.log(typeof advisor, typeof countryLeader, typeof name, typeof tag, typeof tagPrefix  )
+
+        const roles: CharacterRole[] = [];
+
+        if (countryLeader) roles.push('leader')
+        if (advisor) roles.push('advisor')
+        
+        const leaderRoles: CountryLeader[] = countryLeader ? 
+          (Array.isArray(countryLeader) ? countryLeader : [countryLeader]).map((leader: any) => ({
+            subideology: leader.ideology,
+            trait: leader.trait
+        })) : [];
+
+
+        const advisorRoles: Characters.AdvisorWithToken[] = advisor ? 
+          (Array.isArray(advisor) ? advisor : [advisor]).map((adv: any) => ({
+            slot: adv.slot,
+            cost: adv.cost,
+            removeable: adv.can_be_fired,
+            ideaToken: adv.idea_token,
+            trait: adv.traits.join(','),
+            hirable: adv.available.hidden_trigger
+        })) : [];
+
+        const commanderRoles: Characters.General[] = [];
+
+        ['corps_commander', 'navy_leader', 'field_marshal'].forEach((role) => {
+          const commander = query.at(`/characters/${tag}/${role}`);
+          if (commander) {
+            let updatedRole: Characters.GeneralRole;
+            switch (role) {
+              case 'corps_commander':
+                updatedRole = 'general';
+                break;
+              case 'navy_leader':
+                updatedRole = 'admiral';
+                break;
+              case 'field_marshal':
+                updatedRole = 'marshal';
+                break;
+              default:
+                updatedRole = role as Characters.GeneralRole;
+            }
+            commanderRoles.push({
+              type: updatedRole,
+              trait: commander.trait,
+            });
+            roles.push(updatedRole)
+          }
+        });
+
+        extractedData[tag] = {
+          scope: tag,
+          name,
+          tag: tagPrefix,
+          ideology: countryLeader?.[0]?.subideology || null,
+          leaderRoles,
+          advisorRoles,
+          commanderRoles,
+          roles
+        }
+      }
+
+      return extractedData
+    })
+
+  return extractedData
+}
+
+export async function readCharFile(content: string): Promise<Record<string, any>[]> {
+  if (content.length <= 0) return []
+  
+  const data: Characters.ExtractedData = await parseFile(content)
+
+  const parsedChars: Record<string, any>[] = []
+
+  for (const tag in data) {
+    const character = data[tag];
+    const parsed: Record<string, any> = {
+      tag: character.tag,
+      name: character.name,
+      roles: character.roles,
+      leaderRoles: character.leaderRoles,
+      commanderRoles: character.commanderRoles,
+      advisorRoles: character.advisorRoles
+    };
+
+    parsedChars.push(parsed)
+  }
+
+
+
+  return parsedChars
+
+
+}
+
 function extractAdvisorRoles(content: string): string[] {
   if (content.length <= 0) return []
 
@@ -272,7 +383,7 @@ export function readLocalisationFile(content: string, config: Automator.Configur
       ideology: getIdeologyKeyFromShort(ideology, config) ?? 'vanguardist',
       roles: [],
       leaderRoles: [],
-      commanderTraits: [],
+      commanderRoles: [],
       advisorRoles: []
     }
 

@@ -22,7 +22,7 @@ impl MigrationTrait for Migration {
           .col(ColumnDef::new(Character::Ideology).string())
           .col(ColumnDef::new(Character::LeaderRoles).string())
           .col(ColumnDef::new(Character::AdvisorRoles).string())
-          .col(ColumnDef::new(Character::CommanderTraits).string())
+          .col(ColumnDef::new(Character::CommanderRoles).string())
           .col(ColumnDef::new(Character::Roles).string())
           .to_owned()
       ).await
@@ -44,6 +44,6 @@ enum Character {
   Ideology,
   LeaderRoles,
   AdvisorRoles,
-  CommanderTraits,
+  CommanderRoles,
   Roles,
 }

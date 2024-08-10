@@ -99,14 +99,14 @@ declare global {
     ideology: string | null
     leaderRoles: CountryLeader[]
     advisorRoles: Advisor[] // ?
-    commanderTraits: string[]
+    commanderRoles?: Characters.General[]
     roles: CharacterRole[]
   }
   type CharacterWithId = Character & { id: string }
+  type CharacterWithScope = Character & { scope: string }
   type CharacterForm = {
     ideology: Automator.Ideology | string | null
-    commanderRole: CommandingRole | null
-    commanderTraits: string[]
+    commanderRoles?: Characters.General[]
     advisorRoles: Advisor[]
 
     addLeaderRole: boolean
@@ -156,6 +156,9 @@ declare global {
       [key in Characters.GeneralRole]?: Characters.General
     }
     type GeneralPartial = Partial<Record<Characters.GeneralRole, Characters.General>>
+    type ExtractedData = {
+      [key: string]: CharacterWithScope
+    }
   }
   type Sprite = {
     name: string

@@ -8,7 +8,7 @@ import DropZone from '@components/drop-zone.vue'
 import Modal from '@components/modal.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
-import { readCharacterFile, readLocalisationFile } from '@shared/core/reader'
+import { readCharFile, readLocalisationFile } from '@shared/core/reader'
 import { readFileObject } from '@shared/utils/reader'
 import useImportStore from '@stores/import'
 import { open as openTauri } from '@tauri-apps/api/shell'
@@ -35,7 +35,7 @@ const onFileDropped = async (dropped: File) => {
   if (fileExtension === 'yml' || fileExtension === 'yaml') {
     characters.value = readLocalisationFile(content, config)
   } else if (dropped.type === 'text/plain') {
-    characters.value = readCharacterFile(content, config)
+    characters.value = await readCharFile(content)
   }
 }
 
