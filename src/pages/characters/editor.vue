@@ -14,7 +14,7 @@ import AppHeader from '@components/header.vue'
 import SpinnerButton from '@components/spinner-button.vue'
 import Switch from '@components/switch.vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
-import { commanding } from '@shared/const/roles'
+// import { commanding } from '@shared/const/roles'
 import { fromFormData, toFormData } from '@shared/utils/character'
 import useCharacterStore from '@stores/characters'
 import useConfiguration from '@stores/config'
@@ -31,9 +31,8 @@ const { defineField, resetForm, handleSubmit } = useForm<CharacterForm>({
     name: '',
     tag: '',
     leaderRoles: [],
-    commanderTraits: [],
+    commanderRoles: [],
     advisorRoles: [],
-    commanderRole: null
   }
 })
 
@@ -50,10 +49,10 @@ const {
   remove: leaderRolesRemove
 } = useFieldArray<CountryLeaderForm>('leaderRoles')
 const {
-  fields: commanderTraitsFields,
-  push: commanderTraitsPush,
-  remove: commanderTraitsRemove
-} = useFieldArray<string>('commanderTraits')
+  fields: commanderRolesFields,
+  push: commanderRolesPush,
+  remove: commanderRolesRemove
+} = useFieldArray<Characters.General>('commanderRoles')
 const {
   fields: advisorRolesFields,
   push: advisorRolesPush,
@@ -74,7 +73,6 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     id,
     ...fromFormData(data)
   }
-  if (data.commanderRole) character.roles = character.roles.concat([data.commanderRole])
 
   if (typeof characterId === 'string') {
     const status = await update(character)
@@ -194,28 +192,11 @@ const ideologiesOptions = computed(() =>
             :checked="value"
             @update:modelValue="handleChange" />
         </Field>
-        <div class="grid items-start grid-cols-2 gap-4" v-if="enableCommanderRole">
-          <div>
-            <legend class="form-label">{{ t('field.role') }}</legend>
-            <Field name="commanderRole" v-slot="{ value, handleChange }">
-              <dropdown
-                localise
-                value-key="value"
-                display-key="label"
-                :model-value="value"
-                :options="commanding"
-                @update:model-value="handleChange" />
-            </Field>
-          </div>
-          <div>
-            <label for="traits">
-              <span class="form-label">{{ t('field.traits') }}</span>
-              <traits-field-array
-                :fields="commanderTraitsFields"
-                @push="commanderTraitsPush"
-                @remove="commanderTraitsRemove" />
-            </label>
-          </div>
+        <div v-if="enableCommanderRole">
+          <traits-field-array
+            :fields="commanderRolesFields"
+            @push="commanderRolesPush"
+            @remove="commanderRolesRemove" />
         </div>
       </div>
       <div class="space-y-2">

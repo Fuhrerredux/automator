@@ -79,16 +79,16 @@ function defineCountryLeader(character: CharacterWithId): {
   return { countryLeader: countryLeaderObjects }
 }
 
-function defineCommandingRole(
-  character: CharacterWithId,
-  roles: Characters.GeneralRole[]
-): Characters.Commanding {
-  const commandingRolesType: Characters.GeneralPartial = {} as Characters.GeneralPartial
-  roles.forEach((role) => {
-    commandingRolesType[role] = { type: role, trait: character.commanderTraits.join('  ') }
+function defineCommandingRole(character: CharacterWithId): { type: string, trait: string }[] {
+  const commanderObjects: Characters.General[] = []
+  Array.from(new Set(character.commanderRoles)).forEach((e) => {
+    const commanderObject = {
+      type: e.type,
+      trait: e.trait
+    }
+    commanderObjects.push(commanderObject)
   })
-
-  return commandingRolesType
+  return commanderObjects
 }
 
 function defineAdvisorRole(
@@ -153,12 +153,8 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
         isFirstBlock = false
       }
     }
-    const generalRoles: Characters.GeneralRole[] = ['marshal', 'general', 'admiral']
-      .filter((role) => character.roles
-        .includes(role as CommandingRole
-      )) as Characters.GeneralRole[]
     const leaders = defineCountryLeader(character)
-    const commanding: Characters.Commanding = defineCommandingRole(character, generalRoles)
+    const commanding: { type: string, trait: string }[] = defineCommandingRole(character)
     const minister = defineAdvisorRole(character, config, settings)
     let rolesBlock = ''
 
@@ -171,20 +167,20 @@ export function writeCharacter(characters: CharacterWithId[], config: Automator.
       })
     }
 
-    for (const role in commanding) {
+    commanding.forEach((commander) => {
       rolesBlock += `
-          \n\t\t${role} = {
-            traits = { ${character.commanderTraits.join(' ')} }
+          \n\t\t${commander.type} = {
+            traits = { ${commander.trait} }
             skill = 1
             attack_skill = 1
             defense_skill = 1
             ${
-              role === 'admiral'
+              commander.type === 'admiral'
                 ? `maneuvering_skill = 1\n\t\t\tcoordination_skill = 1`
                 : `planning_skill = 1\n\t\t\tlogistics_skill = 1`
             }
-          \n\t\t}`
-    }
+        }`
+    })
     rolesBlock = rolesBlock
       .replace('marshal', 'field_marshal')
       .replace('general', 'corps_commander')

@@ -3,6 +3,7 @@ import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology
 import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
 import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
+import { Jomini } from 'jomini'
 
 export let countryTags: string[] = []
 
@@ -105,111 +106,235 @@ export function extractTraits(
   return traits
 }
 
-export function readCharacterFile(
-  content: string,
-  config: Automator.Configuration
-): Record<string, any>[] {
-  if (content.length <= 0) return []
+/**
+ * @deprecated
+ * @param { string} content 
+ * @param { Automator.Configuration } config
+ * @returns 
+ */
+// export function readCharacterFile(
+//   content: string,
+//   config: Automator.Configuration
+// ): Record<string, any>[] {
+//   if (content.length <= 0) return []
 
-  let lines = content.split('\n')
-  lines = lines.slice(1, lines.length - 1)
-  if (lines.length >= 3) {
-    const tag = lines[0].trim().substring(0, 3)
-    const characters: string[] = []
-    let character = lines[0].trimStart()
-    lines = lines.slice(1)
-    lines.forEach((line, index, arr) => {
-      if (line.trim().startsWith(tag)) {
-        if (character.length > 0) characters.push(character)
-        character = line.trimStart()
-      } else {
-        character = character.concat(`\n${line}`)
+//   let lines = content.split('\n')
+//   lines = lines.slice(1, lines.length - 1)
+//   if (lines.length >= 3) {
+//     const tag = lines[0].trim().substring(0, 3)
+//     const characters: string[] = []
+//     let character = lines[0].trimStart()
+//     lines = lines.slice(1)
+//     lines.forEach((line, index, arr) => {
+//       if (line.trim().startsWith(tag)) {
+//         if (character.length > 0) characters.push(character)
+//         character = line.trimStart()
+//       } else {
+//         character = character.concat(`\n${line}`)
+//       }
+//       // when nearing the end of the lines
+//       // add to array
+//       if (index === arr.length - 1 && character.length > 0) characters.push(character)
+//     })
+
+//     const parsedChars: Record<string, any>[] = []
+//     for (const character of characters) {
+//       const parsed: Record<string, any> = {}
+//       parsed.tag = tag
+//       parsed.cost = config.character.defaultCost
+//       parsed.positions = []
+//       parsed.roles = []
+//       parsed.leaderRoles = {
+//         // empty object, populated later
+//       }
+//       parsed.commanderTraits = []
+//       parsed.advisorRoles = Object.fromEntries(
+//         Object.keys(config.positions).map(positionKey => [positionKey, ''])
+//       )
+
+//       const advisor = extractAdvisorRoles(character)
+//       advisor.forEach((content) => {
+//         // get advisor traits
+//         content.split('\n').forEach((e) => {
+//           const trimmed = e.trim()
+//           positions.forEach((position) => {
+//             const prefix = getPositionSuffix(position as unknown as Automator.Position, config)
+//             if (trimmed.startsWith(`${prefix}_`) && isAdvisorPosition(position, config)) {
+//               parsed.advisorRoles[`${position}`] = trimmed
+//             }
+//           })
+//         })
+//       })
+
+//       const contents = character.split('\n')
+//       contents.forEach((content, index) => {
+//         if (content.includes('name')) {
+//           const name = extractValue(content, true)
+//           parsed.name = name
+//         }
+
+//         if (content.includes('country_leader')) {
+//           parsed.roles = [...parsed.roles, 'leader']
+//         }
+
+//         if (content.includes('field_marshal')) {
+//           parsed.roles = [...parsed.roles, 'marshal']
+//         } else if (content.includes('corps_commander')) {
+//           parsed.roles = [...parsed.roles, 'general']
+//         } else if (content.includes('navy_leader')) {
+//           parsed.roles = [...parsed.roles, 'admiral']
+//         }
+
+//         if (content.includes('ideology')) {
+//           const ideology = extractValue(content)
+//           if (ideology.includes('subtype')) {
+//             const target = ideology.indexOf('subtype') - 1
+//             parsed.leaderRoles[ideology] = ideology.substring(0, target)
+//           }
+//         }
+//         if (!contents.includes('ideology') && content.includes('traits')) {
+//           const target = contents[index + 1]
+//           if (isIdeologyToken(target, config)) {
+//             parsed.ideology = target.trim()
+//           }
+//         }
+//         if (content.includes('slot')) {
+//           const position = extractValue(content).trim()
+//           parsed.positions = [...parsed.positions, position]
+
+//           if (isAdvisorPosition(position, config) && !parsed.roles.includes('advisor')) {
+//             parsed.roles = [...parsed.roles, 'advisor']
+//           }
+//         }
+//       })
+
+//       parsedChars.push(parsed)
+//     }
+
+//     return parsedChars
+//   }
+
+//   return []
+// }
+
+async function parseFile(content: string): Promise<Characters.ExtractedData> {
+  const parser = await Jomini.initialize()
+  const extractedData = parser.parseText(content, 
+    { encoding: "utf8" }, (query) => {
+      const characters = query.at('/characters');
+      const extractedData: Characters.ExtractedData = {};
+
+      for (const [tag, _] of Object.entries(characters)) {
+        const name = query.at(`/characters/${tag}/name`)
+        const tagPrefix = name.slice(0, 3)
+        const countryLeader = query.at(`/characters/${tag}/country_leader`);
+        const advisor = query.at(`/characters/${tag}/advisor`);
+
+        const roles: CharacterRole[] = [];
+
+        if (countryLeader) roles.push('leader')
+        if (advisor) roles.push('advisor')
+        
+        const leaderRoles: CountryLeader[] = countryLeader ? 
+          (Array.isArray(countryLeader) ? countryLeader : [countryLeader]).map((leader: any) => ({
+            subideology: leader.ideology,
+            trait: leader.trait
+        })) : [];
+
+
+        const advisorRoles: Characters.AdvisorWithToken[] = advisor ? 
+          (Array.isArray(advisor) ? advisor : [advisor]).map((adv: any) => ({
+            slot: adv.slot,
+            cost: adv.cost,
+            removeable: adv.can_be_fired,
+            ideaToken: adv.idea_token,
+            trait: Array.isArray(adv.traits) ? adv.traits.join(',') : adv.traits || '',
+            hirable: adv.available?.hidden_trigger!
+        })) : [];
+
+        const commanderRoles: Characters.General[] = [];
+
+        ['corps_commander', 'navy_leader', 'field_marshal'].forEach((role) => {
+          const commander = query.at(`/characters/${tag}/${role}`);
+          if (commander) {
+            let updatedRole: Characters.GeneralRole;
+            switch (role) {
+              case 'corps_commander':
+                updatedRole = 'general';
+                break;
+              case 'navy_leader':
+                updatedRole = 'admiral';
+                break;
+              case 'field_marshal':
+                updatedRole = 'marshal';
+                break;
+              default:
+                updatedRole = role as Characters.GeneralRole;
+            }
+            commanderRoles.push({
+              type: updatedRole,
+              trait: commander.trait,
+            });
+            roles.push(updatedRole)
+          }
+        });
+
+        extractedData[tag] = {
+          scope: tag,
+          name,
+          tag: tagPrefix,
+          ideology: countryLeader?.[0]?.subideology || null,
+          leaderRoles,
+          advisorRoles,
+          commanderRoles,
+          roles
+        }
       }
-      // when nearing the end of the lines
-      // add to array
-      if (index === arr.length - 1 && character.length > 0) characters.push(character)
+
+      return extractedData
     })
 
-    const parsedChars: Record<string, any>[] = []
-    for (const character of characters) {
-      const parsed: Record<string, any> = {}
-      parsed.tag = tag
-      parsed.cost = config.character.defaultCost
-      parsed.positions = []
-      parsed.roles = []
-      parsed.leaderRoles = {
-        // empty object, populated later
-      }
-      parsed.commanderTraits = []
-      parsed.advisorRoles = Object.fromEntries(
-        Object.keys(config.positions).map(positionKey => [positionKey, ''])
-      )
-
-      const advisor = extractAdvisorRoles(character)
-      advisor.forEach((content) => {
-        // get advisor traits
-        content.split('\n').forEach((e) => {
-          const trimmed = e.trim()
-          positions.forEach((position) => {
-            const prefix = getPositionSuffix(position as unknown as Automator.Position, config)
-            if (trimmed.startsWith(`${prefix}_`) && isAdvisorPosition(position, config)) {
-              parsed.advisorRoles[`${position}`] = trimmed
-            }
-          })
-        })
-      })
-
-      const contents = character.split('\n')
-      contents.forEach((content, index) => {
-        if (content.includes('name')) {
-          const name = extractValue(content, true)
-          parsed.name = name
-        }
-
-        if (content.includes('country_leader')) {
-          parsed.roles = [...parsed.roles, 'leader']
-        }
-
-        if (content.includes('field_marshal')) {
-          parsed.roles = [...parsed.roles, 'marshal']
-        } else if (content.includes('corps_commander')) {
-          parsed.roles = [...parsed.roles, 'general']
-        } else if (content.includes('navy_leader')) {
-          parsed.roles = [...parsed.roles, 'admiral']
-        }
-
-        if (content.includes('ideology')) {
-          const ideology = extractValue(content)
-          if (ideology.includes('subtype')) {
-            const target = ideology.indexOf('subtype') - 1
-            parsed.leaderRoles[ideology] = ideology.substring(0, target)
-          }
-        }
-        if (!contents.includes('ideology') && content.includes('traits')) {
-          const target = contents[index + 1]
-          if (isIdeologyToken(target, config)) {
-            parsed.ideology = target.trim()
-          }
-        }
-        if (content.includes('slot')) {
-          const position = extractValue(content).trim()
-          parsed.positions = [...parsed.positions, position]
-
-          if (isAdvisorPosition(position, config) && !parsed.roles.includes('advisor')) {
-            parsed.roles = [...parsed.roles, 'advisor']
-          }
-        }
-      })
-
-      parsedChars.push(parsed)
-    }
-
-    return parsedChars
-  }
-
-  return []
+  return extractedData
 }
 
+/**
+ * Handles character imports using character file
+ * @param { string} content 
+ * @returns  { Promise<Record<string, any>[]> } a promise resolving to the parsed characters
+ */
+export async function readCharFile(content: string): Promise<Record<string, any>[]> {
+  if (content.length <= 0) return []
+  
+  const data: Characters.ExtractedData = await parseFile(content)
+
+  const parsedChars: Record<string, any>[] = []
+
+  for (const tag in data) {
+    const character = data[tag];
+    const parsed: Record<string, any> = {
+      tag: character.tag,
+      name: character.name,
+      roles: character.roles,
+      leaderRoles: character.leaderRoles,
+      commanderRoles: character.commanderRoles,
+      advisorRoles: character.advisorRoles
+    };
+
+    parsedChars.push(parsed)
+  }
+
+
+
+  return parsedChars
+
+
+}
+
+/**
+ * @deprecated
+ * @param {string} content 
+ * @returns 
+ */
 function extractAdvisorRoles(content: string): string[] {
   if (content.length <= 0) return []
 
@@ -272,7 +397,7 @@ export function readLocalisationFile(content: string, config: Automator.Configur
       ideology: getIdeologyKeyFromShort(ideology, config) ?? 'vanguardist',
       roles: [],
       leaderRoles: [],
-      commanderTraits: [],
+      commanderRoles: [],
       advisorRoles: []
     }
 

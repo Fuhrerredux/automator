@@ -12,7 +12,7 @@ pub struct Model {
     pub tag: String,
     pub ideology: Option<String>,
     pub leader_roles: Option<String>,
-    pub commander_traits: Option<String>,
+    pub commander_roles: Option<String>,
     pub advisor_roles: Option<String>,
     pub roles: Option<String>,
 }

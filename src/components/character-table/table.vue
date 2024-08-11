@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h } from 'vue'
+import { h, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from '@/components/data-table.vue'
 import useConfiguration from '@/stores/config'
@@ -24,8 +24,10 @@ type CharacterTableEmits = {
   (e: 'remove', value: CharacterWithId): void
 }
 
-const props = defineProps<CharacterTableProps>()
+const props = defineProps<CharacterTableProps>()  
 const emits = defineEmits<CharacterTableEmits>()
+
+const data = ref(props.characters)
 
 const defineColumns = (): ColumnDef<CharacterWithId>[] => {
   const updateFn = (c: CharacterWithId) => emits('update', c)
@@ -64,11 +66,22 @@ const defineColumns = (): ColumnDef<CharacterWithId>[] => {
 }
 
 const table = useVueTable({
-  data: props.characters,
+  get data() {
+    return data.value
+  },
   columns: defineColumns(),
   getCoreRowModel: getCoreRowModel(),
   getPaginationRowModel: getPaginationRowModel()
 })
+
+watch(
+  () => props.characters,
+  (newCharacters) => {
+    data.value = newCharacters;
+  },
+  { deep: true }
+);
+
 </script>
 
 <template>

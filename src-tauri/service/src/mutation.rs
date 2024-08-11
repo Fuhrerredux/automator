@@ -14,7 +14,7 @@ impl Mutation {
       tag: Set(form_data.tag.to_owned()),
       ideology: Set(form_data.ideology.to_owned()),
       leader_roles: Set(form_data.leader_roles.to_owned()),
-      commander_traits: Set(form_data.commander_traits.to_owned()),
+      commander_roles: Set(form_data.commander_roles.to_owned()),
       advisor_roles: Set(form_data.advisor_roles.to_owned()),
       roles: Set(form_data.roles.to_owned()),
     }
@@ -39,7 +39,7 @@ impl Mutation {
       tag: Set(form_data.tag.to_owned()),
       ideology: Set(form_data.ideology.to_owned()),
       leader_roles: Set(form_data.leader_roles.to_owned()),
-      commander_traits: Set(form_data.commander_traits.to_owned()),
+      commander_roles: Set(form_data.commander_roles.to_owned()),
       advisor_roles: Set(form_data.advisor_roles.to_owned()),
       roles: Set(form_data.roles.to_owned()),
     }

@@ -1,7 +1,7 @@
 import { deserializeObject, serializeObject } from '@/shared/core/data'
 import { invoke } from '@tauri-apps/api/tauri'
 
-const keys: (keyof Character)[] = ['leaderRoles', 'commanderTraits', 'advisorRoles', 'roles']
+const keys: (keyof Character)[] = ['leaderRoles', 'commanderRoles', 'advisorRoles', 'roles']
 
 async function create(character: CharacterWithId) {
   return invoke<Tauri.Broadcast>('create_character', {

@@ -10,6 +10,7 @@ import locales from './locales'
 import router from './router'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { invoke } from '@tauri-apps/api/tauri'
+import { Jomini } from 'jomini'
 
 const locale = 'en'
 const i18n = createI18n({
@@ -45,6 +46,11 @@ async function checkAndUpdate() {
 }
 
 checkAndUpdate();
+
+(async () => {
+  await Jomini.initialize()
+  console.debug("Jomini Initialised")
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
