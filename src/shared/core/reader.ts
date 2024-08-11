@@ -1,7 +1,7 @@
 import { validateConfiguration } from '@shared/utils/configuration'
-import { getIdeologyKeyFromShort, isIdeologyToken } from '@shared/utils/ideology'
+import { getIdeologyKeyFromShort } from '@shared/utils/ideology'
 import { getPositionSuffix, isAdvisorPosition, parsePosition } from '@shared/utils/position'
-import { extractValue } from '@shared/utils/reader'
+// import { extractValue } from '@shared/utils/reader'
 import { readDir, readTextFile } from '@tauri-apps/api/fs'
 import { Jomini } from 'jomini'
 
@@ -57,17 +57,17 @@ export function readSpriteDefinitions(content: string): Sprite[] {
   return sprites
 }
 
-const positions: Position[] = [
-  'head_of_government',
-  'foreign_minister',
-  'economy_minister',
-  'security_minister',
-  'high_command',
-  'army_chief',
-  'navy_chief',
-  'air_chief',
-  'theorist'
-]
+// const positions: Position[] = [
+//   'head_of_government',
+//   'foreign_minister',
+//   'economy_minister',
+//   'security_minister',
+//   'high_command',
+//   'army_chief',
+//   'navy_chief',
+//   'air_chief',
+//   'theorist'
+// ]
 
 export function extractTraits(
   content: string,
@@ -335,32 +335,32 @@ export async function readCharFile(content: string): Promise<Record<string, any>
  * @param {string} content 
  * @returns 
  */
-function extractAdvisorRoles(content: string): string[] {
-  if (content.length <= 0) return []
+// function extractAdvisorRoles(content: string): string[] {
+//   if (content.length <= 0) return []
 
-  const start = content.indexOf('advisor')
-  if (start < 0) return []
+//   const start = content.indexOf('advisor')
+//   if (start < 0) return []
 
-  let lines = content.substring(start).split('\n')
-  const roles: string[] = []
+//   let lines = content.substring(start).split('\n')
+//   const roles: string[] = []
 
-  let role = lines[0]
-  lines = lines.slice(1)
-  lines.forEach((line, index, arr) => {
-    if (line.trim().startsWith('advisor')) {
-      if (role.length > 0) roles.push(role)
-      role = line.trimStart()
-    } else {
-      role = role.concat(`\n${line}`)
-    }
+//   let role = lines[0]
+//   lines = lines.slice(1)
+//   lines.forEach((line, index, arr) => {
+//     if (line.trim().startsWith('advisor')) {
+//       if (role.length > 0) roles.push(role)
+//       role = line.trimStart()
+//     } else {
+//       role = role.concat(`\n${line}`)
+//     }
 
-    // when nearing the end of the lines
-    // add to array
-    if (index === arr.length - 1 && role.length > 0) roles.push(role)
-  })
+//     // when nearing the end of the lines
+//     // add to array
+//     if (index === arr.length - 1 && role.length > 0) roles.push(role)
+//   })
 
-  return roles
-}
+//   return roles
+// }
 
 export function readLocalisationFile(content: string, config: Automator.Configuration) {
   if (content.length <= 0) return []
