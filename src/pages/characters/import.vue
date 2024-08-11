@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import router from '@/router'
@@ -23,10 +23,26 @@ const { remove } = importStore
 const importing = ref(false)
 const character = ref<CharacterWithId | null>(null)
 
-const onCharacterImport = () => {
+const tableData = ref<CharacterWithId[]>([])
+
+watch(
+  characters,
+  (newCharacters) => {
+    tableData.value = [...newCharacters]
+  },
+  { deep: true }
+)
+
+onMounted(async () => {
+  await characterStore.refresh()
+  tableData.value = [...characters.value]
+})
+
+const onCharacterImport = async () => {
   importing.value = true
   try {
     importAll(importStore.characters)
+    await characterStore.refresh()
     $toast.success(t('status.characters-imported'))
     router.back()
   } catch (e) {
@@ -63,7 +79,7 @@ const onCharacterRemove = (param: CharacterWithId) => {
   </app-header>
   <main class="content px-8 page">
     <character-table
-      :characters="characters"
+      :characters="tableData"
       @update="onCharacterUpdate"
       @remove="onCharacterRemove" />
   </main>

@@ -10,7 +10,8 @@ const useCharacterStore = defineStore({
   },
   actions: {
     async findAll(): Promise<CharacterWithId[]> {
-      return CharacterRepository.findAll()
+      this.characters = await CharacterRepository.findAll()
+      return this.characters
     },
     async findOne(id: string): Promise<Character> {
       return CharacterRepository.findById(id)
@@ -45,8 +46,10 @@ const useCharacterStore = defineStore({
     },
     async refresh() {
       try {
-        this.characters = await CharacterRepository.findAll()
-      } catch {}
+        this.characters = await this.findAll()
+      } catch (e) {
+        console.error('Failed to refresh characters', e)
+      }
     }
   }
 })

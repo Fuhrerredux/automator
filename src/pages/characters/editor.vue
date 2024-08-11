@@ -74,8 +74,6 @@ const onSubmit = handleSubmit(async (data: CharacterForm) => {
     ...fromFormData(data)
   }
 
-  console.log(data, character)
-
   if (typeof characterId === 'string') {
     const status = await update(character)
     $toast.success(t(status.message))

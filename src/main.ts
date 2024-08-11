@@ -49,7 +49,7 @@ checkAndUpdate();
 
 (async () => {
   await Jomini.initialize()
-  console.log("Jomini Initialised")
+  console.debug("Jomini Initialised")
 });
 
 document.addEventListener('DOMContentLoaded', () => {

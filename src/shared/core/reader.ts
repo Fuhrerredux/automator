@@ -224,8 +224,6 @@ async function parseFile(content: string): Promise<Characters.ExtractedData> {
         const countryLeader = query.at(`/characters/${tag}/country_leader`);
         const advisor = query.at(`/characters/${tag}/advisor`);
 
-        console.log(typeof advisor, typeof countryLeader, typeof name, typeof tag, typeof tagPrefix  )
-
         const roles: CharacterRole[] = [];
 
         if (countryLeader) roles.push('leader')
@@ -244,8 +242,8 @@ async function parseFile(content: string): Promise<Characters.ExtractedData> {
             cost: adv.cost,
             removeable: adv.can_be_fired,
             ideaToken: adv.idea_token,
-            trait: adv.traits.join(','),
-            hirable: adv.available.hidden_trigger
+            trait: Array.isArray(adv.traits) ? adv.traits.join(',') : adv.traits || '',
+            hirable: adv.available?.hidden_trigger!
         })) : [];
 
         const commanderRoles: Characters.General[] = [];
