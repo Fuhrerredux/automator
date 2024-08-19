@@ -38,7 +38,7 @@
     "jomini": "^0.9.1",
     "nanoid": "5.0.7",
     "npm": "10.8.2",
-    "pinia": "2.1.7",
+    "pinia": "2.2.2",
     "tailwind-merge": "^2.2.1",
     "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "vee-validate": "^4.12.5",
