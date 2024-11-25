@@ -29,6 +29,9 @@ function isActiveIcon(link: string): string {
         <router-link to="/characters" class="link" :class="isActive('/characters')">
           {{ t('route.characters') }}
         </router-link>
+        <router-link to="/nationalfocus" class="link" :class="isActive('/nationalfocus')">
+          {{ t('route.nationalfocus') }}
+        </router-link>
         <router-link to="/others" class="link" :class="isActive('/others')">
           {{ t('route.others') }}
         </router-link>

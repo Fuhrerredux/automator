@@ -11,6 +11,9 @@ import router from './router'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Jomini } from 'jomini'
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
+import ContextMenu from '@imengyu/vue3-context-menu'
+
 
 const locale = 'en'
 const i18n = createI18n({
@@ -29,6 +32,7 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.use(VueTippy, { directive: 'tippy', component: 'tippy' })
+app.use(ContextMenu)
 app.mount('#app')
 
 let checkedForUpdate = false

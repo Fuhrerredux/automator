@@ -1,6 +1,7 @@
-import type { Component } from 'vue'
+import type { Component, ref } from 'vue'
 import type { FileEntry } from '@tauri-apps/api/fs'
 import type { ExportedGlobalComposer, VueI18n } from 'vue-i18n'
+import { useVueFlow } from '@vue-flow/core'
 
 declare global {
   namespace NodeJS {
@@ -22,6 +23,15 @@ declare global {
       label: string
     }
     type DataOption = { value: string; label: string }
+    type DragAndDropState = {
+      draggedType: Ref<string | null>
+      isDragOver: Ref<boolean>
+      isDragging: Ref<boolean>
+    }
+    type NodeEditingState = {
+      editingNodeId: Ref<string | null>
+      editingText: Ref<string>
+    }
   }
   namespace Automator {
     type Definition = { key: string; name: string; short?: string }
@@ -160,8 +170,36 @@ declare global {
       [key: string]: CharacterWithScope
     }
   }
+  namespace FocusTree {
+    type Focus = {
+      tag: string
+      name: string
+      position: [x: number, y: number ]
+      relatives: string[]
+      prerequisites: string[]
+      exclusives: string[]
+      cost?: number
+    }
+    type FocusWithId = Focus & { id: string }
+    type FocusForm = Pick<FocusWithId, 'position' | 'id'> & { label: string }
+    type Node = {
+      type?: string
+      data: { label: string }
+      position: { x: number; y: number }
+      // draggable?: boolean
+      // selectable?: boolean
+      // connectable?: boolean
+    }
+    type NodeWithId = Node & { id: string }
+    type Edge = {
+      source: string
+      target: string
+      label?: string // for future ig
+    }
+    type EdgeWithId = Edge & { id: string }
+  }
   type Sprite = {
-    name: string
+    name: string    
     path: string
     file?: string
     exists?: boolean
@@ -209,6 +247,35 @@ declare global {
     kind: string
     message: string
   }
+
+  declare class DragAndDropManager implements UserInterface.DragAndDropState {
+    state: UserInterface.DragAndDropState
+
+    constructor()
+
+    snapToGrid(position: { x: number; y: number }): { x: number, y: number }
+
+    onDragStart(event: DragEvent, type: string): void;
+
+    onDragOver(event: DragEvent): void;
+
+    onDragLeave(): void;
+
+    onDragEnd(): void;
+
+    onDrop(event: DragEvent): void;
+  }
+
+  declare class NodePropertyManager implements UserInterface.NodeEditingState {
+    state: UserInterface.NodeEditingState
+
+    constructor()
+
+    onDoubleClick(nodeId: string, currentText: string): void;
+
+    saveNodeText(nodeId: string): void;
+  }
+
 }
 
 declare module 'vue' {

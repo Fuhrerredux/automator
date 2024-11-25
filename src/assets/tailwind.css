@@ -96,4 +96,7 @@
   .section-header {
     @apply mb-2 text-sm font-medium text-zinc-400;
   }
+  .vue-flow__minimap {
+    @apply scale-[0.75] origin-bottom-right
+  }
 }

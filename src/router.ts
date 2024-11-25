@@ -6,6 +6,8 @@ import MainPage from '@pages/main.vue'
 import OthersPage from '@pages/others.vue'
 import OptimizePage from '@pages/others/optimize.vue'
 import SettingsPage from '@pages/settings.vue'
+import FocusPage from '@pages/focus.vue'
+
 const routes = [
   {
     path: '/',
@@ -16,6 +18,11 @@ const routes = [
     path: '/characters',
     name: 'Characters',
     component: CharactersPage
+  },
+  {
+    path: '/nationalfocus',
+    name: 'National Focus',
+    component: FocusPage
   },
   {
     path: '/others',

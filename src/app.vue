@@ -9,6 +9,7 @@ import useModStore from '@stores/mod'
 import useSettingsStore from '@stores/settings'
 import useThemeStore from '@stores/theme'
 import useTraitsStore from '@stores/traits'
+import useFocusStore from './stores/focuses'
 
 const { t } = useI18n()
 const $toast = useToast()
@@ -18,9 +19,11 @@ const themeStore = useThemeStore()
 const traitsStore = useTraitsStore()
 const settingsStore = useSettingsStore()
 const configStore = useConfiguration()
+const focusStore = useFocusStore()
 
 onMounted(async () => {
   characterStore.refresh()
+  focusStore.refresh()
 
   themeStore.fetch()
   settingsStore.fetch()
@@ -47,3 +50,5 @@ onMounted(async () => {
   <router-view />
 </template>
 @/database/character
+@/database/focus
+@/database/node

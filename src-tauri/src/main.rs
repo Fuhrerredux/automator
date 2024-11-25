@@ -14,6 +14,9 @@ use service::{
   Mutation as MutationCore, Query as QueryCore
 };
 use entity::character;
+use entity::focus;
+use entity::node;
+use entity::connection;
 
 #[tokio::main]
 async fn main() {
@@ -59,6 +62,27 @@ async fn main() {
       list_characters,
       list_all_characters,
       get_character,
+      create_focus,
+      update_focus,
+      delete_focus,
+      purge_focuses,
+      list_focuses,
+      list_all_focuses,
+      get_focus,
+      create_node,
+      update_node,
+      delete_node,
+      purge_nodes,
+      list_nodes,
+      list_all_nodes,
+      get_node,
+      create_connection,
+      update_connection,
+      delete_connection,
+      purge_connections,
+      list_all_connections,
+      get_connection_by_source,
+      get_connection_by_target,
       close_splashscreen
     ])
     .run(tauri::generate_context!())
@@ -175,6 +199,320 @@ async fn get_character(
   let data = character.unwrap();
 
   Ok(data)
+}
+
+#[tauri::command]
+async fn create_focus(state: tauri::State<'_, AppState>, form: focus::Model) -> Result<Broadcast, ()> {
+  let _ = &state.conn;
+
+  MutationCore::create_focus(&state.conn, form)
+    .await
+    .expect("could not insert focus");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.focus.created".to_owned()
+  };
+  Ok(data)
+}
+
+#[tauri::command]
+async fn update_focus(
+  state: tauri::State<'_, AppState>,
+  id: String,
+  form: focus::Model
+)-> Result<Broadcast, ()> {
+  MutationCore::update_focus_by_id(&state.conn, id, form)
+    .await
+    .expect("could not edit focus");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.focus.updated".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn delete_focus(
+  state: tauri::State<'_, AppState>,
+  id: String,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_focus(&state.conn, id)
+    .await
+    .expect("could not delete focus");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.focus.removed".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn purge_focuses(
+  state: tauri::State<'_, AppState>,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_all_focuses(&state.conn)
+    .await
+    .expect("could not purge all focuses");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.focus.purged".to_owned()
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn list_focuses(
+  state: tauri::State<'_, AppState>,
+  params: ListParams,
+) -> Result<Vec<focus::Model>, ()> {
+  let page = params.page.unwrap_or(1);
+  let focuses_per_page = params.limit.unwrap_or(10);
+
+  let (focuses, num_pages) = QueryCore::find_focuses_in_page(&state.conn, page, focuses_per_page)
+    .await
+    .expect("Cannot find focuses in page");
+
+  println!("num_pages: {}", num_pages);
+
+  Ok(focuses)
+}
+
+#[tauri::command]
+async fn list_all_focuses(
+  state: tauri::State<'_, AppState>
+) -> Result<Vec<focus::Model>, ()> {
+  let focs = QueryCore::find_focuses(&state.conn).await;
+  let focuses  = focs.unwrap();
+
+  Ok(focuses)
+}
+
+#[tauri::command]
+async fn get_focus(
+  state: tauri::State<'_, AppState>,
+  params: GetParams
+) -> Result<focus::Model, ()> {
+  let id = params.id;
+  let focus = QueryCore::find_focus_by_id(&state.conn, id).await.expect("Cannot find focus");
+  let data = focus.unwrap();
+
+  Ok(data)
+}
+
+// nodes
+
+#[tauri::command]
+async fn create_node(state: tauri::State<'_, AppState>, form: node::Model) -> Result<Broadcast, ()> {
+  let _ = &state.conn;
+
+  MutationCore::create_node(&state.conn, form)
+    .await
+    .expect("could not insert focus");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.node.created".to_owned()
+  };
+  Ok(data)
+}
+
+#[tauri::command]
+async fn update_node(
+  state: tauri::State<'_, AppState>,
+  id: String,
+  form: node::Model
+)-> Result<Broadcast, ()> {
+  MutationCore::update_node_by_id(&state.conn, id, form)
+    .await
+    .expect("could not edit node");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.node.updated".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn delete_node(
+  state: tauri::State<'_, AppState>,
+  id: String,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_node(&state.conn, id)
+    .await
+    .expect("could not delete node");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.node.removed".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn purge_nodes(
+  state: tauri::State<'_, AppState>,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_all_nodes(&state.conn)
+    .await
+    .expect("could not purge all nodes");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.node.purged".to_owned()
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn list_nodes(
+  state: tauri::State<'_, AppState>,
+  params: ListParams,
+) -> Result<Vec<node::Model>, ()> {
+  let page = params.page.unwrap_or(1);
+  let focuses_per_page = params.limit.unwrap_or(10);
+
+  let (focuses, num_pages) = QueryCore::find_nodes_in_page(&state.conn, page, focuses_per_page)
+    .await
+    .expect("Cannot find nodes in page");
+
+  println!("num_pages: {}", num_pages);
+
+  Ok(focuses)
+}
+
+#[tauri::command]
+async fn list_all_nodes(
+  state: tauri::State<'_, AppState>
+) -> Result<Vec<node::Model>, ()> {
+  let focs = QueryCore::find_nodes(&state.conn).await;
+  let focuses  = focs.unwrap();
+
+  Ok(focuses)
+}
+
+#[tauri::command]
+async fn get_node(
+  state: tauri::State<'_, AppState>,
+  params: GetParams
+) -> Result<node::Model, ()> {
+  let id = params.id;
+  let node = QueryCore::find_node_by_id(&state.conn, id).await.expect("Cannot find focus");
+  let data = node.unwrap();
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn create_connection(state: tauri::State<'_, AppState>, form: connection::Model) -> Result<Broadcast, ()> {
+  let _ = &state.conn;
+
+  MutationCore::create_connection(&state.conn, form)
+    .await
+    .expect("could not insert connection");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.connection.created".to_owned()
+  };
+  Ok(data)
+}
+
+#[tauri::command]
+async fn update_connection(
+  state: tauri::State<'_, AppState>,
+  id: String,
+  form: connection::Model
+)-> Result<Broadcast, ()> {
+  MutationCore::update_connection_by_id(&state.conn, id, form)
+    .await
+    .expect("could not edit node");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.connection.updated".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn delete_connection(
+  state: tauri::State<'_, AppState>,
+  id: String,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_connection(&state.conn, id)
+    .await
+    .expect("could not delete connection");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.connection.removed".to_owned(),
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn purge_connections(
+  state: tauri::State<'_, AppState>,
+) -> Result<Broadcast, ()> {
+  MutationCore::delete_all_connections(&state.conn)
+    .await
+    .expect("could not purge all connections");
+
+  let data = Broadcast {
+    kind: "success".to_owned(),
+    message: "status.connection.purged".to_owned()
+  };
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn list_all_connections(
+  state: tauri::State<'_, AppState>
+) -> Result<Vec<connection::Model>, ()> {
+  let focs = QueryCore::find_connections(&state.conn).await;
+  let connections  = focs.unwrap();
+
+  Ok(connections)
+}
+
+#[tauri::command]
+async fn get_connection_by_source(
+  state: tauri::State<'_, AppState>,
+  source_id: String,
+) -> Result<Vec<connection::Model>, ()> {
+  let connections = QueryCore::find_connections_by_source(&state.conn, &source_id).await;
+
+  match connections {
+    Ok(conns) => Ok(conns),
+    Err(_) => Err(()),
+  }
+}
+
+#[tauri::command]
+async fn get_connection_by_target(
+  state: tauri::State<'_, AppState>,
+  target_id: String,
+) -> Result<Vec<connection::Model>, ()> {
+  let connections = QueryCore::find_connections_by_target(&state.conn, &target_id).await;
+
+  match connections {
+    Ok(conns) => Ok(conns),
+    Err(_) => Err(()),
+  }
 }
 
 #[derive(Clone)]

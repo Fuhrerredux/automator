@@ -5,7 +5,8 @@
     "characters": "Characters",
     "others": "Others",
     "character-import": "Character Importer",
-    "analyze-gfx": "Analyze GFX"
+    "analyze-gfx": "Analyze GFX",
+    "nationalfocus": "National Focus"
   },
   "settings": {
     "header": "Settings",
@@ -124,6 +125,12 @@
       "updated": "Character updated",
       "removed": "Character deleted",
       "purged": "Characters purged"
+    },
+    "focus": {
+      "created": "Focus created",
+      "updated": "Focus updated",
+      "removed": "Focus deleted",
+      "purged": "Focus purged"
     },
     "saved": "Saved",
     "characters-exported": "Characters exported",
