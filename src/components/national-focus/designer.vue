@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
 import { useDragAndDrop } from '@/shared/utils/vueFlow'
-import { NodeProps, VueFlow, useVueFlow, type Node, type Edge } from '@vue-flow/core'
+import { NodeProps, VueFlow, useVueFlow, type Node, type Edge, GraphNode } from '@vue-flow/core'
 import DropzoneBackground from './dropzone-background.vue'
 import sidebar from './sidebar.vue'
 import CustomNode from './nodes.vue'
 import useFocusStore from '@/stores/focuses'
 import useNodeStore from '@/stores/nodes'
-import { storeToRefs } from 'pinia'
+// import { storeToRefs } from 'pinia'
 // import router from '@/router'
 
 // const focusStore = useFocusStore()
 const nodeStore = useNodeStore()
 
-const { nodes, edges } = storeToRefs(nodeStore)
+// const { nodes, edges } = storeToRefs(nodeStore)
 // const { focuses } = storeToRefs(focusStore)
 // const { nodes, connections } = storeToRefs(nodeStore)
 const { onConnect, addEdges } = useVueFlow()
@@ -31,10 +31,11 @@ const { onDragOver, onDrop, onDragLeave, isDragOver } = useDragAndDrop()
 // let edges = ref<Edge[]>([])
 
 onMounted(async () => {
+  // nodeStore.refresh()
   nodeStore.fetch()
 
-  nodes.value = nodeStore.nodes
-  edges.value = nodeStore.edges
+  // nodes.value = nodeStore.nodes
+  // edges.value = nodeStore.edges
   // nodes.value = [
   //   {
   //     id: '1',
@@ -66,11 +67,33 @@ onMounted(async () => {
   // ]
 })
 
+                    //nNodes
 function onNodesChange(_: FocusTree.NodeWithId[]) {
+  // const uNodes = nNodes.map((node: Node) => {
+  //   return {
+  //     id: node.id,
+  //     data: { label: node.label },
+  //     position: node.position,
+  //     type: node.type
+  //   }
+  // }) as FocusTree.NodeWithId[]
+  // console.log(uNodes)
+  // nodeStore.saveNodes(uNodes)
   nodeStore.save()
 }
-
+                    //nEdges
 function onEdgeChange(_: FocusTree.EdgeWithId[]) {
+  // const uEdges = nEdges.map((edge) => {
+  //   return {
+  //     id: edge.id,
+  //     source: edge.source,
+  //     target: edge.target,
+  //     label: edge.label,
+  //     type: edge.type
+  //   }
+  // })
+  // console.log(uEdges)
+  // nodeStore.saveEdges(uEdges)
   nodeStore.save()
 }
 

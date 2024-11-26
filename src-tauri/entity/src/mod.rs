@@ -3,6 +3,6 @@
 pub mod prelude;
 
 pub mod character;
-pub mod connection;
+pub mod edge;
 pub mod focus;
 pub mod node;

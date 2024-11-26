@@ -17,11 +17,9 @@ impl MigrationTrait for Migration {
               .not_null()
               .primary_key()
           )
-          .col(ColumnDef::new(Node::PositionX).integer().not_null())
-          .col(ColumnDef::new(Node::PositionY).integer().not_null())
-          .col(ColumnDef::new(Node::Label).string().null())
-          .col(ColumnDef::new(Node::Type).string().null())
-          .col(ColumnDef::new(Node::Data).json().null())
+          .col(ColumnDef::new(Node::Type).string().not_null())
+          .col(ColumnDef::new(Node::Label).string().not_null())
+          .col(ColumnDef::new(Node::Position).json().not_null())
           .to_owned()
       ).await
   }
@@ -37,9 +35,7 @@ impl MigrationTrait for Migration {
 enum Node {
   Table,
   Id,
-  PositionX,
-  PositionY,
-  Label,
   Type,
-  Data
+  Label,
+  Position
 }

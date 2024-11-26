@@ -1,10 +1,10 @@
- import { ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 import useNodeStore from '@/stores/nodes'
 
 let id: number | null = null
 // the operand of a decrement/increment operator must be a variable or a property access
-const getId = () => `node_${(id = (id ?? useNodeStore().getId) + 1 - 1 + 1)}`
+const getId = async () => `node_${(id = (id ?? await useNodeStore().getId) + 1)}`
 
 const state: UserInterface.DragAndDropState = {
   draggedType: ref<string | null>(null),
@@ -64,13 +64,13 @@ export function useDragAndDrop() {
     document.removeEventListener('drop', onDragEnd)
   }
 
-  function onDrop(event: DragEvent) {
+  async function onDrop(event: DragEvent) {
     const position = screenToFlowCoordinate({
       x: event.clientX,
       y: event.clientY,
     })
 
-    const nodeId = getId()
+    const nodeId = await getId()
 
     const newNode = {
       id: nodeId,

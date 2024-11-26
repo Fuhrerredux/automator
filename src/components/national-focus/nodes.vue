@@ -19,7 +19,7 @@ const saveLabel = () => {
 
 const nodePosition = computed(() => {
   const { x, y } = props.position
-  return `x: ${Math.round(x/10)}, y: ${Math.round(y/10)}`
+  return `x: ${Math.round(x/50)}, y: ${Math.round(y/50)}`
 })
 
 </script>

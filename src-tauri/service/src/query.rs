@@ -2,11 +2,12 @@ use ::entity::{
   character, 
   focus, 
   node, 
-  connection, 
+  edge,
   character::Entity as Character, 
   focus::Entity as Focus, 
   node::Entity as Node, 
-  connection::Entity as Connection};
+  edge::Entity as Edge
+};
 use sea_orm::*;
 
 pub struct Query;
@@ -83,7 +84,6 @@ impl Query {
     Node::find_by_id(id).one(db).await
   }
 
-  
   pub async fn find_nodes(
     db: &DbConn,
   ) -> Result<Vec<node::Model>, DbErr> {
@@ -91,37 +91,49 @@ impl Query {
     fetcher.await
   }
 
-  /// If ok, returns (post models, num pages).
-  pub async fn find_nodes_in_page(
-    db: &DbConn,
-    page: u64,
-    nodes_per_page: u64,
-  ) -> Result<(Vec<node::Model>, u64), DbErr> {
-    // Setup paginator
-    let paginator = Node::find()
-      .order_by_asc(node::Column::Id)
-      .paginate(db, nodes_per_page);
-    let num_pages = paginator.num_pages().await?;
+  pub async fn get_count(db: &DbConn) -> Result<u64, DbErr> {
+    let c = Node::find().count(db).await?;
 
-      // Fetch paginated posts
-      paginator.fetch_page(page - 1).await.map(|p| (p, num_pages))
+    Ok(c)
   }
+
+  /// If ok, returns (post models, num pages).
+  // pub async fn find_nodes_in_page(
+  //   db: &DbConn,
+  //   page: u64,
+  //   nodes_per_page: u64,
+  // ) -> Result<(Vec<node::Model>, u64), DbErr> {
+  //   // Setup paginator
+  //   let paginator = Node::find()
+  //     .order_by_asc(node::Column::Id)
+  //     .paginate(db, nodes_per_page);
+  //   let num_pages = paginator.num_pages().await?;
+
+  //     // Fetch paginated posts
+  //     paginator.fetch_page(page - 1).await.map(|p| (p, num_pages))
+  // }
 
   // connections
 
-  pub async fn find_connections(
+  pub async fn find_edges(
     db: &DbConn,
-  ) -> Result<Vec<connection::Model>, DbErr> {
-    let fetcher = Connection::find().order_by_asc(connection::Column::Id).all(db);
+  ) -> Result<Vec<edge::Model>, DbErr> {
+    let fetcher = Edge::find().order_by_asc(edge::Column::Id).all(db);
     fetcher.await
+  }
+
+  pub async fn find_edge_by_id(
+    db: &DbConn, id: String
+  ) -> Result<Option<edge::Model>, DbErr> {
+    Edge::find_by_id(id).one(db).await
   }
 
   pub async fn find_connections_by_source(
     db: &DbConn, 
     source_id: &str
-  ) -> Result<Vec<connection::Model>, DbErr> {
-    Connection::find()
-      .filter(connection::Column::Source.eq(source_id))
+  ) -> Result<Vec<edge::Model>, DbErr> {
+    Edge::find()
+      .filter(edge::Column::Source.eq(source_id))
       .all(db)
       .await
   }
@@ -129,9 +141,9 @@ impl Query {
   pub async fn find_connections_by_target(
     db: &DbConn, 
     target_id: &str
-  ) -> Result<Vec<connection::Model>, DbErr> {
-    Connection::find()
-      .filter(connection::Column::Target.eq(target_id))
+  ) -> Result<Vec<edge::Model>, DbErr> {
+    Edge::find()
+      .filter(edge::Column::Target.eq(target_id))
       .all(db)
       .await
   }

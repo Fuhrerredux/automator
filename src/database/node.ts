@@ -1,8 +1,8 @@
 import { deserializeObject, serializeObject } from '@/shared/core/data'
 import { invoke } from '@tauri-apps/api/tauri'
 
-const nodeKeys: (keyof FocusTree.Node)[] = ['data', 'position', 'type', 'label']
-const connectionKeys: (keyof FocusTree.Connection)[] = ['source', 'target', 'sourceHandle', 'targetHandle']
+const nodeKeys: (keyof FocusTree.NodeWithId)[] = ['id', 'data', 'position', 'type']
+const edgeKeys: (keyof FocusTree.EdgeWithId)[] = ['id', 'source', 'target', 'label', 'type']
 
 async function create(node: FocusTree.NodeWithId) {
   return invoke<Tauri.Broadcast>('create_node', {
@@ -32,13 +32,13 @@ async function findAll(): Promise<FocusTree.NodeWithId[]> {
   return nodes.map((focus) => deserializeObject(focus, nodeKeys)) as FocusTree.NodeWithId[]
 }
 
-async function list(page: number = 1, limit: number = 10): Promise<FocusTree.NodeWithId[]> {
-  const nodes = await invoke<FocusTree.NodeWithId[]>('list_nodes', {
-    page,
-    limit
-  })
-  return nodes.map((node) => deserializeObject(node, nodeKeys)) as FocusTree.NodeWithId[]
-}
+// async function list(page: number = 1, limit: number = 10): Promise<FocusTree.NodeWithId[]> {
+//   const nodes = await invoke<FocusTree.NodeWithId[]>('list_nodes', {
+//     page,
+//     limit
+//   })
+//   return nodes.map((node) => deserializeObject(node, nodeKeys)) as FocusTree.NodeWithId[]
+// }
 
 async function findById(id: string): Promise<FocusTree.NodeWithId> {
   const node = await invoke<FocusTree.NodeWithId>('get_node', {
@@ -47,58 +47,62 @@ async function findById(id: string): Promise<FocusTree.NodeWithId> {
   return deserializeObject(node, nodeKeys)
 }
 
-// Connection Functions
-async function createConnection(connection: FocusTree.ConnectionWithId) {
-  return invoke<Tauri.Broadcast>('create_connection', {
-    form: serializeObject(connection, connectionKeys)
+async function getCount(): Promise<number> {
+  return await invoke<number>('get_node_count')
+}
+
+// Edge Functions
+async function createEdge(edge: FocusTree.EdgeWithId) {
+  return invoke<Tauri.Broadcast>('create_edge', {
+    form: serializeObject(edge, edgeKeys)
   })
 }
 
-async function updateConnection(id: string, connection: FocusTree.ConnectionWithId) {
-  return invoke<Tauri.Broadcast>('update_connection', {
+async function updateEdge(id: string, edge: FocusTree.EdgeWithId) {
+  return invoke<Tauri.Broadcast>('update_edge', {
     id,
-    form: serializeObject(connection, connectionKeys)
+    form: serializeObject(edge, edgeKeys)
   })
 }
 
-async function removeConnection(id: string) {
-  return invoke<Tauri.Broadcast>('delete_connection', { id })
+async function removeEdge(id: string) {
+  return invoke<Tauri.Broadcast>('delete_edge', { id })
 }
 
-async function purgeConnections() {
-  return invoke<Tauri.Broadcast>('purge_connections')
+async function purgeEdges() {
+  return invoke<Tauri.Broadcast>('purge_edges')
 }
 
-async function findAllConnections(): Promise<FocusTree.ConnectionWithId[]> {
-  const connections = await invoke<FocusTree.ConnectionWithId[]>('list_all_connections')
-  return connections.map((connection) =>
-    deserializeObject(connection, connectionKeys)
-  ) as FocusTree.ConnectionWithId[]
+async function findAllEdges(): Promise<FocusTree.EdgeWithId[]> {
+  const edges = await invoke<FocusTree.EdgeWithId[]>('list_all_edges')
+  return edges.map((edge) =>
+    deserializeObject(edge, edgeKeys)
+  ) as FocusTree.EdgeWithId[]
 }
 
-async function findConnectionById(id: string): Promise<FocusTree.ConnectionWithId> {
-  const connection = await invoke<FocusTree.ConnectionWithId>('get_connection', { id })
-  return deserializeObject(connection, connectionKeys)
+async function findEdgeById(id: string): Promise<FocusTree.EdgeWithId> {
+  const edge = await invoke<FocusTree.EdgeWithId>('get_edge', { id })
+  return deserializeObject(edge, edgeKeys)
 }
 
-async function findConnectionsBySource(sourceId: string): Promise<FocusTree.ConnectionWithId[]> {
-  const connections = await invoke<FocusTree.ConnectionWithId[]>(
-    'get_connections_by_source',
+async function findEdgesBySource(sourceId: string): Promise<FocusTree.EdgeWithId[]> {
+  const edges = await invoke<FocusTree.EdgeWithId[]>(
+    'get_edge_by_source',
     { sourceId }
   )
-  return connections.map((connection) =>
-    deserializeObject(connection, connectionKeys)
-  ) as FocusTree.ConnectionWithId[]
+  return edges.map((edge) =>
+    deserializeObject(edge, edgeKeys)
+  ) as FocusTree.EdgeWithId[]
 }
 
-async function findConnectionsByTarget(targetId: string): Promise<FocusTree.ConnectionWithId[]> {
-  const connections = await invoke<FocusTree.ConnectionWithId[]>(
-    'get_connections_by_target',
+async function findEdgesByTarget(targetId: string): Promise<FocusTree.EdgeWithId[]> {
+  const edges = await invoke<FocusTree.EdgeWithId[]>(
+    'get_edge_by_target',
     { targetId }
   )
-  return connections.map((connection) =>
-    deserializeObject(connection, connectionKeys)
-  ) as FocusTree.ConnectionWithId[]
+  return edges.map((edge) =>
+    deserializeObject(edge, edgeKeys)
+  ) as FocusTree.EdgeWithId[]
 }
 
 export const NodeRepository = {
@@ -107,17 +111,17 @@ export const NodeRepository = {
   remove: remove,
   purge: purge,
   findAll: findAll,
-  list: list,
-  findById: findById
+  findById: findById,
+  getCount: getCount
 }
 
-export const ConnectionRepository = {
-  create: createConnection,
-  update: updateConnection,
-  remove: removeConnection,
-  purge: purgeConnections,
-  findAll: findAllConnections,
-  findById: findConnectionById,
-  findBySource: findConnectionsBySource,
-  findByTarget: findConnectionsByTarget
+export const EdgeRepository = {
+  create: createEdge,
+  update: updateEdge,
+  remove: removeEdge,
+  purge: purgeEdges,
+  findAll: findAllEdges,
+  findById: findEdgeById,
+  findBySource: findEdgesBySource,
+  findByTarget: findEdgesByTarget
 }

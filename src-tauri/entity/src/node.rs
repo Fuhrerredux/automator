@@ -8,14 +8,12 @@ use serde::{Deserialize, Serialize};
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false, column_type = "Text")]
     pub id: String,
-    pub position_x: i32,
-    pub position_y: i32,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub label: Option<String>,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub r#type: Option<String>,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub data: Option<String>,
+    #[sea_orm(column_type = "Text")]
+    pub r#type: String,
+    #[sea_orm(column_type = "Text")]
+    pub label: String,
+    #[sea_orm(column_type = "Text")]
+    pub position: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

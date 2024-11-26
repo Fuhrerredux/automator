@@ -2,11 +2,12 @@ use ::entity::{
   character, 
   focus, 
   node, 
-  connection, 
+  edge,
   character::Entity as Character, 
   focus::Entity as Focus, 
   node::Entity as Node, 
-  connection::Entity as Connection};
+  edge::Entity as Edge,
+};
 use sea_orm::*;
 
 pub struct Mutation;
@@ -142,11 +143,9 @@ impl Mutation {
   ) -> Result<node::Model, DbErr> {
     node::ActiveModel {
       id: Set(form_data.id.to_owned()),
-      position_x: Set(form_data.position_x.to_owned()),
-      position_y: Set(form_data.position_y.to_owned()),
+      position: Set(form_data.position.to_owned()),
       label: Set(form_data.label.to_owned()),
-      r#type: Set(form_data.r#type.to_owned()),
-      data: Set(form_data.data.to_owned()),
+      r#type: Set(form_data.r#type.to_owned())
     }
     .insert(db)
     .await
@@ -165,11 +164,9 @@ impl Mutation {
 
     node::ActiveModel {
       id: node.id,
-      position_x: Set(form_data.position_x.to_owned()),
-      position_y: Set(form_data.position_y.to_owned()),
+      position: Set(form_data.position.to_owned()),
       label: Set(form_data.label.to_owned()),
       r#type: Set(form_data.r#type.to_owned()),
-      data: Set(form_data.data.to_owned()),
     }
     .update(db)
     .await
@@ -189,59 +186,58 @@ impl Mutation {
     Node::delete_many().exec(db).await
   } 
 
-  // connection-related
+  // edge-related
 
-  pub async fn create_connection(
+  pub async fn create_edge(
     db: &DbConn,
-    form_data: connection::Model,
-  ) -> Result<connection::Model, DbErr> {
-    connection::ActiveModel {
+    form_data: edge::Model,
+  ) -> Result<edge::Model, DbErr> {
+    edge::ActiveModel {
       id: Set(form_data.id.to_owned()),
       source: Set(form_data.source.to_owned()),
       target: Set(form_data.target.to_owned()),
-      source_handle: Set(form_data.source_handle.to_owned()),
-      target_handle: Set(form_data.target_handle.to_owned()),
+      label: Set(form_data.label.to_owned()),
+      r#type: Set(form_data.r#type.to_owned())
     }
     .insert(db)
     .await
   }
 
-  pub async fn update_connection_by_id(
+  pub async fn update_edge_by_id(
     db: &DbConn,
     id: String,
-    form_data: connection::Model
-  ) -> Result<connection::Model, DbErr> {
-    let connection: connection::ActiveModel = Connection::find_by_id(id)
+    form_data: edge::Model
+  ) -> Result<edge::Model, DbErr> {
+    let edge: edge::ActiveModel = Edge::find_by_id(id)
       .one(db)
       .await?
-      .ok_or(DbErr::Custom("Cannot find connection:".to_owned()))
+      .ok_or(DbErr::Custom("Cannot find edge:".to_owned()))
       .map(Into::into)?;
 
-    connection::ActiveModel {
-      id: connection.id,
+    edge::ActiveModel {
+      id: edge.id,
       source: Set(form_data.source.to_owned()),
       target: Set(form_data.target.to_owned()),
-      source_handle: Set(form_data.source_handle.to_owned()),
-      target_handle: Set(form_data.target_handle.to_owned()),
+      label: Set(form_data.label.to_owned()),
+      r#type: Set(form_data.r#type.to_owned())
     }
     .update(db)
     .await
   }
 
-  pub async fn delete_connection(db: &DbConn, id: String) -> Result<DeleteResult, DbErr> {
-    let connection: connection::ActiveModel = Connection::find_by_id(id)
+  pub async fn delete_edge(db: &DbConn, id: String) -> Result<DeleteResult, DbErr> {
+    let edge: edge::ActiveModel = Edge::find_by_id(id)
       .one(db)
       .await?
-      .ok_or(DbErr::Custom("Cannot find connection.".to_owned()))
+      .ok_or(DbErr::Custom("Cannot find edge.".to_owned()))
       .map(Into::into)?;
 
-      connection.delete(db).await
+      edge.delete(db).await
   }
 
-  pub async fn delete_all_connections(db: &DbConn) -> Result<DeleteResult, DbErr> {
-    Connection::delete_many().exec(db).await
-  } 
-
+  pub async fn delete_all_edges(db: &DbConn) -> Result<DeleteResult, DbErr> {
+    Edge::delete_many().exec(db).await
+  }
 
 }
 

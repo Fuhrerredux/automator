@@ -16,7 +16,7 @@ use service::{
 use entity::character;
 use entity::focus;
 use entity::node;
-use entity::connection;
+use entity::edge;
 
 #[tokio::main]
 async fn main() {
@@ -73,16 +73,18 @@ async fn main() {
       update_node,
       delete_node,
       purge_nodes,
-      list_nodes,
+      // list_nodes,
       list_all_nodes,
       get_node,
-      create_connection,
-      update_connection,
-      delete_connection,
-      purge_connections,
-      list_all_connections,
-      get_connection_by_source,
-      get_connection_by_target,
+      get_node_count,
+      create_edge,
+      update_edge,
+      delete_edge,
+      purge_edges,
+      list_all_edges,
+      get_edge,
+      get_edge_by_source,
+      get_edge_by_target,
       close_splashscreen
     ])
     .run(tauri::generate_context!())
@@ -374,22 +376,22 @@ async fn purge_nodes(
   Ok(data)
 }
 
-#[tauri::command]
-async fn list_nodes(
-  state: tauri::State<'_, AppState>,
-  params: ListParams,
-) -> Result<Vec<node::Model>, ()> {
-  let page = params.page.unwrap_or(1);
-  let focuses_per_page = params.limit.unwrap_or(10);
+// #[tauri::command]
+// async fn list_nodes(
+//   state: tauri::State<'_, AppState>,
+//   params: ListParams,
+// ) -> Result<Vec<node::Model>, ()> {
+//   let page = params.page.unwrap_or(1);
+//   let focuses_per_page = params.limit.unwrap_or(10);
 
-  let (focuses, num_pages) = QueryCore::find_nodes_in_page(&state.conn, page, focuses_per_page)
-    .await
-    .expect("Cannot find nodes in page");
+//   let (focuses, num_pages) = QueryCore::find_nodes_in_page(&state.conn, page, focuses_per_page)
+//     .await
+//     .expect("Cannot find nodes in page");
 
-  println!("num_pages: {}", num_pages);
+//   println!("num_pages: {}", num_pages);
 
-  Ok(focuses)
-}
+//   Ok(focuses)
+// }
 
 #[tauri::command]
 async fn list_all_nodes(
@@ -407,109 +409,129 @@ async fn get_node(
   params: GetParams
 ) -> Result<node::Model, ()> {
   let id = params.id;
-  let node = QueryCore::find_node_by_id(&state.conn, id).await.expect("Cannot find focus");
+  let node = QueryCore::find_node_by_id(&state.conn, id).await.expect("Cannot find node");
   let data = node.unwrap();
 
   Ok(data)
 }
 
 #[tauri::command]
-async fn create_connection(state: tauri::State<'_, AppState>, form: connection::Model) -> Result<Broadcast, ()> {
+async fn get_node_count(
+  state: tauri::State<'_, AppState>,
+) -> Result<u64, ()> {
+  let count = QueryCore::get_count(&state.conn).await.expect("Cannot find nodes");
+  Ok(count)
+}
+
+#[tauri::command]
+async fn create_edge(state: tauri::State<'_, AppState>, form: edge::Model) -> Result<Broadcast, ()> {
   let _ = &state.conn;
 
-  MutationCore::create_connection(&state.conn, form)
+  MutationCore::create_edge(&state.conn, form)
     .await
-    .expect("could not insert connection");
+    .expect("could not insert edge");
 
   let data = Broadcast {
     kind: "success".to_owned(),
-    message: "status.connection.created".to_owned()
+    message: "status.edge.created".to_owned()
   };
   Ok(data)
 }
 
 #[tauri::command]
-async fn update_connection(
+async fn update_edge(
   state: tauri::State<'_, AppState>,
   id: String,
-  form: connection::Model
+  form: edge::Model
 )-> Result<Broadcast, ()> {
-  MutationCore::update_connection_by_id(&state.conn, id, form)
+  MutationCore::update_edge_by_id(&state.conn, id, form)
     .await
-    .expect("could not edit node");
+    .expect("could not edit edge");
 
   let data = Broadcast {
     kind: "success".to_owned(),
-    message: "status.connection.updated".to_owned(),
+    message: "status.edge.updated".to_owned(),
   };
 
   Ok(data)
 }
 
 #[tauri::command]
-async fn delete_connection(
+async fn delete_edge(
   state: tauri::State<'_, AppState>,
   id: String,
 ) -> Result<Broadcast, ()> {
-  MutationCore::delete_connection(&state.conn, id)
+  MutationCore::delete_edge(&state.conn, id)
     .await
-    .expect("could not delete connection");
+    .expect("could not delete edge");
 
   let data = Broadcast {
     kind: "success".to_owned(),
-    message: "status.connection.removed".to_owned(),
+    message: "status.edge.removed".to_owned(),
   };
 
   Ok(data)
 }
 
 #[tauri::command]
-async fn purge_connections(
+async fn purge_edges(
   state: tauri::State<'_, AppState>,
 ) -> Result<Broadcast, ()> {
-  MutationCore::delete_all_connections(&state.conn)
+  MutationCore::delete_all_edges(&state.conn)
     .await
-    .expect("could not purge all connections");
+    .expect("could not purge all edges");
 
   let data = Broadcast {
     kind: "success".to_owned(),
-    message: "status.connection.purged".to_owned()
+    message: "status.edge.purged".to_owned()
   };
 
   Ok(data)
 }
 
 #[tauri::command]
-async fn list_all_connections(
+async fn list_all_edges(
   state: tauri::State<'_, AppState>
-) -> Result<Vec<connection::Model>, ()> {
-  let focs = QueryCore::find_connections(&state.conn).await;
-  let connections  = focs.unwrap();
+) -> Result<Vec<edge::Model>, ()> {
+  let edgs = QueryCore::find_edges(&state.conn).await;
+  let edges  = edgs.unwrap();
 
-  Ok(connections)
+  Ok(edges)
 }
 
 #[tauri::command]
-async fn get_connection_by_source(
+async fn get_edge(
+  state: tauri::State<'_, AppState>,
+  params: GetParams
+) -> Result<edge::Model, ()> {
+  let id = params.id;
+  let edge = QueryCore::find_edge_by_id(&state.conn, id).await.expect("Cannot find edge");
+  let data = edge.unwrap();
+
+  Ok(data)
+}
+
+#[tauri::command]
+async fn get_edge_by_source(
   state: tauri::State<'_, AppState>,
   source_id: String,
-) -> Result<Vec<connection::Model>, ()> {
-  let connections = QueryCore::find_connections_by_source(&state.conn, &source_id).await;
+) -> Result<Vec<edge::Model>, ()> {
+  let edge = QueryCore::find_connections_by_source(&state.conn, &source_id).await;
 
-  match connections {
+  match edge {
     Ok(conns) => Ok(conns),
     Err(_) => Err(()),
   }
 }
 
 #[tauri::command]
-async fn get_connection_by_target(
+async fn get_edge_by_target(
   state: tauri::State<'_, AppState>,
   target_id: String,
-) -> Result<Vec<connection::Model>, ()> {
-  let connections = QueryCore::find_connections_by_target(&state.conn, &target_id).await;
+) -> Result<Vec<edge::Model>, ()> {
+  let edges = QueryCore::find_connections_by_target(&state.conn, &target_id).await;
 
-  match connections {
+  match edges {
     Ok(conns) => Ok(conns),
     Err(_) => Err(()),
   }

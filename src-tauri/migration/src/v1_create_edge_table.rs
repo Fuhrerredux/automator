@@ -9,28 +9,28 @@ impl MigrationTrait for Migration {
     manager
       .create_table(
           Table::create()
-              .table(Connection::Table)
+              .table(Edge::Table)
               .if_not_exists()
               .col(
-                  ColumnDef::new(Connection::Id)
-                      .string()
-                      .not_null()
-                      .primary_key(),
+                ColumnDef::new(Edge::Id)
+                  .string()
+                  .not_null()
+                  .primary_key(),
               )
-              .col(ColumnDef::new(Connection::Source).string().not_null()) // Source node ID
-              .col(ColumnDef::new(Connection::Target).string().not_null()) // Target node ID
-              .col(ColumnDef::new(Connection::SourceHandle).string().null())
-              .col(ColumnDef::new(Connection::TargetHandle).string().null())
+              .col(ColumnDef::new(Edge::Source).string().not_null())
+              .col(ColumnDef::new(Edge::Target).string().not_null())
+              .col(ColumnDef::new(Edge::Label).string().default("").not_null())
+              .col(ColumnDef::new(Edge::Type).string().not_null())
               .foreign_key(
                 ForeignKey::create()
-                  .from(Connection::Table, Connection::Source)
+                  .from(Edge::Table, Edge::Source)
                   .to(Node::Table, Node::Id)
                   .on_delete(ForeignKeyAction::Cascade)
                   .on_update(ForeignKeyAction::Cascade),
               )
               .foreign_key(
                 ForeignKey::create()
-                  .from(Connection::Table, Connection::Target)
+                  .from(Edge::Table, Edge::Target)
                   .to(Node::Table, Node::Id)
                   .on_delete(ForeignKeyAction::Cascade)
                   .on_update(ForeignKeyAction::Cascade),
@@ -42,19 +42,19 @@ impl MigrationTrait for Migration {
 
   async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
     manager
-      .drop_table(Table::drop().table(Connection::Table).to_owned())
+      .drop_table(Table::drop().table(Edge::Table).to_owned())
       .await
   }
 }
 
 #[derive(DeriveIden)]
-enum Connection {
+enum Edge {
   Table,
   Id,
   Source,
   Target,
-  SourceHandle,
-  TargetHandle
+  Label,
+  Type
 }
 
 #[derive(DeriveIden)]

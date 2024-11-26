@@ -183,18 +183,18 @@ declare global {
     type FocusWithId = Focus & { id: string }
     type FocusForm = Pick<FocusWithId, 'position' | 'id'> & { label: string }
     type Node = {
-      type?: string
+      // id: string
+      type: string
       data: { label: string }
-      position: { x: number; y: number }
-      // draggable?: boolean
-      // selectable?: boolean
-      // connectable?: boolean
+      position: { x: number, y: number }
     }
     type NodeWithId = Node & { id: string }
     type Edge = {
+      // id: string
+      type: string
       source: string
       target: string
-      label?: string // for future ig
+      label: string 
     }
     type EdgeWithId = Edge & { id: string }
   }

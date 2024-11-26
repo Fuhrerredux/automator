@@ -3,7 +3,7 @@ pub use sea_orm_migration::prelude::*;
 mod v1_create_char_table;
 mod v1_create_focus_table;
 mod v1_create_node_table;
-mod v1_create_connection_table;
+mod v1_create_edge_table;
 
 pub struct Migrator;
 
@@ -14,7 +14,7 @@ impl MigratorTrait for Migrator {
       Box::new(v1_create_char_table::Migration),
       Box::new(v1_create_focus_table::Migration),
       Box::new(v1_create_node_table::Migration),
-      Box::new(v1_create_connection_table::Migration),
+      Box::new(v1_create_edge_table::Migration),
     ]
   }
 }

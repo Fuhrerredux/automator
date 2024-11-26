@@ -2,7 +2,7 @@
 name = "automator"
 version = "1.1.0"
 description = "Automator"
-authors = ["dax0102"]
+authors = ["dax0102", "Thanasis Lanaras"]
 license = "AGPL-3.0-only"
 repository = "https://github.com/Fuhrerredux/automator"
 edition = "2021"

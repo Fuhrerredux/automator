@@ -1,132 +1,185 @@
 import { defineStore } from 'pinia'
-import { NodeRepository, ConnectionRepository } from '@/database/node'
-import type { Node, Edge } from '@vue-flow/core'
-
+import { NodeRepository, EdgeRepository } from '@/database/node'
+// import type { Node, Edge } from '@vue-flow/core'
+import { convertToNode, convertToEdge } from '@/shared/const/form-structure'
 
 const useNodeStore = defineStore({
   id: 'nodes',
-  state: () => ({
-    // return {
-      nodes: [] as Node[], //FocusTree.NodeWithId[],
-      edges: [] as Edge[] //FocusTree.EdgeWithId[]
-    // }
-  }),
+  state: () => {
+    return {
+      nodes: [] as FocusTree.NodeWithId[], //FocusTree.NodeWithId[],
+      edges: [] as FocusTree.EdgeWithId[] //FocusTree.EdgeWithId[]
+    }
+  },
   getters: {
-    getId(): number {
+    async getId(): Promise<number> {
       const sNodes = localStorage.getItem('nodes')
       if (sNodes) return JSON.parse(sNodes).length
       return 0
+      // return await NodeRepository.getCount() ?? 0
     },
   },
+  // comment if DB ever works
   actions: {
     fetch() {
       const sNodes = localStorage.getItem('nodes')
       const sEdges = localStorage.getItem('edges')
       if (sNodes) {
-        // const parsedNodes = JSON.parse(sNodes)
-        // this.nodes = parsedNodes.map((node: any) => ({
-        //   ...node,
-        //   data: node.data || { label: '' },
-        //   position: node.position || { x: 0, y: 0 }
-        // }))
+        this.nodes = JSON.parse(sNodes).map((node: any) => ({
+          id: node.id,
+          type: node.type,
+          data: node.data,
+          computedPosition: node.computedPosition,
+        }))
         this.nodes = JSON.parse(sNodes)
       }
       if (sEdges) this.edges = JSON.parse(sEdges)
     },
     save() {
-      localStorage.setItem('nodes', JSON.stringify(this.nodes))
-      localStorage.setItem('edges', JSON.stringify(this.edges))
+      const simpNodes = this.nodes.map((node: any) => ({
+        id: node.id,
+        type: node.type,
+        data: node.data,
+        computedPosition: node.computedPosition,
+      }))
+      const simpEdges = this.edges.map((edge: any) => ({
+        id: edge.id,
+        type: edge.type,
+        source: edge.source,
+        target: edge.target,
+        label: edge.label
+      }))
+      localStorage.setItem('nodes', JSON.stringify(simpNodes))
+      localStorage.setItem('edges', JSON.stringify(simpEdges))
     },
   },
+
+  // cant deal with the DB
   // actions: {
-  //   // nodes
-  //   async findAll(): Promise<{
-  //     nodes: FocusTree.NodeWithId[], 
-  //     connections: FocusTree.ConnectionWithId[] 
-  //   }> {
+  //   async findAllNodes(): Promise<FocusTree.NodeWithId[]> {
   //     this.nodes = await NodeRepository.findAll()
-  //     this.connections = await ConnectionRepository.findAll()
-  //     return { nodes: this.nodes, connections: this.connections }
+  //     return this.nodes.map((node) => ({
+  //       id: node.id,
+  //       type: node.type,
+  //       data: node.data,
+  //       position: node.position
+  //     }))
   //   },
-  //   async findOne(id: string): Promise<FocusTree.Node> {
-  //     return NodeRepository.findById(id)
+  //   async findOneNode(id: string): Promise<FocusTree.NodeWithId> {
+  //     const node = await NodeRepository.findById(id)
+  //     return {
+  //       id: node.id,
+  //       type: node.type,
+  //       data: node.data,
+  //       position: node.position
+  //     }
   //   },
-  //   async importAll(nodes: FocusTree.NodeWithId[]) {
+  //   // TODO: Map correctly
+  //   async importAllNodes(nodes: FocusTree.NodeWithId[]) {
   //     const promises = nodes.map((e) => NodeRepository.create(e))
   //     return await Promise.all(promises)
   //   },
-  //   async create(node: FocusTree.NodeWithId): Promise<Tauri.Broadcast> {
+  //   async createNode(node: FocusTree.NodeWithId): Promise<Tauri.Broadcast> {
   //     const status = await NodeRepository.create(node)
   //     if (status.kind === 'success') this.nodes = await NodeRepository.findAll()
 
   //     return status
   //   },
-  //   async update(node: FocusTree.NodeWithId): Promise<Tauri.Broadcast> {
-  //     const status = await NodeRepository.update(node.id, focus)
+  //   async updateNode(node: FocusTree.NodeWithId): Promise<Tauri.Broadcast> {
+  //     const status = await NodeRepository.update(node.id, node)
   //     if (status.kind === 'success') this.nodes = await NodeRepository.findAll()
 
   //     return status
   //   },
-  //   async remove(node: FocusTree.FocusWithId): Promise<Tauri.Broadcast> {
+  //   async removeNode(node: FocusTree.NodeWithId): Promise<Tauri.Broadcast> {
   //     const status = await NodeRepository.remove(node.id)
   //     if (status.kind === 'success') this.nodes = await NodeRepository.findAll()
 
   //     return status
   //   },
-  //   async purge(): Promise<Tauri.Broadcast> {
+  //   async purgeNodes(): Promise<Tauri.Broadcast> {
   //     const status = await NodeRepository.purge()
   //     if (status.kind === 'success') this.nodes = await NodeRepository.findAll()
 
   //     return status
   //   },
-  //   // connections
-  //   async findOneConnection(id: string): Promise<FocusTree.Connection> {
-  //     return ConnectionRepository.findById(id)
+  //   // edges
+  //   async findAllEdges(): Promise<FocusTree.EdgeWithId[]> {
+  //     this.edges = await EdgeRepository.findAll()
+  //     return this.edges.map((edge) => ({
+  //       id: edge.id,
+  //       type: edge.type,
+  //       source: edge.source,
+  //       target: edge.target,
+  //       label: edge.label
+  //     }))
   //   },
-  //   async getConnectionsBySource(sourceId: string): Promise<FocusTree.Connection> {
-  //     return ConnectionRepository.findBySource(sourceId)
+  //   async findOneEdge(id: string): Promise<FocusTree.EdgeWithId> {
+  //     const edge = await EdgeRepository.findById(id)
+  //     return {
+  //       id: edge.id,
+  //       type: edge.type,
+  //       source: edge.source,
+  //       target: edge.target,
+  //       label: edge.label
+  //     }
   //   },
-  //   async getConnectionsByTarget(targetId: string): Promise<FocusTree.Connection> {
-  //     return ConnectionRepository.findByTarget(targetId)
-  //   },
-  //   async importAllConnections(connections: FocusTree.ConnectionWithId[]) {
-  //     const promises = connections.map((e) => ConnectionRepository.create(e))
+  //   async importAllEdges(edges: FocusTree.EdgeWithId[]) {
+  //     const promises = edges.map((e) => EdgeRepository.create(e))
   //     return await Promise.all(promises)
   //   },
-  //   async createConnection(node: FocusTree.ConnectionWithId): Promise<Tauri.Broadcast> {
-  //     const status = await ConnectionRepository.create(node)
-  //     if (status.kind === 'success') this.connections = await ConnectionRepository.findAll()
+  //   async createEdge(edge: FocusTree.EdgeWithId): Promise<Tauri.Broadcast> {
+  //     const status = await EdgeRepository.create(edge)
+  //     if (status.kind === 'success') this.edges = await EdgeRepository.findAll()
 
   //     return status
   //   },
-  //   async updateConnection(connection: FocusTree.ConnectionWithId): Promise<Tauri.Broadcast> {
-  //     const status = await ConnectionRepository.update(connection.id, focus)
-  //     if (status.kind === 'success') this.connetions = await ConnectionRepository.findAll()
+  //   async updateEdge(edge: FocusTree.EdgeWithId): Promise<Tauri.Broadcast> {
+  //     const status = await EdgeRepository.update(edge.id, edge)
+  //     if (status.kind === 'success') this.edges = await EdgeRepository.findAll()
 
   //     return status
   //   },
-  //   async removeConnection(connection: FocusTree.ConnectionWithId): Promise<Tauri.Broadcast> {
-  //     const status = await ConnectionRepository.remove(connection.id)
-  //     if (status.kind === 'success') this.connetions = await ConnectionRepository.findAll()
+  //   async removeEdge(edge: FocusTree.EdgeWithId): Promise<Tauri.Broadcast> {
+  //     const status = await EdgeRepository.remove(edge.id)
+  //     if (status.kind === 'success') this.edges = await EdgeRepository.findAll()
 
   //     return status
   //   },
-  //   async purgeConnections(): Promise<Tauri.Broadcast> {
-  //     const status = await ConnectionRepository.purge()
-  //     if (status.kind === 'success') this.connetions = await ConnectionRepository.findAll()
+  //   async purgeEdges(): Promise<Tauri.Broadcast> {
+  //     const status = await EdgeRepository.purge()
+  //     if (status.kind === 'success') this.edges = await EdgeRepository.findAll()
 
   //     return status
   //   },
-  //   //
   //   async refresh() {
   //     try {
-  //       const { nodes, connections} = await this.findAll()
-  //       this.nodes = nodes 
-  //       this.connections = connections
+  //       this.nodes = await this.findAllNodes()
+  //       this.edges = await this.findAllEdges()
   //     } catch (e) {
-  //       console.error('Failed to refresh nodes', e)
+  //       console.error('Failed to refresh nodes and edges', e)
   //     }
-  //   }
+  //   },
+
+  //   async saveNodes(nodes: FocusTree.NodeWithId[]): Promise<Tauri.Broadcast[]> {
+  //     const promises = nodes.map(async (node) => {
+  //       const eNodes = await NodeRepository.findById(node.id)
+        
+  //       if (eNodes) return NodeRepository.update(node.id, node)
+  //       else return NodeRepository.create(node)
+  //     })
+  //     return await Promise.all(promises)
+  //   },
+
+  //   async saveEdges(edges: FocusTree.EdgeWithId[]): Promise<Tauri.Broadcast[]> {
+  //     const promises = edges.map(async (edge) => {
+  //       const eNodes = await EdgeRepository.findById(edge.id)
+        
+  //       if (eNodes) return EdgeRepository.update(edge.id, edge)
+  //       else return EdgeRepository.create(edge)
+  //     })
+  //     return await Promise.all(promises)
+  //   },
   // }
 })
 
