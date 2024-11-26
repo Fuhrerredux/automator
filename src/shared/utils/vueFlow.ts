@@ -1,8 +1,10 @@
-import { ref, watch } from 'vue'
+ import { ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
+import useNodeStore from '@/stores/nodes'
 
-let id = 0
-const getId = () => `node_${id++}`
+let id: number | null = null
+// the operand of a decrement/increment operator must be a variable or a property access
+const getId = () => `node_${(id = (id ?? useNodeStore().getId) + 1 - 1 + 1)}`
 
 const state: UserInterface.DragAndDropState = {
   draggedType: ref<string | null>(null),

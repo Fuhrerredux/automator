@@ -11,6 +11,13 @@ const useNodeStore = defineStore({
       edges: [] as Edge[] //FocusTree.EdgeWithId[]
     // }
   }),
+  getters: {
+    getId(): number {
+      const sNodes = localStorage.getItem('nodes')
+      if (sNodes) return JSON.parse(sNodes).length
+      return 0
+    },
+  },
   actions: {
     fetch() {
       const sNodes = localStorage.getItem('nodes')
