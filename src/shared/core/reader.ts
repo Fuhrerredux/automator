@@ -330,11 +330,11 @@ export async function readCharFile(content: string): Promise<Record<string, any>
 
 }
 
-/**
- * @deprecated
- * @param {string} content 
- * @returns 
- */
+// /**
+//  * @deprecated
+//  * @param {string} content 
+//  * @returns 
+//  */
 // function extractAdvisorRoles(content: string): string[] {
 //   if (content.length <= 0) return []
 
@@ -362,7 +362,13 @@ export async function readCharFile(content: string): Promise<Record<string, any>
 //   return roles
 // }
 
-export function readLocalisationFile(content: string, config: Automator.Configuration) {
+/**
+ * 
+ * @param {string} content 
+ * @param {Automator.Configuration} config 
+ * @returns {Character[]}
+ */
+export function readLocalisationFile(content: string, config: Automator.Configuration): Character[] {
   if (content.length <= 0) return []
 
   function extractPosition(token: string) {
